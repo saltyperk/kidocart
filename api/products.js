@@ -18,7 +18,7 @@ async function connectToDatabase() {
   return cachedDb;
 }
 
-// Product Schema
+// Product Schema with multiple images
 const productSchema = new mongoose.Schema({
   name: { type: String, required: true },
   description: String,
@@ -27,7 +27,7 @@ const productSchema = new mongoose.Schema({
   category: String,
   ageGroup: String,
   brand: String,
-  images: [String],
+  images: [String], // Array of image URLs
   stock: { type: Number, default: 0 },
   availability: { type: Boolean, default: true },
   rating: { type: Number, default: 4.5 },
@@ -36,7 +36,8 @@ const productSchema = new mongoose.Schema({
   colors: [String],
   badge: String,
   featured: { type: Boolean, default: false },
-  createdAt: { type: Date, default: Date.now }
+  createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now }
 });
 
 const Product = mongoose.models.Product || mongoose.model('Product', productSchema);
@@ -59,19 +60,29 @@ module.exports = async (req, res) => {
     // GET - Fetch products
     if (req.method === 'GET') {
       if (id) {
+        // Get single product
         const product = await Product.findById(id);
         if (!product) {
           return res.status(404).json({ error: 'Product not found' });
         }
         return res.status(200).json(product);
       } else {
-        const { category, ageGroup, brand, featured } = req.query;
+        // Get all products with filters
+        const { category, ageGroup, brand, featured, availability, search } = req.query;
         let query = {};
         
         if (category) query.category = category;
         if (ageGroup) query.ageGroup = ageGroup;
         if (brand) query.brand = brand;
         if (featured) query.featured = featured === 'true';
+        if (availability) query.availability = availability === 'true';
+        if (search) {
+          query.$or = [
+            { name: { $regex: search, $options: 'i' } },
+            { description: { $regex: search, $options: 'i' } },
+            { brand: { $regex: search, $options: 'i' } }
+          ];
+        }
         
         const products = await Product.find(query).sort({ createdAt: -1 });
         return res.status(200).json(products);
@@ -80,8 +91,17 @@ module.exports = async (req, res) => {
 
     // POST - Create product
     if (req.method === 'POST') {
-      const product = new Product(req.body);
+      const productData = req.body;
+      
+      // Ensure images is an array
+      if (productData.images && !Array.isArray(productData.images)) {
+        productData.images = [productData.images];
+      }
+      
+      const product = new Product(productData);
       await product.save();
+      
+      console.log('Product created:', product._id);
       return res.status(201).json(product);
     }
 
@@ -90,10 +110,22 @@ module.exports = async (req, res) => {
       if (!id) {
         return res.status(400).json({ error: 'Product ID required' });
       }
-      const product = await Product.findByIdAndUpdate(id, req.body, { new: true });
+      
+      const updates = req.body;
+      
+      // Ensure images is an array
+      if (updates.images && !Array.isArray(updates.images)) {
+        updates.images = [updates.images];
+      }
+      
+      updates.updatedAt = new Date();
+      
+      const product = await Product.findByIdAndUpdate(id, updates, { new: true });
       if (!product) {
         return res.status(404).json({ error: 'Product not found' });
       }
+      
+      console.log('Product updated:', product._id);
       return res.status(200).json(product);
     }
 
@@ -102,10 +134,13 @@ module.exports = async (req, res) => {
       if (!id) {
         return res.status(400).json({ error: 'Product ID required' });
       }
+      
       const product = await Product.findByIdAndDelete(id);
       if (!product) {
         return res.status(404).json({ error: 'Product not found' });
       }
+      
+      console.log('Product deleted:', id);
       return res.status(200).json({ message: 'Product deleted successfully' });
     }
 
