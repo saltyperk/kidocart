@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout - KidsStore</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .checkout-page { padding: 2rem 1rem; }
+    .checkout-layout { display: grid; grid-template-columns: 1fr 400px; gap: 2rem; }
+    .checkout-steps { display: flex; justify-content: center; margin-bottom: 2rem; }
+    .step { display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; color: var(--gray); position: relative; }
+    .step.active { color: var(--primary); font-weight: 600; }
+    .step.completed { color: var(--success); }
+    .step-number { width: 30px; height: 30px; border-radius: 50%; background: var(--light); display: flex; align-items: center; justify-content: center; font-weight: 600; }
+    .step.active .step-number { background: var(--primary); color: white; }
+    .step.completed .step-number { background: var(--success); color: white; }
+    .step:not(:last-child)::after { content: ''; position: absolute; right: -20px; width: 40px; height: 2px; background: var(--light); }
+    .step.completed:not(:last-child)::after { background: var(--success); }
+    .checkout-form { background: white; padding: 2rem; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+    .checkout-form h2 { margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.75rem; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .saved-addresses { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1.5rem; }
+    .address-option { padding: 1rem; border: 2px solid var(--light); border-radius: 10px; cursor: pointer; transition: all 0.3s; }
+    .address-option:hover, .address-option.selected { border-color: var(--primary); background: var(--pastel-purple); }
+    .address-option input { margin-right: 0.75rem; }
+    .payment-methods { display: flex; flex-direction: column; gap: 1rem; }
+    .payment-option { padding: 1rem; border: 2px solid var(--light); border-radius: 10px; cursor: pointer; display: flex; align-items: center; gap: 1rem; transition: all 0.3s; }
+    .payment-option:hover, .payment-option.selected { border-color: var(--primary); background: var(--pastel-purple); }
+    .payment-option i { font-size: 1.5rem; color: var(--primary); }
+    .order-summary-card { background: white; padding: 1.5rem; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); position: sticky; top: 100px; }
+    .order-items { max-height: 300px; overflow-y: auto; margin-bottom: 1rem; }
+    .order-item { display: flex; gap: 1rem; padding: 0.75rem 0; border-bottom: 1px solid var(--light); }
+    .order-item:last-child { border-bottom: none; }
+    .order-item img { width: 60px; height: 60px; border-radius: 8px; object-fit: cover; }
+    .order-item-details { flex: 1; }
+    .order-item-name { font-weight: 500; font-size: 0.875rem; }
+    .order-item-meta { color: var(--gray); font-size: 0.75rem; }
+    .order-item-price { font-weight: 600; color: var(--primary); }
+    .step-content { display: none; }
+    .step-content.active { display: block; }
+    .success-page { text-align: center; padding: 3rem; }
+    .success-page i { font-size: 5rem; color: var(--success); margin-bottom: 1.5rem; }
+    .order-details-box { background: var(--light); padding: 1.5rem; border-radius: 15px; margin: 1.5rem 0; text-align: left; max-width: 500px; margin-left: auto; margin-right: auto; }
+    @media (max-width: 900px) {
+      .checkout-layout { grid-template-columns: 1fr; }
+      .order-summary-card { position: relative; top: 0; }
+      .checkout-steps { flex-wrap: wrap; gap: 0.5rem; }
+      .step::after { display: none; }
+      .form-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-top container">
+      <a href="index.html" class="logo"><i class="fas fa-baby"></i> Kids<span>Store</span></a>
+      <div class="header-actions">
+        <a href="cart.html" class="header-action"><i class="fas fa-shopping-cart"></i><span class="cart-count" style="display: none;">0</span><span>Cart</span></a>
+        <div id="user-action"><a href="login.html" class="header-action"><i class="fas fa-user"></i><span>Login</span></a></div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container checkout-page">
+    <div class="checkout-steps" id="checkout-steps">
+      <div class="step active" data-step="1">
+        <span class="step-number">1</span>
+        <span>Shipping</span>
+      </div>
+      <div class="step" data-step="2">
+        <span class="step-number">2</span>
+        <span>Payment</span>
+      </div>
+      <div class="step" data-step="3">
+        <span class="step-number">3</span>
+        <span>Review</span>
+      </div>
+    </div>
+
+    <div class="checkout-layout" id="checkout-layout">
+      <div class="checkout-form">
+        <!-- Step 1: Shipping -->
+        <div class="step-content active" id="step-1">
+          <h2><i class="fas fa-shipping-fast"></i> Shipping Information</h2>
+          
+          <div class="saved-addresses" id="saved-addresses" style="display: none;">
+            <h4>Saved Addresses</h4>
+            <!-- Saved addresses will be rendered here -->
+          </div>
+
+          <form id="shipping-form">
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">First Name *</label>
+                <input type="text" class="form-input" id="ship-first-name" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Last Name *</label>
+                <input type="text" class="form-input" id="ship-last-name" required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Phone Number *</label>
+              <input type="tel" class="form-input" id="ship-phone" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Street Address *</label>
+              <input type="text" class="form-input" id="ship-address" placeholder="House number and street name" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Apartment, Suite, etc. (Optional)</label>
+              <input type="text" class="form-input" id="ship-address2">
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">City *</label>
+                <input type="text" class="form-input" id="ship-city" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">State/Province *</label>
+                <input type="text" class="form-input" id="ship-state" required>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">ZIP/Postal Code *</label>
+                <input type="text" class="form-input" id="ship-zip" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Country *</label>
+                <select class="form-input" id="ship-country" required>
+                  <option value="US">United States</option>
+                  <option value="CA">Canada</option>
+                  <option value="UK">United Kingdom</option>
+                  <option value="AU">Australia</option>
+                </select>
+              </div>
+            </div>
+            <label style="display: flex; align-items: center; gap: 0.5rem; margin-top: 1rem;">
+              <input type="checkbox" id="save-address">
+              <span>Save this address for future orders</span>
+            </label>
+            <button type="submit" class="btn btn-primary btn-lg w-full mt-4">
+              Continue to Payment <i class="fas fa-arrow-right"></i>
+            </button>
+          </form>
+        </div>
+
+        <!-- Step 2: Payment -->
+        <div class="step-content" id="step-2">
+          <h2><i class="fas fa-credit-card"></i> Payment Method</h2>
+          
+          <div class="payment-methods" id="payment-methods">
+            <label class="payment-option selected">
+              <input type="radio" name="payment" value="card" checked>
+              <i class="fas fa-credit-card"></i>
+              <div>
+                <strong>Credit / Debit Card</strong>
+                <p style="font-size: 0.875rem; color: var(--gray);">Visa, Mastercard, American Express</p>
+              </div>
+            </label>
+            <label class="payment-option">
+              <input type="radio" name="payment" value="paypal">
+              <i class="fab fa-paypal"></i>
+              <div>
+                <strong>PayPal</strong>
+                <p style="font-size: 0.875rem; color: var(--gray);">Pay with your PayPal account</p>
+              </div>
+            </label>
+            <label class="payment-option">
+              <input type="radio" name="payment" value="applepay">
+              <i class="fab fa-apple-pay"></i>
+              <div>
+                <strong>Apple Pay</strong>
+                <p style="font-size: 0.875rem; color: var(--gray);">Quick and secure payment</p>
+              </div>
+            </label>
+            <label class="payment-option">
+              <input type="radio" name="payment" value="cod">
+              <i class="fas fa-money-bill-wave"></i>
+              <div>
+                <strong>Cash on Delivery</strong>
+                <p style="font-size: 0.875rem; color: var(--gray);">Pay when you receive your order</p>
+              </div>
+            </label>
+          </div>
+
+          <!-- Card Details (shown when card is selected) -->
+          <div id="card-details" style="margin-top: 1.5rem;">
+            <div class="form-group">
+              <label class="form-label">Card Number *</label>
+              <input type="text" class="form-input" id="card-number" placeholder="1234 5678 9012 3456" maxlength="19">
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Expiry Date *</label>
+                <input type="text" class="form-input" id="card-expiry" placeholder="MM/YY" maxlength="5">
+              </div>
+              <div class="form-group">
+                <label class="form-label">CVV *</label>
+                <input type="text" class="form-input" id="card-cvv" placeholder="123" maxlength="4">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Name on Card *</label>
+              <input type="text" class="form-input" id="card-name" placeholder="John Doe">
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+            <button class="btn btn-outline" onclick="goToStep(1)">
+              <i class="fas fa-arrow-left"></i> Back
+            </button>
+            <button class="btn btn-primary btn-lg" style="flex: 1;" onclick="goToStep(3)">
+              Review Order <i class="fas fa-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Step 3: Review -->
+        <div class="step-content" id="step-3">
+          <h2><i class="fas fa-clipboard-check"></i> Review Your Order</h2>
+          
+          <div style="background: var(--light); padding: 1.5rem; border-radius: 15px; margin-bottom: 1.5rem;">
+            <h4 style="margin-bottom: 0.75rem;"><i class="fas fa-map-marker-alt"></i> Shipping Address</h4>
+            <p id="review-address">Loading...</p>
+            <button class="btn btn-sm btn-outline mt-2" onclick="goToStep(1)">Edit</button>
+          </div>
+
+          <div style="background: var(--light); padding: 1.5rem; border-radius: 15px; margin-bottom: 1.5rem;">
+            <h4 style="margin-bottom: 0.75rem;"><i class="fas fa-credit-card"></i> Payment Method</h4>
+            <p id="review-payment">Loading...</p>
+            <button class="btn btn-sm btn-outline mt-2" onclick="goToStep(2)">Edit</button>
+          </div>
+
+          <div style="background: var(--pastel-yellow); padding: 1rem; border-radius: 10px; margin-bottom: 1.5rem;">
+            <p style="font-size: 0.875rem;"><i class="fas fa-info-circle"></i> By placing your order, you agree to our Terms of Service and Privacy Policy.</p>
+          </div>
+
+          <div style="display: flex; gap: 1rem;">
+            <button class="btn btn-outline" onclick="goToStep(2)">
+              <i class="fas fa-arrow-left"></i> Back
+            </button>
+            <button class="btn btn-primary btn-lg" style="flex: 1;" onclick="placeOrder()">
+              <i class="fas fa-lock"></i> Place Order
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Order Summary -->
+      <div class="order-summary-card">
+        <h3 style="margin-bottom: 1rem;">Order Summary</h3>
+        <div class="order-items" id="order-items">
+          <!-- Items rendered here -->
+        </div>
+        <div class="summary-row"><span>Subtotal</span><span id="checkout-subtotal">$0.00</span></div>
+        <div class="summary-row"><span>Shipping</span><span id="checkout-shipping">$0.00</span></div>
+        <div class="summary-row"><span>Tax (8%)</span><span id="checkout-tax">$0.00</span></div>
+        <div class="summary-row total"><span>Total</span><span id="checkout-total">$0.00</span></div>
+      </div>
+    </div>
+
+    <!-- Order Success -->
+    <div class="success-page" id="success-page" style="display: none;">
+      <i class="fas fa-check-circle"></i>
+      <h1 style="color: var(--success);">Order Placed Successfully!</h1>
+      <p style="color: var(--gray); font-size: 1.125rem;">Thank you for shopping with KidsStore</p>
+      
+      <div class="order-details-box">
+        <p><strong>Order Number:</strong> <span id="success-order-id"></span></p>
+        <p><strong>Order Date:</strong> <span id="success-date"></span></p>
+        <p><strong>Estimated Delivery:</strong> <span id="success-delivery"></span></p>
+        <p><strong>Total Amount:</strong> <span id="success-total"></span></p>
+      </div>
+
+      <p style="margin-bottom: 1.5rem;">A confirmation email has been sent to your email address.</p>
+
+      <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+        <a href="orders.html" class="btn btn-primary"><i class="fas fa-box"></i> View Order</a>
+        <a href="products.html" class="btn btn-outline"><i class="fas fa-shopping-bag"></i> Continue Shopping</a>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom"><p>&copy; 2024 KidsStore. All rights reserved.</p></div>
+    </div>
+  </footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    let currentStep = 1;
+    let shippingData = {};
+    let paymentMethod = 'card';
+
+    // Check if user is logged in and cart has items
+    document.addEventListener('DOMContentLoaded', () => {
+      const user = getCurrentUser();
+      if (!user) {
+        window.location.href = 'login.html';
+        return;
+      }
+      const cart = getCart();
+      if (cart.length === 0) {
+        window.location.href = 'cart.html';
+        return;
+      }
+
+      // Pre-fill with user data
+      const nameParts = user.name.split(' ');
+      document.getElementById('ship-first-name').value = nameParts[0] || '';
+      document.getElementById('ship-last-name').value = nameParts.slice(1).join(' ') || '';
+      document.getElementById('ship-phone').value = user.phone || '';
+
+      renderOrderSummary();
+      initPaymentMethods();
+    });
+
+    function renderOrderSummary() {
+      const cart = getCart();
+      const products = getProducts();
+      const totals = getCartTotal();
+
+      const container = document.getElementById('order-items');
+      container.innerHTML = cart.map(item => {
+        const product = products.find(p => p.id === item.productId);
+        if (!product) return '';
+        return `
+          <div class="order-item">
+            <img src="${product.images[0]}" alt="${product.name}">
+            <div class="order-item-details">
+              <p class="order-item-name">${product.name}</p>
+              <p class="order-item-meta">Qty: ${item.quantity} ${item.size ? '| Size: ' + item.size : ''} ${item.color ? '| ' + item.color : ''}</p>
+            </div>
+            <span class="order-item-price">$${(product.price * item.quantity).toFixed(2)}</span>
+          </div>
+        `;
+      }).join('');
+
+      document.getElementById('checkout-subtotal').textContent = `$${totals.subtotal.toFixed(2)}`;
+      document.getElementById('checkout-shipping').textContent = totals.shipping === 0 ? 'FREE' : `$${totals.shipping.toFixed(2)}`;
+      document.getElementById('checkout-tax').textContent = `$${totals.tax.toFixed(2)}`;
+      document.getElementById('checkout-total').textContent = `$${totals.total.toFixed(2)}`;
+    }
+
+    function initPaymentMethods() {
+      const paymentOptions = document.querySelectorAll('.payment-option');
+      paymentOptions.forEach(option => {
+        option.addEventListener('click', () => {
+          paymentOptions.forEach(o => o.classList.remove('selected'));
+          option.classList.add('selected');
+          option.querySelector('input').checked = true;
+          paymentMethod = option.querySelector('input').value;
+          
+          // Toggle card details visibility
+          document.getElementById('card-details').style.display = paymentMethod === 'card' ? 'block' : 'none';
+        });
+      });
+    }
+
+    function goToStep(step) {
+      // Validate current step before moving forward
+      if (step > currentStep) {
+        if (currentStep === 1) {
+          const form = document.getElementById('shipping-form');
+          if (!form.checkValidity()) {
+            form.reportValidity();
+            return;
+          }
+          // Save shipping data
+          shippingData = {
+            firstName: document.getElementById('ship-first-name').value,
+            lastName: document.getElementById('ship-last-name').value,
+            phone: document.getElementById('ship-phone').value,
+            address: document.getElementById('ship-address').value,
+            address2: document.getElementById('ship-address2').value,
+            city: document.getElementById('ship-city').value,
+            state: document.getElementById('ship-state').value,
+            zip: document.getElementById('ship-zip').value,
+            country: document.getElementById('ship-country').value
+          };
+        }
+      }
+
+      // Update step display
+      currentStep = step;
+      document.querySelectorAll('.step-content').forEach(el => el.classList.remove('active'));
+      document.getElementById(`step-${step}`).classList.add('active');
+
+      // Update step indicators
+      document.querySelectorAll('.step').forEach((el, index) => {
+        el.classList.remove('active', 'completed');
+        if (index + 1 < step) el.classList.add('completed');
+        if (index + 1 === step) el.classList.add('active');
+      });
+
+      // Update review step content
+      if (step === 3) {
+        document.getElementById('review-address').innerHTML = `
+          ${shippingData.firstName} ${shippingData.lastName}<br>
+          ${shippingData.address}${shippingData.address2 ? ', ' + shippingData.address2 : ''}<br>
+          ${shippingData.city}, ${shippingData.state} ${shippingData.zip}<br>
+          ${shippingData.country}<br>
+          Phone: ${shippingData.phone}
+        `;
+        
+        const paymentLabels = {
+          'card': 'Credit/Debit Card',
+          'paypal': 'PayPal',
+          'applepay': 'Apple Pay',
+          'cod': 'Cash on Delivery'
+        };
+        document.getElementById('review-payment').textContent = paymentLabels[paymentMethod];
+      }
+    }
+
+    // Handle shipping form submit
+    document.getElementById('shipping-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      goToStep(2);
+    });
+
+    function placeOrder() {
+      const totals = getCartTotal();
+      
+      const orderData = {
+        shippingAddress: shippingData,
+        paymentMethod: paymentMethod
+      };
+
+      const order = createOrder(orderData);
+
+      if (order) {
+        // Show success page
+        document.getElementById('checkout-layout').style.display = 'none';
+        document.getElementById('checkout-steps').style.display = 'none';
+        document.getElementById('success-page').style.display = 'block';
+
+        document.getElementById('success-order-id').textContent = order.id;
+        document.getElementById('success-date').textContent = new Date().toLocaleDateString();
+        
+        const deliveryDate = new Date();
+        deliveryDate.setDate(deliveryDate.getDate() + 5);
+        document.getElementById('success-delivery').textContent = deliveryDate.toLocaleDateString();
+        
+        document.getElementById('success-total').textContent = `$${order.total.toFixed(2)}`;
+      }
+    }
+  </script>
+</body>
+</html>

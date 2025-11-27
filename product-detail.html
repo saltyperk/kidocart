@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Details - KidsStore</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .product-detail-page { padding: 2rem 1rem; }
+    .product-detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; }
+    .gallery-container { position: sticky; top: 100px; }
+    .main-image { width: 100%; height: 500px; border-radius: 20px; overflow: hidden; margin-bottom: 1rem; }
+    .main-image img { width: 100%; height: 100%; object-fit: cover; }
+    .thumbnail-list { display: flex; gap: 0.75rem; }
+    .thumbnail { width: 80px; height: 80px; border-radius: 10px; overflow: hidden; cursor: pointer; border: 3px solid transparent; transition: border-color 0.3s; }
+    .thumbnail:hover, .thumbnail.active { border-color: var(--primary); }
+    .thumbnail img { width: 100%; height: 100%; object-fit: cover; }
+    .product-title { font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .product-meta { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap; }
+    .rating-display { display: flex; align-items: center; gap: 0.5rem; }
+    .rating-display .stars { color: var(--accent); }
+    .price-section { background: var(--pastel-green); padding: 1.5rem; border-radius: 15px; margin: 1.5rem 0; }
+    .price-row { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+    .big-price { font-size: 2.5rem; font-weight: 800; color: var(--primary); }
+    .old-price { font-size: 1.25rem; color: var(--gray); text-decoration: line-through; }
+    .save-badge { background: var(--success); color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-weight: 600; }
+    .stock-status { margin-top: 0.5rem; }
+    .stock-status.in-stock { color: var(--success); }
+    .stock-status.low-stock { color: var(--warning); }
+    .stock-status.out-of-stock { color: var(--danger); }
+    .options-section { margin: 1.5rem 0; }
+    .option-title { font-weight: 600; margin-bottom: 0.75rem; }
+    .size-options, .color-options { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    .size-btn, .color-btn { padding: 0.5rem 1rem; border: 2px solid var(--light); border-radius: 10px; background: white; cursor: pointer; transition: all 0.3s; }
+    .size-btn:hover, .size-btn.active { border-color: var(--primary); background: var(--pastel-purple); }
+    .color-btn { width: 40px; height: 40px; border-radius: 50%; padding: 0; }
+    .color-btn.active { box-shadow: 0 0 0 3px var(--primary); }
+    .quantity-section { display: flex; align-items: center; gap: 1rem; margin: 1.5rem 0; }
+    .qty-control { display: flex; align-items: center; border: 2px solid var(--light); border-radius: 10px; overflow: hidden; }
+    .qty-btn { width: 45px; height: 45px; border: none; background: var(--light); cursor: pointer; font-size: 1.25rem; transition: background 0.3s; }
+    .qty-btn:hover { background: var(--primary); color: white; }
+    .qty-input { width: 60px; height: 45px; border: none; text-align: center; font-size: 1.1rem; font-weight: 600; }
+    .action-buttons { display: flex; gap: 1rem; margin: 1.5rem 0; }
+    .action-buttons .btn { flex: 1; padding: 1rem; font-size: 1.1rem; }
+    .product-features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1.5rem 0; }
+    .feature-item { display: flex; align-items: center; gap: 0.75rem; padding: 1rem; background: var(--light); border-radius: 10px; }
+    .feature-item i { color: var(--primary); font-size: 1.25rem; }
+    .description-section { margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--light); }
+    .description-section h3 { margin-bottom: 1rem; }
+    .specs-table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+    .specs-table tr:nth-child(even) { background: var(--light); }
+    .specs-table td { padding: 0.75rem 1rem; }
+    .specs-table td:first-child { font-weight: 600; width: 40%; }
+    .reviews-section { margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--light); }
+    .review-card { background: white; padding: 1.5rem; border-radius: 15px; margin-bottom: 1rem; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+    .review-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; }
+    .reviewer-name { font-weight: 600; }
+    .review-date { color: var(--gray); font-size: 0.875rem; }
+    .related-products { margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--light); }
+    @media (max-width: 900px) {
+      .product-detail-grid { grid-template-columns: 1fr; }
+      .gallery-container { position: relative; top: 0; }
+      .main-image { height: 350px; }
+      .product-features { grid-template-columns: 1fr; }
+      .action-buttons { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-top container">
+      <a href="index.html" class="logo"><i class="fas fa-baby"></i> Kids<span>Store</span></a>
+      <div class="search-bar">
+        <input type="text" id="search-input" placeholder="Search for products...">
+        <button id="search-btn"><i class="fas fa-search"></i> Search</button>
+      </div>
+      <div class="header-actions">
+        <a href="wishlist.html" class="header-action"><i class="fas fa-heart"></i><span class="wishlist-count" style="display: none;">0</span><span>Wishlist</span></a>
+        <a href="cart.html" class="header-action"><i class="fas fa-shopping-cart"></i><span class="cart-count" style="display: none;">0</span><span>Cart</span></a>
+        <div id="user-action"><a href="login.html" class="header-action"><i class="fas fa-user"></i><span>Login</span></a></div>
+      </div>
+    </div>
+    <nav class="nav">
+      <ul class="nav-list container">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="products.html">All Products</a></li>
+        <li><a href="products.html?category=clothing">Clothing</a></li>
+        <li><a href="products.html?category=toys">Toys</a></li>
+        <li><a href="products.html?category=feeding">Feeding</a></li>
+        <li><a href="products.html?category=gear">Gear & Travel</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Breadcrumb -->
+  <div class="container" style="padding: 1rem;">
+    <nav style="color: var(--gray); font-size: 0.875rem;" id="breadcrumb">
+      <a href="index.html" style="color: var(--primary);">Home</a> / 
+      <a href="products.html" style="color: var(--primary);">Products</a> / 
+      <span id="breadcrumb-product">Loading...</span>
+    </nav>
+  </div>
+
+  <!-- Product Detail -->
+  <main class="container product-detail-page">
+    <div class="product-detail-grid">
+      <!-- Gallery -->
+      <div class="gallery-container">
+        <div class="main-image">
+          <img id="main-product-image" src="" alt="Product Image">
+        </div>
+        <div class="thumbnail-list" id="thumbnail-list">
+          <!-- Thumbnails -->
+        </div>
+      </div>
+
+      <!-- Product Info -->
+      <div class="product-info-section">
+        <span class="age-badge" id="product-age-badge">Loading...</span>
+        <h1 class="product-title" id="product-title">Loading...</h1>
+        
+        <div class="product-meta">
+          <div class="rating-display">
+            <span class="stars" id="product-stars"></span>
+            <span id="product-rating">0</span>
+            <span style="color: var(--gray);">(<span id="review-count">0</span> reviews)</span>
+          </div>
+          <span style="color: var(--gray);">|</span>
+          <span style="color: var(--gray);">Brand: <strong id="product-brand">-</strong></span>
+        </div>
+
+        <div class="price-section">
+          <div class="price-row">
+            <span class="big-price" id="product-price">$0.00</span>
+            <span class="old-price" id="product-original-price"></span>
+            <span class="save-badge" id="save-badge" style="display: none;">Save 0%</span>
+          </div>
+          <p class="stock-status" id="stock-status">Checking availability...</p>
+        </div>
+
+        <!-- Size Options -->
+        <div class="options-section" id="size-section" style="display: none;">
+          <p class="option-title">Select Size:</p>
+          <div class="size-options" id="size-options"></div>
+        </div>
+
+        <!-- Color Options -->
+        <div class="options-section" id="color-section" style="display: none;">
+          <p class="option-title">Select Color: <span id="selected-color-name"></span></p>
+          <div class="color-options" id="color-options"></div>
+        </div>
+
+        <!-- Quantity -->
+        <div class="quantity-section">
+          <span class="option-title">Quantity:</span>
+          <div class="qty-control">
+            <button class="qty-btn" onclick="changeQuantity(-1)">-</button>
+            <input type="number" class="qty-input" id="quantity-input" value="1" min="1" readonly>
+            <button class="qty-btn" onclick="changeQuantity(1)">+</button>
+          </div>
+          <span style="color: var(--gray); font-size: 0.875rem;" id="max-qty-text"></span>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+          <button class="btn btn-primary" id="add-to-cart-btn" onclick="handleAddToCartDetail()">
+            <i class="fas fa-shopping-cart"></i> Add to Cart
+          </button>
+          <button class="btn btn-secondary" id="buy-now-btn" onclick="handleBuyNow()">
+            <i class="fas fa-bolt"></i> Buy Now
+          </button>
+        </div>
+
+        <button class="btn btn-outline w-full" id="wishlist-btn" onclick="handleWishlistDetail()">
+          <i class="far fa-heart"></i> Add to Wishlist
+        </button>
+
+        <!-- Features -->
+        <div class="product-features">
+          <div class="feature-item">
+            <i class="fas fa-truck"></i>
+            <div>
+              <strong>Free Shipping</strong>
+              <small style="display: block; color: var(--gray);">Orders over $50</small>
+            </div>
+          </div>
+          <div class="feature-item">
+            <i class="fas fa-undo"></i>
+            <div>
+              <strong>Easy Returns</strong>
+              <small style="display: block; color: var(--gray);">30 day returns</small>
+            </div>
+          </div>
+          <div class="feature-item">
+            <i class="fas fa-shield-alt"></i>
+            <div>
+              <strong>Secure</strong>
+              <small style="display: block; color: var(--gray);">100% Protected</small>
+            </div>
+          </div>
+        </div>
+
+        <!-- Description -->
+        <div class="description-section">
+          <h3>Product Description</h3>
+          <p id="product-description">Loading...</p>
+
+          <table class="specs-table" id="specs-table">
+            <!-- Specs will be rendered here -->
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reviews Section -->
+    <section class="reviews-section">
+      <h2 class="section-title">Customer <span>Reviews</span></h2>
+      <div id="reviews-container">
+        <p style="text-align: center; color: var(--gray);">No reviews yet. Be the first to review this product!</p>
+      </div>
+    </section>
+
+    <!-- Related Products -->
+    <section class="related-products">
+      <h2 class="section-title">You May Also <span>Like</span></h2>
+      <div class="product-grid" id="related-products"></div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom"><p>&copy; 2024 KidsStore. All rights reserved.</p></div>
+    </div>
+  </footer>
+
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    let currentProduct = null;
+    let selectedSize = null;
+    let selectedColor = null;
+    let quantity = 1;
+
+    function getProductIdFromURL() {
+      const params = new URLSearchParams(window.location.search);
+      return parseInt(params.get('id'));
+    }
+
+    function loadProduct() {
+      const productId = getProductIdFromURL();
+      currentProduct = getProductById(productId);
+
+      if (!currentProduct) {
+        document.querySelector('.product-detail-page').innerHTML = `
+          <div style="text-align: center; padding: 4rem;">
+            <i class="fas fa-exclamation-circle fa-4x" style="color: var(--gray);"></i>
+            <h2 style="margin: 1rem 0;">Product Not Found</h2>
+            <a href="products.html" class="btn btn-primary">Browse Products</a>
+          </div>
+        `;
+        return;
+      }
+
+      // Set page title
+      document.title = `${currentProduct.name} - KidsStore`;
+
+      // Breadcrumb
+      document.getElementById('breadcrumb-product').textContent = currentProduct.name;
+
+      // Main image
+      document.getElementById('main-product-image').src = currentProduct.images[0];
+      document.getElementById('main-product-image').alt = currentProduct.name;
+
+      // Thumbnails
+      const thumbContainer = document.getElementById('thumbnail-list');
+      thumbContainer.innerHTML = currentProduct.images.map((img, index) => `
+        <div class="thumbnail ${index === 0 ? 'active' : ''}" onclick="changeMainImage('${img}', this)">
+          <img src="${img}" alt="Thumbnail ${index + 1}">
+        </div>
+      `).join('');
+
+      // Age badge
+      const ageGroup = AGE_GROUPS.find(ag => ag.id === currentProduct.ageGroup);
+      document.getElementById('product-age-badge').textContent = ageGroup ? ageGroup.label : 'All Ages';
+
+      // Title & Brand
+      document.getElementById('product-title').textContent = currentProduct.name;
+      document.getElementById('product-brand').textContent = currentProduct.brand;
+
+      // Rating
+      document.getElementById('product-stars').innerHTML = renderStars(currentProduct.rating);
+      document.getElementById('product-rating').textContent = currentProduct.rating.toFixed(1);
+      document.getElementById('review-count').textContent = currentProduct.reviewCount;
+
+      // Price
+      document.getElementById('product-price').textContent = `$${currentProduct.price.toFixed(2)}`;
+      if (currentProduct.originalPrice) {
+        document.getElementById('product-original-price').textContent = `$${currentProduct.originalPrice.toFixed(2)}`;
+        const discount = Math.round((1 - currentProduct.price / currentProduct.originalPrice) * 100);
+        document.getElementById('save-badge').textContent = `Save ${discount}%`;
+        document.getElementById('save-badge').style.display = 'inline-block';
+      }
+
+      // Stock status
+      const stockEl = document.getElementById('stock-status');
+      if (!currentProduct.availability || currentProduct.stock === 0) {
+        stockEl.textContent = '✗ Out of Stock';
+        stockEl.className = 'stock-status out-of-stock';
+        document.getElementById('add-to-cart-btn').disabled = true;
+        document.getElementById('buy-now-btn').disabled = true;
+      } else if (currentProduct.stock < 10) {
+        stockEl.textContent = `✓ Only ${currentProduct.stock} left in stock - order soon!`;
+        stockEl.className = 'stock-status low-stock';
+      } else {
+        stockEl.textContent = '✓ In Stock';
+        stockEl.className = 'stock-status in-stock';
+      }
+      document.getElementById('max-qty-text').textContent = `(${currentProduct.stock} available)`;
+
+      // Size options
+      if (currentProduct.sizes && currentProduct.sizes.length > 0) {
+        document.getElementById('size-section').style.display = 'block';
+        document.getElementById('size-options').innerHTML = currentProduct.sizes.map(size => `
+          <button class="size-btn" onclick="selectSize('${size}', this)">${size}</button>
+        `).join('');
+      }
+
+      // Color options
+      if (currentProduct.colors && currentProduct.colors.length > 0) {
+        document.getElementById('color-section').style.display = 'block';
+        const colorMap = {
+          'Red': '#ef4444', 'Blue': '#3b82f6', 'Green': '#22c55e', 'Pink': '#ec4899',
+          'White': '#ffffff', 'Black': '#1f2937', 'Yellow': '#eab308', 'Purple': '#a855f7',
+          'Brown': '#92400e', 'Gray': '#6b7280', 'Navy': '#1e3a5a', 'Natural Wood': '#deb887',
+          'Dinosaur': '#22c55e', 'Unicorn': '#ec4899', 'Space': '#1e3a5a', 'Princess': '#f472b6'
+        };
+        document.getElementById('color-options').innerHTML = currentProduct.colors.map(color => `
+          <button class="color-btn" style="background: ${colorMap[color] || '#ccc'}; border: 2px solid ${color === 'White' ? '#ddd' : 'transparent'};" 
+            onclick="selectColor('${color}', this)" title="${color}"></button>
+        `).join('');
+      }
+
+      // Description
+      document.getElementById('product-description').textContent = currentProduct.description;
+
+      // Specs table
+      document.getElementById('specs-table').innerHTML = `
+        <tr><td>Category</td><td>${currentProduct.category}</td></tr>
+        <tr><td>Age Group</td><td>${ageGroup ? ageGroup.label : '-'}</td></tr>
+        <tr><td>Brand</td><td>${currentProduct.brand}</td></tr>
+        ${currentProduct.sizes ? `<tr><td>Available Sizes</td><td>${currentProduct.sizes.join(', ')}</td></tr>` : ''}
+        ${currentProduct.colors ? `<tr><td>Available Colors</td><td>${currentProduct.colors.join(', ')}</td></tr>` : ''}
+      `;
+
+      // Wishlist button state
+      updateWishlistButton();
+
+      // Related products
+      loadRelatedProducts();
+    }
+
+    function changeMainImage(src, thumbEl) {
+      document.getElementById('main-product-image').src = src;
+      document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
+      thumbEl.classList.add('active');
+    }
+
+    function selectSize(size, btn) {
+      selectedSize = size;
+      document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    }
+
+    function selectColor(color, btn) {
+      selectedColor = color;
+      document.getElementById('selected-color-name').textContent = color;
+      document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    }
+
+    function changeQuantity(delta) {
+      const newQty = quantity + delta;
+      if (newQty >= 1 && newQty <= currentProduct.stock) {
+        quantity = newQty;
+        document.getElementById('quantity-input').value = quantity;
+      }
+    }
+
+    function handleAddToCartDetail() {
+      if (currentProduct.sizes && !selectedSize) {
+        showToast('Please select a size', 'warning');
+        return;
+      }
+      if (currentProduct.colors && !selectedColor) {
+        showToast('Please select a color', 'warning');
+        return;
+      }
+      addToCart(currentProduct.id, quantity, selectedSize, selectedColor);
+    }
+
+    function handleBuyNow() {
+      if (currentProduct.sizes && !selectedSize) {
+        showToast('Please select a size', 'warning');
+        return;
+      }
+      if (currentProduct.colors && !selectedColor) {
+        showToast('Please select a color', 'warning');
+        return;
+      }
+      addToCart(currentProduct.id, quantity, selectedSize, selectedColor);
+      window.location.href = 'checkout.html';
+    }
+
+    function handleWishlistDetail() {
+      const inWishlist = toggleWishlist(currentProduct.id);
+      updateWishlistButton();
+    }
+
+    function updateWishlistButton() {
+      const btn = document.getElementById('wishlist-btn');
+      const inWishlist = isInWishlist(currentProduct.id);
+      btn.innerHTML = inWishlist 
+        ? '<i class="fas fa-heart"></i> Remove from Wishlist'
+        : '<i class="far fa-heart"></i> Add to Wishlist';
+      btn.classList.toggle('btn-secondary', inWishlist);
+      btn.classList.toggle('btn-outline', !inWishlist);
+    }
+
+    function loadRelatedProducts() {
+      const products = getProducts()
+        .filter(p => p.id !== currentProduct.id && (p.category === currentProduct.category || p.ageGroup === currentProduct.ageGroup))
+        .slice(0, 4);
+      
+      document.getElementById('related-products').innerHTML = products.map(p => renderProductCard(p)).join('');
+    }
+
+    document.addEventListener('DOMContentLoaded', loadProduct);
+  </script>
+</body>
+</html>
