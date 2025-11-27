@@ -1,22 +1,8 @@
 {
   "version": 2,
+  "buildCommand": "",
+  "outputDirectory": ".",
   "builds": [
-    {
-      "src": "*.html",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "admin/*.html",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "css/**",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "js/**",
-      "use": "@vercel/static"
-    },
     {
       "src": "api/*.js",
       "use": "@vercel/node"
@@ -26,6 +12,9 @@
     {
       "src": "/api/(.*)",
       "dest": "/api/$1"
+    },
+    {
+      "handle": "filesystem"
     },
     {
       "src": "/(.*)",
