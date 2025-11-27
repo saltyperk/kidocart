@@ -4,5 +4,15 @@
   "description": "Kids E-Commerce Store",
   "scripts": {
     "build": "echo 'done'"
+    "dev": "vercel dev",
+    "deploy": "vercel --prod"
+  },
+  "dependencies": {
+    "mongoose": "^7.5.0",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2"
+  },
+  "devDependencies": {
+    "vercel": "^32.0.0"
   }
 }
