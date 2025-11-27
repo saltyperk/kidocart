@@ -1,4 +1,4 @@
-// KidsStore - API Connector
+// kidocart - API Connector
 // This file handles all communication with the backend
 
 const API_BASE = '/api'; // Netlify functions will handle this
@@ -6,15 +6,15 @@ const API_BASE = '/api'; // Netlify functions will handle this
 // ============ AUTH TOKEN MANAGEMENT ============
 
 function getAuthToken() {
-  return localStorage.getItem('kidsstore_token');
+  return localStorage.getItem('kidocart_token');
 }
 
 function setAuthToken(token) {
-  localStorage.setItem('kidsstore_token', token);
+  localStorage.setItem('kidocart_token', token);
 }
 
 function removeAuthToken() {
-  localStorage.removeItem('kidsstore_token');
+  localStorage.removeItem('kidocart_token');
 }
 
 function getAuthHeaders() {
@@ -102,7 +102,7 @@ const UsersAPI = {
     
     if (data.token) {
       setAuthToken(data.token);
-      localStorage.setItem('kidsstore_currentUser', JSON.stringify(data.user));
+      localStorage.setItem('kidocart_currentUser', JSON.stringify(data.user));
     }
     
     return data;
@@ -117,7 +117,7 @@ const UsersAPI = {
     
     if (data.token) {
       setAuthToken(data.token);
-      localStorage.setItem('kidsstore_currentUser', JSON.stringify(data.user));
+      localStorage.setItem('kidocart_currentUser', JSON.stringify(data.user));
     }
     
     return data;
@@ -132,7 +132,7 @@ const UsersAPI = {
     
     if (data.token) {
       setAuthToken(data.token);
-      localStorage.setItem('kidsstore_currentUser', JSON.stringify(data.user));
+      localStorage.setItem('kidocart_currentUser', JSON.stringify(data.user));
     }
     
     return data;
@@ -150,16 +150,16 @@ const UsersAPI = {
       body: JSON.stringify(updates)
     });
     
-    localStorage.setItem('kidsstore_currentUser', JSON.stringify(data));
+    localStorage.setItem('kidocart_currentUser', JSON.stringify(data));
     return data;
   },
   
   // Logout
   logout() {
     removeAuthToken();
-    localStorage.removeItem('kidsstore_currentUser');
-    localStorage.removeItem('kidsstore_cart');
-    localStorage.removeItem('kidsstore_wishlist');
+    localStorage.removeItem('kidocart_currentUser');
+    localStorage.removeItem('kidocart_cart');
+    localStorage.removeItem('kidocart_wishlist');
     window.location.href = '/index.html';
   }
 };
@@ -208,7 +208,7 @@ const PaymentAPI = {
       key: window.RAZORPAY_KEY_ID || 'rzp_test_your_key', // Set in HTML or env
       amount: Math.round(orderData.total * 100), // Amount in paise
       currency: 'INR',
-      name: 'KidsStore',
+      name: 'kidocart',
       description: 'Order Payment',
       image: '/images/logo.png',
       handler: async function(response) {
@@ -221,7 +221,7 @@ const PaymentAPI = {
           });
           
           // Clear cart
-          localStorage.removeItem('kidsstore_cart');
+          localStorage.removeItem('kidocart_cart');
           
           if (onSuccess) onSuccess(order, response);
         } catch (error) {
@@ -230,7 +230,7 @@ const PaymentAPI = {
       },
       prefill: {
         name: `${orderData.shippingAddress.firstName} ${orderData.shippingAddress.lastName}`,
-        email: JSON.parse(localStorage.getItem('kidsstore_currentUser'))?.email || '',
+        email: JSON.parse(localStorage.getItem('kidocart_currentUser'))?.email || '',
         contact: orderData.shippingAddress.phone
       },
       theme: {
