@@ -1,12 +1,8 @@
 {
-  "name": "kidsstore",
+  "name": "kidocart",
   "version": "1.0.0",
   "description": "Kids E-Commerce Store",
   "scripts": {
-    "build": "echo 'Static site - no build needed'"
-  },
-  "dependencies": {},
-  "engines": {
-    "node": "18.x"
+    "build": "echo 'done'"
   }
 }
