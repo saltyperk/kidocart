@@ -8,7 +8,10 @@ let cachedDb = null;
 
 async function connectToDatabase() {
   if (cachedDb) return cachedDb;
-  const client = await mongoose.connect(process.env.MONGODB_URI);
+  const client = await mongoose.connect(process.env.MONGODB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
   cachedDb = client;
   return cachedDb;
 }
@@ -59,6 +62,11 @@ module.exports = async (req, res) => {
     if (req.method === 'POST' && action === 'register') {
       const { name, email, password, phone } = req.body;
 
+      // Validate input
+      if (!name || !email || !password) {
+        return res.status(400).json({ error: 'Please provide name, email, and password' });
+      }
+
       // Check if user exists
       const existingUser = await User.findOne({ email });
       if (existingUser) {
@@ -82,9 +90,11 @@ module.exports = async (req, res) => {
       // Generate token
       const token = jwt.sign(
         { userId: user._id, email: user.email },
-        process.env.JWT_SECRET,
+        process.env.JWT_SECRET || 'fallback-secret-key',
         { expiresIn: '7d' }
       );
+
+      console.log('User registered:', user.email);
 
       return res.status(201).json({
         success: true,
@@ -101,6 +111,10 @@ module.exports = async (req, res) => {
     // LOGIN
     if (req.method === 'POST' && action === 'login') {
       const { email, password } = req.body;
+
+      if (!email || !password) {
+        return res.status(400).json({ error: 'Please provide email and password' });
+      }
 
       const user = await User.findOne({ email });
       if (!user) {
@@ -119,9 +133,11 @@ module.exports = async (req, res) => {
 
       const token = jwt.sign(
         { userId: user._id, email: user.email },
-        process.env.JWT_SECRET,
+        process.env.JWT_SECRET || 'fallback-secret-key',
         { expiresIn: '7d' }
       );
+
+      console.log('User logged in:', user.email);
 
       return res.status(200).json({
         success: true,
@@ -140,6 +156,10 @@ module.exports = async (req, res) => {
     if (req.method === 'POST' && action === 'google') {
       const { googleId, email, name, picture } = req.body;
 
+      if (!googleId || !email || !name) {
+        return res.status(400).json({ error: 'Invalid Google data' });
+      }
+
       let user = await User.findOne({ email });
 
       if (!user) {
@@ -152,16 +172,18 @@ module.exports = async (req, res) => {
           provider: 'google'
         });
         await user.save();
+        console.log('New Google user:', email);
       } else if (!user.googleId) {
         // Link Google account
         user.googleId = googleId;
         user.picture = picture;
         await user.save();
+        console.log('Google account linked:', email);
       }
 
       const token = jwt.sign(
         { userId: user._id, email: user.email },
-        process.env.JWT_SECRET,
+        process.env.JWT_SECRET || 'fallback-secret-key',
         { expiresIn: '7d' }
       );
 
@@ -187,8 +209,12 @@ module.exports = async (req, res) => {
       }
 
       const token = authHeader.replace('Bearer ', '');
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback-secret-key');
       const user = await User.findById(decoded.userId).select('-password');
+
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
 
       return res.status(200).json(user);
     }
@@ -201,7 +227,7 @@ module.exports = async (req, res) => {
       }
 
       const token = authHeader.replace('Bearer ', '');
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback-secret-key');
       
       const updates = req.body;
       delete updates.password; // Don't allow password update here
@@ -211,6 +237,8 @@ module.exports = async (req, res) => {
         updates,
         { new: true }
       ).select('-password');
+
+      console.log('Profile updated:', user.email);
 
       return res.status(200).json(user);
     }
