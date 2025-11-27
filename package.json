@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Kids E-Commerce Store",
   "scripts": {
-    "build": "echo 'done'"
+    "build": "echo 'done'",
     "dev": "vercel dev",
     "deploy": "vercel --prod"
   },
