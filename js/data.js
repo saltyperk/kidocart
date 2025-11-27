@@ -288,8 +288,8 @@ const INITIAL_PRODUCTS = [
 
 // Admin credentials (in real app, this would be server-side)
 const ADMIN_CREDENTIALS = {
-  username: 'saltyperk',
-  password: 'Ansari@717'
+  username: 'admin',
+  password: 'admin123'
 };
 
 // Initialize data in localStorage if not exists
