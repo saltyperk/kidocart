@@ -1,20 +1,20 @@
-// kidocart - API Connector
+// KidsStore - API Connector
 // This file handles all communication with the backend
 
-const API_BASE = '/api'; // Netlify functions will handle this
+const API_BASE = '/api'; // Vercel functions will handle this
 
 // ============ AUTH TOKEN MANAGEMENT ============
 
 function getAuthToken() {
-  return localStorage.getItem('kidocart_token');
+  return localStorage.getItem('kidsstore_token');
 }
 
 function setAuthToken(token) {
-  localStorage.setItem('kidocart_token', token);
+  localStorage.setItem('kidsstore_token', token);
 }
 
 function removeAuthToken() {
-  localStorage.removeItem('kidocart_token');
+  localStorage.removeItem('kidsstore_token');
 }
 
 function getAuthHeaders() {
@@ -63,7 +63,7 @@ const ProductsAPI = {
   
   // Get single product by ID
   async getById(id) {
-    return apiRequest(`/products/${id}`);
+    return apiRequest(`/products?id=${id}`);
   },
   
   // Create new product (Admin)
@@ -76,7 +76,7 @@ const ProductsAPI = {
   
   // Update product (Admin)
   async update(id, updates) {
-    return apiRequest(`/products/${id}`, {
+    return apiRequest(`/products?id=${id}`, {
       method: 'PUT',
       body: JSON.stringify(updates)
     });
@@ -84,7 +84,7 @@ const ProductsAPI = {
   
   // Delete product (Admin)
   async delete(id) {
-    return apiRequest(`/products/${id}`, {
+    return apiRequest(`/products?id=${id}`, {
       method: 'DELETE'
     });
   }
@@ -95,14 +95,14 @@ const ProductsAPI = {
 const UsersAPI = {
   // Register new user
   async register(userData) {
-    const data = await apiRequest('/users/register', {
+    const data = await apiRequest('/users?action=register', {
       method: 'POST',
       body: JSON.stringify(userData)
     });
     
     if (data.token) {
       setAuthToken(data.token);
-      localStorage.setItem('kidocart_currentUser', JSON.stringify(data.user));
+      localStorage.setItem('kidsstore_currentUser', JSON.stringify(data.user));
     }
     
     return data;
@@ -110,14 +110,14 @@ const UsersAPI = {
   
   // Login user
   async login(email, password) {
-    const data = await apiRequest('/users/login', {
+    const data = await apiRequest('/users?action=login', {
       method: 'POST',
       body: JSON.stringify({ email, password })
     });
     
     if (data.token) {
       setAuthToken(data.token);
-      localStorage.setItem('kidocart_currentUser', JSON.stringify(data.user));
+      localStorage.setItem('kidsstore_currentUser', JSON.stringify(data.user));
     }
     
     return data;
@@ -125,14 +125,14 @@ const UsersAPI = {
   
   // Google login
   async googleLogin(googleData) {
-    const data = await apiRequest('/users/google', {
+    const data = await apiRequest('/users?action=google', {
       method: 'POST',
       body: JSON.stringify(googleData)
     });
     
     if (data.token) {
       setAuthToken(data.token);
-      localStorage.setItem('kidocart_currentUser', JSON.stringify(data.user));
+      localStorage.setItem('kidsstore_currentUser', JSON.stringify(data.user));
     }
     
     return data;
@@ -140,26 +140,26 @@ const UsersAPI = {
   
   // Get current user profile
   async getProfile() {
-    return apiRequest('/users/profile');
+    return apiRequest('/users?action=profile');
   },
   
   // Update user profile
   async updateProfile(updates) {
-    const data = await apiRequest('/users/profile', {
+    const data = await apiRequest('/users?action=profile', {
       method: 'PUT',
       body: JSON.stringify(updates)
     });
     
-    localStorage.setItem('kidocart_currentUser', JSON.stringify(data));
+    localStorage.setItem('kidsstore_currentUser', JSON.stringify(data));
     return data;
   },
   
   // Logout
   logout() {
     removeAuthToken();
-    localStorage.removeItem('kidocart_currentUser');
-    localStorage.removeItem('kidocart_cart');
-    localStorage.removeItem('kidocart_wishlist');
+    localStorage.removeItem('kidsstore_currentUser');
+    localStorage.removeItem('kidsstore_cart');
+    localStorage.removeItem('kidsstore_wishlist');
     window.location.href = '/index.html';
   }
 };
@@ -174,7 +174,7 @@ const OrdersAPI = {
   
   // Get single order
   async getById(orderId) {
-    return apiRequest(`/orders/${orderId}`);
+    return apiRequest(`/orders?id=${orderId}`);
   },
   
   // Create new order
@@ -192,7 +192,7 @@ const OrdersAPI = {
   
   // Update order status (Admin)
   async updateStatus(orderId, status) {
-    return apiRequest(`/orders/${orderId}`, {
+    return apiRequest(`/orders?id=${orderId}`, {
       method: 'PUT',
       body: JSON.stringify({ status })
     });
@@ -208,7 +208,7 @@ const PaymentAPI = {
       key: window.RAZORPAY_KEY_ID || 'rzp_test_your_key', // Set in HTML or env
       amount: Math.round(orderData.total * 100), // Amount in paise
       currency: 'INR',
-      name: 'kidocart',
+      name: 'KidsStore',
       description: 'Order Payment',
       image: '/images/logo.png',
       handler: async function(response) {
@@ -221,7 +221,7 @@ const PaymentAPI = {
           });
           
           // Clear cart
-          localStorage.removeItem('kidocart_cart');
+          localStorage.removeItem('kidsstore_cart');
           
           if (onSuccess) onSuccess(order, response);
         } catch (error) {
@@ -230,7 +230,7 @@ const PaymentAPI = {
       },
       prefill: {
         name: `${orderData.shippingAddress.firstName} ${orderData.shippingAddress.lastName}`,
-        email: JSON.parse(localStorage.getItem('kidocart_currentUser'))?.email || '',
+        email: JSON.parse(localStorage.getItem('kidsstore_currentUser'))?.email || '',
         contact: orderData.shippingAddress.phone
       },
       theme: {
@@ -249,42 +249,83 @@ const PaymentAPI = {
 };
 
 // ============ HYBRID MODE ============
-// Use API if available, fallback to localStorage
+// Use API if MongoDB is configured, fallback to localStorage
 
 const HybridAPI = {
-  useLocalStorage: true, // Set to false when MongoDB is configured
+  // Set to false when MongoDB is configured
+  useLocalStorage: true, // CHANGE THIS TO false WHEN MONGODB IS READY
   
   async getProducts(filters = {}) {
     if (this.useLocalStorage) {
-      return filterProducts(filters); // From existing app.js
+      // Use existing localStorage functions
+      return typeof filterProducts !== 'undefined' ? filterProducts(filters) : getProducts();
     }
     return ProductsAPI.getAll(filters);
   },
   
   async getProductById(id) {
     if (this.useLocalStorage) {
-      return getProductById(id); // From existing app.js
+      return typeof getProductById !== 'undefined' ? getProductById(id) : getProducts().find(p => p.id === parseInt(id));
     }
     return ProductsAPI.getById(id);
   },
   
+  async createProduct(productData) {
+    if (this.useLocalStorage) {
+      const products = getProducts();
+      const newProduct = {
+        ...productData,
+        id: Date.now(),
+        createdAt: new Date().toISOString()
+      };
+      products.push(newProduct);
+      saveProducts(products);
+      return newProduct;
+    }
+    return ProductsAPI.create(productData);
+  },
+  
+  async updateProduct(id, updates) {
+    if (this.useLocalStorage) {
+      const products = getProducts();
+      const index = products.findIndex(p => p.id === parseInt(id));
+      if (index !== -1) {
+        products[index] = { ...products[index], ...updates };
+        saveProducts(products);
+        return products[index];
+      }
+      throw new Error('Product not found');
+    }
+    return ProductsAPI.update(id, updates);
+  },
+  
+  async deleteProduct(id) {
+    if (this.useLocalStorage) {
+      let products = getProducts();
+      products = products.filter(p => p.id !== parseInt(id));
+      saveProducts(products);
+      return { success: true };
+    }
+    return ProductsAPI.delete(id);
+  },
+  
   async login(email, password) {
     if (this.useLocalStorage) {
-      return loginUser(email, password); // From existing app.js
+      return typeof loginUser !== 'undefined' ? loginUser(email, password) : { success: false, message: 'Login not available' };
     }
     return UsersAPI.login(email, password);
   },
   
   async register(userData) {
     if (this.useLocalStorage) {
-      return registerUser(userData); // From existing app.js
+      return typeof registerUser !== 'undefined' ? registerUser(userData) : { success: false, message: 'Registration not available' };
     }
     return UsersAPI.register(userData);
   },
   
   async createOrder(orderData) {
     if (this.useLocalStorage) {
-      return createOrder(orderData); // From existing app.js
+      return typeof createOrder !== 'undefined' ? createOrder(orderData) : null;
     }
     return OrdersAPI.create(orderData);
   }
