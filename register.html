@@ -3,71 +3,212 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Register - KidsStore</title>
+  <title>Register - KidoCart</title>
   <link rel="stylesheet" href="css/styles.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Sign-In -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <style>
+    .google-btn-container {
+      display: flex;
+      justify-content: center;
+      margin: 1rem 0;
+    }
+    .social-login-divider {
+      display: flex;
+      align-items: center;
+      margin: 1.5rem 0;
+    }
+    .social-login-divider::before,
+    .social-login-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--light);
+    }
+    .social-login-divider span {
+      padding: 0 1rem;
+      color: var(--gray);
+      font-size: 0.875rem;
+    }
+    .password-input-wrapper {
+      position: relative;
+    }
+    .password-toggle {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--gray);
+    }
+    .password-toggle:hover {
+      color: var(--primary);
+    }
+    .password-strength {
+      margin-top: 0.5rem;
+      font-size: 0.75rem;
+    }
+    .strength-bar {
+      height: 4px;
+      border-radius: 2px;
+      margin-top: 0.25rem;
+      transition: all 0.3s;
+    }
+    .strength-weak { background: var(--danger); width: 33%; }
+    .strength-medium { background: var(--warning); width: 66%; }
+    .strength-strong { background: var(--success); width: 100%; }
+    .register-benefits {
+      background: var(--pastel-blue);
+      padding: 1rem;
+      border-radius: 10px;
+      margin-bottom: 1.5rem;
+    }
+    .register-benefits ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .register-benefits li {
+      font-size: 0.875rem;
+      color: var(--dark);
+      padding: 0.25rem 0;
+    }
+    .register-benefits li i {
+      color: var(--primary);
+      margin-right: 0.5rem;
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    @media (max-width: 500px) {
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+    }
+    .password-match {
+      font-size: 0.75rem;
+      margin-top: 0.25rem;
+    }
+    .password-match.success {
+      color: var(--success);
+    }
+    .password-match.error {
+      color: var(--danger);
+    }
+  </style>
 </head>
 <body>
   <div class="auth-page">
     <div class="auth-card">
       <a href="index.html" class="logo" style="justify-content: center; margin-bottom: 1.5rem;">
         <i class="fas fa-baby" style="color: var(--primary);"></i>
-        Kids<span>Store</span>
+        Kido<span>Cart</span>
       </a>
       
       <h1>Create Account</h1>
-      <p class="subtitle">Join us and start shopping for your little ones</p>
+      <p class="subtitle">Join KidoCart and start shopping for your little ones</p>
       
+      <!-- Registration Benefits -->
+      <div class="register-benefits">
+        <ul>
+          <li><i class="fas fa-gift"></i> Get 10% off your first order</li>
+          <li><i class="fas fa-truck"></i> Free shipping on orders over ₹500</li>
+          <li><i class="fas fa-tags"></i> Exclusive member-only deals</li>
+        </ul>
+      </div>
+      
+      <!-- Google Sign-Up Button -->
+      <div class="google-btn-container">
+        <div id="google-signup-btn"></div>
+      </div>
+      
+      <div class="social-login-divider">
+        <span>or register with email</span>
+      </div>
+      
+      <!-- Registration Form -->
       <form id="register-form">
-        <div class="form-group">
-          <label class="form-label">Full Name</label>
-          <input type="text" class="form-input" id="name" placeholder="Enter your full name" required>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">First Name *</label>
+            <input type="text" class="form-input" id="first-name" placeholder="First name" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Last Name *</label>
+            <input type="text" class="form-input" id="last-name" placeholder="Last name" required>
+          </div>
         </div>
         
         <div class="form-group">
-          <label class="form-label">Email Address</label>
+          <label class="form-label">Email Address *</label>
           <input type="email" class="form-input" id="email" placeholder="Enter your email" required>
         </div>
         
         <div class="form-group">
-          <label class="form-label">Phone Number</label>
-          <input type="tel" class="form-input" id="phone" placeholder="Enter your phone number" required>
+          <label class="form-label">Phone Number *</label>
+          <input type="tel" class="form-input" id="phone" placeholder="+91 9876543210" required>
         </div>
         
         <div class="form-group">
-          <label class="form-label">Password</label>
-          <input type="password" class="form-input" id="password" placeholder="Create a password" required minlength="6">
+          <label class="form-label">Password *</label>
+          <div class="password-input-wrapper">
+            <input type="password" class="form-input" id="password" placeholder="Create a password" required minlength="6">
+            <button type="button" class="password-toggle" onclick="togglePassword('password', 'password-icon')">
+              <i class="fas fa-eye" id="password-icon"></i>
+            </button>
+          </div>
+          <div class="password-strength" id="password-strength">
+            <span id="strength-text"></span>
+            <div class="strength-bar" id="strength-bar"></div>
+          </div>
         </div>
         
         <div class="form-group">
-          <label class="form-label">Confirm Password</label>
-          <input type="password" class="form-input" id="confirm-password" placeholder="Confirm your password" required>
+          <label class="form-label">Confirm Password *</label>
+          <div class="password-input-wrapper">
+            <input type="password" class="form-input" id="confirm-password" placeholder="Confirm your password" required>
+            <button type="button" class="password-toggle" onclick="togglePassword('confirm-password', 'confirm-icon')">
+              <i class="fas fa-eye" id="confirm-icon"></i>
+            </button>
+          </div>
+          <div class="password-match" id="password-match"></div>
         </div>
         
-        <label style="display: flex; align-items: flex-start; gap: 0.5rem; margin-bottom: 1.5rem; cursor: pointer;">
-          <input type="checkbox" id="terms" required style="margin-top: 4px;">
-          <span>I agree to the <a href="#" style="color: var(--primary);">Terms of Service</a> and <a href="#" style="color: var(--primary);">Privacy Policy</a></span>
-        </label>
+        <div class="form-group">
+          <label style="display: flex; align-items: flex-start; gap: 0.5rem; cursor: pointer;">
+            <input type="checkbox" id="terms" required style="margin-top: 4px;">
+            <span style="font-size: 0.875rem;">
+              I agree to the <a href="#" style="color: var(--primary);">Terms of Service</a> and 
+              <a href="#" style="color: var(--primary);">Privacy Policy</a>
+            </span>
+          </label>
+        </div>
+        
+        <div class="form-group">
+          <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+            <input type="checkbox" id="newsletter">
+            <span style="font-size: 0.875rem;">Send me exclusive offers and updates</span>
+          </label>
+        </div>
         
         <button type="submit" class="btn btn-primary w-full btn-lg">
           <i class="fas fa-user-plus"></i> Create Account
         </button>
       </form>
       
-      <div class="divider">
-        <span>OR</span>
-      </div>
-      
-      <button class="btn btn-outline w-full" style="margin-bottom: 0.75rem;">
-        <i class="fab fa-google"></i> Sign up with Google
-      </button>
-      
-      <button class="btn btn-outline w-full">
-        <i class="fab fa-facebook"></i> Sign up with Facebook
-      </button>
-      
       <p style="text-align: center; margin-top: 1.5rem;">
         Already have an account? <a href="login.html" style="color: var(--primary); font-weight: 600;">Sign In</a>
+      </p>
+      
+      <p style="text-align: center; margin-top: 1rem;">
+        <a href="index.html" style="color: var(--gray); font-size: 0.875rem;">
+          <i class="fas fa-arrow-left"></i> Back to Store
+        </a>
       </p>
     </div>
   </div>
@@ -75,37 +216,267 @@
   <script src="js/data.js"></script>
   <script src="js/app.js"></script>
   <script>
+    // Configuration
+    const GOOGLE_CLIENT_ID = document.querySelector('meta[name="google-client-id"]')?.content || 'YOUR_GOOGLE_CLIENT_ID';
+    
     // Redirect if already logged in
     if (getCurrentUser()) {
       window.location.href = 'account.html';
     }
 
+    // Initialize Google Sign-In
+    window.onload = function() {
+      if (GOOGLE_CLIENT_ID && GOOGLE_CLIENT_ID !== 'YOUR_GOOGLE_CLIENT_ID') {
+        google.accounts.id.initialize({
+          client_id: GOOGLE_CLIENT_ID,
+          callback: handleGoogleSignUp,
+          auto_select: false,
+          cancel_on_tap_outside: true
+        });
+        
+        google.accounts.id.renderButton(
+          document.getElementById('google-signup-btn'),
+          { 
+            theme: 'outline',
+            size: 'large',
+            width: '100%',
+            text: 'signup_with',
+            shape: 'rectangular',
+            logo_alignment: 'center'
+          }
+        );
+      } else {
+        // Show placeholder if Google Client ID not configured
+        document.getElementById('google-signup-btn').innerHTML = `
+          <button class="btn btn-outline w-full" disabled style="opacity: 0.6;">
+            <i class="fab fa-google"></i> Google Sign-Up (Configure in env)
+          </button>
+        `;
+      }
+    };
+
+    // Handle Google Sign-Up Response
+    function handleGoogleSignUp(response) {
+      try {
+        // Decode the JWT token from Google
+        const payload = JSON.parse(atob(response.credential.split('.')[1]));
+        
+        const googleUser = {
+          id: 'google_' + payload.sub,
+          name: payload.name,
+          email: payload.email,
+          picture: payload.picture,
+          provider: 'google',
+          emailVerified: payload.email_verified
+        };
+        
+        // Check if user already exists
+        let users = getUsers();
+        let existingUser = users.find(u => u.email === googleUser.email);
+        
+        if (existingUser) {
+          // User exists, just log them in
+          if (!existingUser.googleId) {
+            existingUser.googleId = googleUser.id;
+            existingUser.picture = googleUser.picture;
+            existingUser.provider = 'google';
+            saveUsers(users);
+          }
+          setCurrentUser(existingUser);
+          showToast('Welcome back! Logging you in...', 'success');
+        } else {
+          // Create new user
+          const newUser = {
+            id: Date.now(),
+            googleId: googleUser.id,
+            name: googleUser.name,
+            email: googleUser.email,
+            picture: googleUser.picture,
+            phone: '',
+            provider: 'google',
+            addresses: [],
+            createdAt: new Date().toISOString()
+          };
+          users.push(newUser);
+          saveUsers(users);
+          setCurrentUser(newUser);
+          showToast('Account created successfully!', 'success');
+        }
+        
+        // Redirect after short delay
+        setTimeout(() => {
+          window.location.href = 'index.html';
+        }, 1000);
+        
+      } catch (error) {
+        console.error('Google Sign-Up Error:', error);
+        showToast('Google sign-up failed. Please try again.', 'error');
+      }
+    }
+
+    // Toggle Password Visibility
+    function togglePassword(inputId, iconId) {
+      const input = document.getElementById(inputId);
+      const icon = document.getElementById(iconId);
+      
+      if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+      } else {
+        input.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+      }
+    }
+
+    // Password Strength Checker
+    document.getElementById('password').addEventListener('input', function(e) {
+      const password = e.target.value;
+      const strengthBar = document.getElementById('strength-bar');
+      const strengthText = document.getElementById('strength-text');
+      
+      if (password.length === 0) {
+        strengthBar.className = 'strength-bar';
+        strengthText.textContent = '';
+        return;
+      }
+      
+      let strength = 0;
+      
+      // Length check
+      if (password.length >= 6) strength++;
+      if (password.length >= 10) strength++;
+      
+      // Character variety
+      if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
+      if (/[0-9]/.test(password)) strength++;
+      if (/[^a-zA-Z0-9]/.test(password)) strength++;
+      
+      if (strength <= 2) {
+        strengthBar.className = 'strength-bar strength-weak';
+        strengthText.textContent = 'Weak password';
+        strengthText.style.color = 'var(--danger)';
+      } else if (strength <= 4) {
+        strengthBar.className = 'strength-bar strength-medium';
+        strengthText.textContent = 'Medium password';
+        strengthText.style.color = 'var(--warning)';
+      } else {
+        strengthBar.className = 'strength-bar strength-strong';
+        strengthText.textContent = 'Strong password';
+        strengthText.style.color = 'var(--success)';
+      }
+      
+      // Also check password match if confirm has value
+      checkPasswordMatch();
+    });
+
+    // Password Match Checker
+    document.getElementById('confirm-password').addEventListener('input', checkPasswordMatch);
+
+    function checkPasswordMatch() {
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirm-password').value;
+      const matchDiv = document.getElementById('password-match');
+      
+      if (confirmPassword.length === 0) {
+        matchDiv.textContent = '';
+        matchDiv.className = 'password-match';
+        return;
+      }
+      
+      if (password === confirmPassword) {
+        matchDiv.textContent = '✓ Passwords match';
+        matchDiv.className = 'password-match success';
+      } else {
+        matchDiv.textContent = '✗ Passwords do not match';
+        matchDiv.className = 'password-match error';
+      }
+    }
+
+    // Form Submission
     document.getElementById('register-form').addEventListener('submit', function(e) {
       e.preventDefault();
       
-      const name = document.getElementById('name').value;
-      const email = document.getElementById('email').value;
-      const phone = document.getElementById('phone').value;
+      const firstName = document.getElementById('first-name').value.trim();
+      const lastName = document.getElementById('last-name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const phone = document.getElementById('phone').value.trim();
       const password = document.getElementById('password').value;
       const confirmPassword = document.getElementById('confirm-password').value;
+      const termsAccepted = document.getElementById('terms').checked;
+      
+      // Validation
+      if (!firstName || !lastName) {
+        showToast('Please enter your full name', 'error');
+        return;
+      }
+      
+      if (!email) {
+        showToast('Please enter your email address', 'error');
+        return;
+      }
+      
+      if (!phone) {
+        showToast('Please enter your phone number', 'error');
+        return;
+      }
+      
+      if (password.length < 6) {
+        showToast('Password must be at least 6 characters', 'error');
+        return;
+      }
       
       if (password !== confirmPassword) {
         showToast('Passwords do not match', 'error');
         return;
       }
       
-      const result = registerUser({ name, email, phone, password });
+      if (!termsAccepted) {
+        showToast('Please accept the Terms of Service', 'error');
+        return;
+      }
+      
+      // Register user
+      const result = registerUser({
+        name: `${firstName} ${lastName}`,
+        email: email,
+        phone: phone,
+        password: password
+      });
       
       if (result.success) {
-        showToast('Account created successfully!', 'success');
         setCurrentUser(result.user);
+        showToast('Account created successfully! Welcome to KidoCart!', 'success');
+        
         setTimeout(() => {
           window.location.href = 'index.html';
-        }, 1000);
+        }, 1500);
       } else {
-        showToast(result.message, 'error');
+        showToast(result.message || 'Registration failed', 'error');
       }
     });
+
+    // Toast function (if not already defined)
+    function showToast(message, type = 'success') {
+      const container = document.getElementById('toast-container') || createToastContainer();
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      toast.innerHTML = `
+        <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-times-circle' : 'fa-exclamation-circle'}"></i>
+        <span>${message}</span>
+      `;
+      container.appendChild(toast);
+      setTimeout(() => toast.remove(), 4000);
+    }
+
+    function createToastContainer() {
+      const container = document.createElement('div');
+      container.id = 'toast-container';
+      container.className = 'toast-container';
+      document.body.appendChild(container);
+      return container;
+    }
   </script>
 </body>
 </html>
