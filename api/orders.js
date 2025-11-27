@@ -7,7 +7,10 @@ let cachedDb = null;
 
 async function connectToDatabase() {
   if (cachedDb) return cachedDb;
-  const client = await mongoose.connect(process.env.MONGODB_URI);
+  const client = await mongoose.connect(process.env.MONGODB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
   cachedDb = client;
   return cachedDb;
 }
@@ -27,6 +30,7 @@ const orderSchema = new mongoose.Schema({
   }],
   subtotal: Number,
   shipping: Number,
+  discount: Number,
   tax: Number,
   total: Number,
   shippingAddress: {
@@ -55,7 +59,7 @@ function verifyToken(authHeader) {
   if (!authHeader) return null;
   const token = authHeader.replace('Bearer ', '');
   try {
-    return jwt.verify(token, process.env.JWT_SECRET);
+    return jwt.verify(token, process.env.JWT_SECRET || 'fallback-secret-key');
   } catch {
     return null;
   }
@@ -83,6 +87,8 @@ module.exports = async (req, res) => {
         const orders = await Order.find()
           .populate('userId', 'name email')
           .sort({ createdAt: -1 });
+        
+        console.log('Admin fetched orders:', orders.length);
         return res.status(200).json(orders);
       }
 
@@ -107,6 +113,8 @@ module.exports = async (req, res) => {
       // All user orders
       const orders = await Order.find({ userId: decoded.userId })
         .sort({ createdAt: -1 });
+      
+      console.log('User fetched orders:', orders.length);
       return res.status(200).json(orders);
     }
 
@@ -120,7 +128,7 @@ module.exports = async (req, res) => {
       const orderData = req.body;
       
       // Generate order ID
-      const orderId = 'ORD-' + Date.now();
+      const orderId = 'ORD-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9).toUpperCase();
 
       const order = new Order({
         ...orderData,
@@ -129,6 +137,8 @@ module.exports = async (req, res) => {
       });
 
       await order.save();
+
+      console.log('Order created:', orderId);
 
       return res.status(201).json(order);
     }
@@ -140,13 +150,11 @@ module.exports = async (req, res) => {
       }
 
       const updates = req.body;
+      updates.updatedAt = new Date();
       
       const order = await Order.findOneAndUpdate(
         { orderId: id },
-        { 
-          ...updates,
-          updatedAt: new Date()
-        },
+        updates,
         { new: true }
       );
 
@@ -154,7 +162,26 @@ module.exports = async (req, res) => {
         return res.status(404).json({ error: 'Order not found' });
       }
 
+      console.log('Order updated:', id, 'Status:', updates.status);
+
       return res.status(200).json(order);
+    }
+
+    // DELETE ORDER (Admin)
+    if (req.method === 'DELETE') {
+      if (!id) {
+        return res.status(400).json({ error: 'Order ID required' });
+      }
+
+      const order = await Order.findOneAndDelete({ orderId: id });
+
+      if (!order) {
+        return res.status(404).json({ error: 'Order not found' });
+      }
+
+      console.log('Order deleted:', id);
+
+      return res.status(200).json({ message: 'Order deleted successfully' });
     }
 
     return res.status(405).json({ error: 'Method not allowed' });
