@@ -1,0 +1,35 @@
+[build]
+  # No build command needed for static HTML
+  publish = "."
+  functions = "netlify/functions"
+
+[functions]
+  # Use Node.js 18
+  node_bundler = "esbuild"
+
+# Redirect API calls to functions
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
+
+# SPA fallback (optional)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+  conditions = {Role = ["admin"]}
+
+# Headers for security
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+
+# Environment variables are set in Netlify Dashboard
+# MONGODB_URI = "your-mongodb-connection-string"
+# JWT_SECRET = "your-jwt-secret"
+# GOOGLE_CLIENT_ID = "your-google-client-id"
+# RAZORPAY_KEY_ID = "your-razorpay-key"
