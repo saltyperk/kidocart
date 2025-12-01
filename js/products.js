@@ -160,30 +160,30 @@ function renderProductCard(product) {
   const inWishlist = isInWishlist(product.id);
 
   return `
-    <div class="product-card" data-id="₹{product.id}">
-      ₹{product.badge ? `<span class="product-badge badge-₹{product.badge}">₹{product.badge.toUpperCase()}</span>` : ''}
-      <button class="product-wishlist ₹{inWishlist ? 'active' : ''}" onclick="handleWishlistClick(event, ₹{product.id})">
-        <i class="fa₹{inWishlist ? 's' : 'r'} fa-heart"></i>
+    <div class="product-card" data-id="${product.id}">
+      ${product.badge ? `<span class="product-badge badge-${product.badge}">${product.badge.toUpperCase()}</span>` : ''}
+      <button class="product-wishlist ${inWishlist ? 'active' : ''}" onclick="handleWishlistClick(event, ${product.id})">
+        <i class="fa${inWishlist ? 's' : 'r'} fa-heart"></i>
       </button>
-      <div class="product-image" onclick="window.location.href='product-detail.html?id=₹{product.id}'">
-        <img src="₹{product.images[0]}" alt="₹{product.name}" loading="lazy">
+      <div class="product-image" onclick="window.location.href='product-detail.html?id=${product.id}'">
+        <img src="${product.images[0]}" alt="${product.name}" loading="lazy">
       </div>
       <div class="product-info">
-        <span class="age-badge">₹{ageGroup ? ageGroup.label : 'All Ages'}</span>
-        <p class="product-category">₹{product.category}</p>
-        <h3 class="product-name">₹{product.name}</h3>
+        <span class="age-badge">${ageGroup ? ageGroup.label : 'All Ages'}</span>
+        <p class="product-category">${product.category}</p>
+        <h3 class="product-name">${product.name}</h3>
         <div class="product-rating">
-          <span class="stars">₹{renderStars(product.rating)}</span>
-          <span class="rating-count">(₹{product.reviewCount})</span>
+          <span class="stars">${renderStars(product.rating)}</span>
+          <span class="rating-count">(${product.reviewCount})</span>
         </div>
         <div class="product-price">
-          <span class="current-price">₹₹{product.price.toFixed(2)}</span>
-          ₹{product.originalPrice ? `<span class="original-price">₹₹{product.originalPrice.toFixed(2)}</span>` : ''}
-          ₹{discount > 0 ? `<span class="discount">-₹{discount}%</span>` : ''}
+          <span class="current-price">$${product.price.toFixed(2)}</span>
+          ${product.originalPrice ? `<span class="original-price">$${product.originalPrice.toFixed(2)}</span>` : ''}
+          ${discount > 0 ? `<span class="discount">-${discount}%</span>` : ''}
         </div>
         <div class="product-actions">
-          <button class="btn btn-primary btn-sm" onclick="handleAddToCart(₹{product.id})" ₹{!product.availability || product.stock < 1 ? 'disabled' : ''}>
-            <i class="fas fa-shopping-cart"></i> ₹{product.availability && product.stock > 0 ? 'Add to Cart' : 'Out of Stock'}
+          <button class="btn btn-primary btn-sm" onclick="handleAddToCart(${product.id})" ${!product.availability || product.stock < 1 ? 'disabled' : ''}>
+            <i class="fas fa-shopping-cart"></i> ${product.availability && product.stock > 0 ? 'Add to Cart' : 'Out of Stock'}
           </button>
         </div>
       </div>
@@ -197,7 +197,7 @@ function handleWishlistClick(event, productId) {
   const isNowInWishlist = toggleWishlist(productId);
   const btn = event.currentTarget;
   btn.classList.toggle('active', isNowInWishlist);
-  btn.innerHTML = `<i class="fa₹{isNowInWishlist ? 's' : 'r'} fa-heart"></i>`;
+  btn.innerHTML = `<i class="fa${isNowInWishlist ? 's' : 'r'} fa-heart"></i>`;
 }
 
 // Handle add to cart from product card
@@ -227,7 +227,7 @@ function getStockStatus(product) {
     return { status: 'out-of-stock', message: 'Out of Stock', class: 'danger' };
   }
   if (isLowStock(product)) {
-    return { status: 'low-stock', message: `Only ₹{product.stock} left!`, class: 'warning' };
+    return { status: 'low-stock', message: `Only ${product.stock} left!`, class: 'warning' };
   }
   return { status: 'in-stock', message: 'In Stock', class: 'success' };
 }
