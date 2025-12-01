@@ -107,8 +107,8 @@ function getCartTotal() {
     }
   });
 
-  // Free shipping over $50
-  const shipping = subtotal > 50 ? 0 : 9.99;
+  // Free shipping over ₹500
+  const shipping = subtotal > 500 ? 0 : 9.99;
   
   // Tax rate 8%
   const tax = subtotal * 0.08;
@@ -121,8 +121,8 @@ function getCartTotal() {
     tax, 
     total, 
     itemCount,
-    freeShippingThreshold: 50,
-    amountToFreeShipping: Math.max(0, 50 - subtotal)
+    freeShippingThreshold: 500,
+    amountToFreeShipping: Math.max(0, 500 - subtotal)
   };
 }
 
@@ -198,7 +198,7 @@ function validateCart() {
         type: 'unavailable',
         productId: item.productId,
         productName: product.name,
-        message: `${product.name} is currently unavailable`
+        message: `₹{product.name} is currently unavailable`
       });
     } else if (product.stock < item.quantity) {
       issues.push({
@@ -207,7 +207,7 @@ function validateCart() {
         productName: product.name,
         available: product.stock,
         requested: item.quantity,
-        message: `Only ${product.stock} of ${product.name} available`
+        message: `Only ₹{product.stock} of ₹{product.name} available`
       });
     }
   });
