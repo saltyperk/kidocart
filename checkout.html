@@ -3,13 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="google-client-id" content="163244508840-kcersqu6gr3mg2kas71enpr07o3s4vbv.apps.googleusercontent.com">
-  <meta name="razorpay-key-id" content="YOUR_RAZORPAY_KEY_ID_HERE"> 
-  <title>Checkout - KidoCart</title>
+  <title>Checkout - KidsStore</title>
   <link rel="stylesheet" href="css/styles.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <!-- Razorpay SDK -->
-  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
   <style>
     .checkout-page { padding: 2rem 1rem; }
     .checkout-layout { display: grid; grid-template-columns: 1fr 400px; gap: 2rem; }
@@ -25,15 +21,14 @@
     .checkout-form { background: white; padding: 2rem; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
     .checkout-form h2 { margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.75rem; }
     .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .saved-addresses { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1.5rem; }
+    .address-option { padding: 1rem; border: 2px solid var(--light); border-radius: 10px; cursor: pointer; transition: all 0.3s; }
+    .address-option:hover, .address-option.selected { border-color: var(--primary); background: var(--pastel-purple); }
+    .address-option input { margin-right: 0.75rem; }
     .payment-methods { display: flex; flex-direction: column; gap: 1rem; }
-    .payment-option { padding: 1.25rem; border: 2px solid var(--light); border-radius: 15px; cursor: pointer; display: flex; align-items: center; gap: 1rem; transition: all 0.3s; }
-    .payment-option:hover { border-color: var(--primary); background: var(--pastel-purple); }
-    .payment-option.selected { border-color: var(--primary); background: var(--pastel-purple); }
-    .payment-option i { font-size: 1.75rem; width: 40px; }
-    .payment-option .fa-credit-card { color: var(--primary); }
-    .payment-option .razorpay-icon { color: #528FF0; }
-    .payment-option .fa-money-bill-wave { color: var(--success); }
-    .payment-option .fa-wallet { color: #FF9F00; }
+    .payment-option { padding: 1rem; border: 2px solid var(--light); border-radius: 10px; cursor: pointer; display: flex; align-items: center; gap: 1rem; transition: all 0.3s; }
+    .payment-option:hover, .payment-option.selected { border-color: var(--primary); background: var(--pastel-purple); }
+    .payment-option i { font-size: 1.5rem; color: var(--primary); }
     .order-summary-card { background: white; padding: 1.5rem; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); position: sticky; top: 100px; }
     .order-items { max-height: 300px; overflow-y: auto; margin-bottom: 1rem; }
     .order-item { display: flex; gap: 1rem; padding: 0.75rem 0; border-bottom: 1px solid var(--light); }
@@ -48,19 +43,9 @@
     .success-page { text-align: center; padding: 3rem; }
     .success-page i { font-size: 5rem; color: var(--success); margin-bottom: 1.5rem; }
     .order-details-box { background: var(--light); padding: 1.5rem; border-radius: 15px; margin: 1.5rem 0; text-align: left; max-width: 500px; margin-left: auto; margin-right: auto; }
-    .secure-badge { display: flex; align-items: center; justify-content: center; gap: 0.5rem; color: var(--gray); font-size: 0.875rem; margin-top: 1rem; padding: 0.75rem; background: var(--light); border-radius: 10px; }
-    .secure-badge i { color: var(--success); }
-    .payment-logos { display: flex; justify-content: center; gap: 1rem; margin-top: 1rem; opacity: 0.7; }
-    .payment-logos img { height: 24px; }
-    .promo-section { background: var(--pastel-yellow); padding: 1rem; border-radius: 10px; margin-bottom: 1rem; }
-    .promo-input { display: flex; gap: 0.5rem; }
-    .promo-input input { flex: 1; }
-    .free-shipping-progress { background: var(--light); padding: 0.75rem; border-radius: 10px; margin-bottom: 1rem; }
-    .progress-bar { height: 6px; background: #e0e0e0; border-radius: 3px; overflow: hidden; margin-top: 0.5rem; }
-    .progress-fill { height: 100%; background: var(--success); transition: width 0.3s; }
     @media (max-width: 900px) {
       .checkout-layout { grid-template-columns: 1fr; }
-      .order-summary-card { position: relative; top: 0; order: -1; }
+      .order-summary-card { position: relative; top: 0; }
       .checkout-steps { flex-wrap: wrap; gap: 0.5rem; }
       .step::after { display: none; }
       .form-row { grid-template-columns: 1fr; }
@@ -71,25 +56,15 @@
   <!-- Header -->
   <header class="header">
     <div class="header-top container">
-      <a href="index.html" class="logo"><i class="fas fa-baby"></i> Kido<span>Cart</span></a>
+      <a href="index.html" class="logo"><i class="fas fa-baby"></i> Kids<span>Store</span></a>
       <div class="header-actions">
-        <a href="cart.html" class="header-action">
-          <i class="fas fa-shopping-cart"></i>
-          <span class="cart-count" style="display: none;">0</span>
-          <span>Cart</span>
-        </a>
-        <div id="user-action">
-          <a href="login.html" class="header-action">
-            <i class="fas fa-user"></i>
-            <span>Login</span>
-          </a>
-        </div>
+        <a href="cart.html" class="header-action"><i class="fas fa-shopping-cart"></i><span class="cart-count" style="display: none;">0</span><span>Cart</span></a>
+        <div id="user-action"><a href="login.html" class="header-action"><i class="fas fa-user"></i><span>Login</span></a></div>
       </div>
     </div>
   </header>
 
   <main class="container checkout-page">
-    <!-- Checkout Steps Indicator -->
     <div class="checkout-steps" id="checkout-steps">
       <div class="step active" data-step="1">
         <span class="step-number">1</span>
@@ -101,24 +76,19 @@
       </div>
       <div class="step" data-step="3">
         <span class="step-number">3</span>
-        <span>Confirm</span>
+        <span>Review</span>
       </div>
     </div>
 
     <div class="checkout-layout" id="checkout-layout">
-      <!-- Checkout Form -->
       <div class="checkout-form">
         <!-- Step 1: Shipping -->
         <div class="step-content active" id="step-1">
           <h2><i class="fas fa-shipping-fast"></i> Shipping Information</h2>
           
-          <!-- Saved Addresses -->
-          <div id="saved-addresses-section" style="display: none; margin-bottom: 1.5rem;">
-            <h4 style="margin-bottom: 1rem;">Saved Addresses</h4>
-            <div id="saved-addresses-list"></div>
-            <button class="btn btn-outline btn-sm mt-2" onclick="showNewAddressForm()">
-              <i class="fas fa-plus"></i> Add New Address
-            </button>
+          <div class="saved-addresses" id="saved-addresses" style="display: none;">
+            <h4>Saved Addresses</h4>
+            <!-- Saved addresses will be rendered here -->
           </div>
 
           <form id="shipping-form">
@@ -132,61 +102,47 @@
                 <input type="text" class="form-input" id="ship-last-name" required>
               </div>
             </div>
-            
-            <div class="form-row">
-              <div class="form-group">
-                <label class="form-label">Email *</label>
-                <input type="email" class="form-input" id="ship-email" required>
-              </div>
-              <div class="form-group">
-                <label class="form-label">Phone Number *</label>
-                <input type="tel" class="form-input" id="ship-phone" placeholder="+91 9876543210" required>
-              </div>
+            <div class="form-group">
+              <label class="form-label">Phone Number *</label>
+              <input type="tel" class="form-input" id="ship-phone" required>
             </div>
-            
             <div class="form-group">
               <label class="form-label">Street Address *</label>
               <input type="text" class="form-input" id="ship-address" placeholder="House number and street name" required>
             </div>
-            
             <div class="form-group">
               <label class="form-label">Apartment, Suite, etc. (Optional)</label>
-              <input type="text" class="form-input" id="ship-address2" placeholder="Apartment, suite, unit, etc.">
+              <input type="text" class="form-input" id="ship-address2">
             </div>
-            
             <div class="form-row">
               <div class="form-group">
                 <label class="form-label">City *</label>
                 <input type="text" class="form-input" id="ship-city" required>
               </div>
               <div class="form-group">
-                <label class="form-label">State *</label>
+                <label class="form-label">State/Province *</label>
                 <input type="text" class="form-input" id="ship-state" required>
               </div>
             </div>
-            
             <div class="form-row">
               <div class="form-group">
-                <label class="form-label">PIN Code *</label>
-                <input type="text" class="form-input" id="ship-zip" pattern="[0-9]{6}" placeholder="6-digit PIN code" required>
+                <label class="form-label">ZIP/Postal Code *</label>
+                <input type="text" class="form-input" id="ship-zip" required>
               </div>
               <div class="form-group">
                 <label class="form-label">Country *</label>
                 <select class="form-input" id="ship-country" required>
-                  <option value="IN" selected>India</option>
                   <option value="US">United States</option>
-                  <option value="UK">United Kingdom</option>
                   <option value="CA">Canada</option>
+                  <option value="UK">United Kingdom</option>
                   <option value="AU">Australia</option>
                 </select>
               </div>
             </div>
-            
             <label style="display: flex; align-items: center; gap: 0.5rem; margin-top: 1rem;">
               <input type="checkbox" id="save-address">
               <span>Save this address for future orders</span>
             </label>
-            
             <button type="submit" class="btn btn-primary btn-lg w-full mt-4">
               Continue to Payment <i class="fas fa-arrow-right"></i>
             </button>
@@ -198,70 +154,60 @@
           <h2><i class="fas fa-credit-card"></i> Payment Method</h2>
           
           <div class="payment-methods" id="payment-methods">
-            <label class="payment-option selected" data-method="razorpay">
-              <input type="radio" name="payment" value="razorpay" checked hidden>
-              <i class="fas fa-bolt razorpay-icon"></i>
-              <div style="flex: 1;">
-                <strong>Pay with Razorpay</strong>
-                <p style="font-size: 0.875rem; color: var(--gray); margin: 0;">Cards, UPI, Wallets, Net Banking</p>
-              </div>
-              <span style="background: var(--success); color: white; padding: 0.25rem 0.5rem; border-radius: 5px; font-size: 0.75rem;">Recommended</span>
-            </label>
-            
-            <label class="payment-option" data-method="card">
-              <input type="radio" name="payment" value="card" hidden>
+            <label class="payment-option selected">
+              <input type="radio" name="payment" value="card" checked>
               <i class="fas fa-credit-card"></i>
               <div>
                 <strong>Credit / Debit Card</strong>
-                <p style="font-size: 0.875rem; color: var(--gray); margin: 0;">Visa, Mastercard, RuPay</p>
+                <p style="font-size: 0.875rem; color: var(--gray);">Visa, Mastercard, American Express</p>
               </div>
             </label>
-            
-            <label class="payment-option" data-method="upi">
-              <input type="radio" name="payment" value="upi" hidden>
-              <i class="fas fa-wallet"></i>
+            <label class="payment-option">
+              <input type="radio" name="payment" value="paypal">
+              <i class="fab fa-paypal"></i>
               <div>
-                <strong>UPI</strong>
-                <p style="font-size: 0.875rem; color: var(--gray); margin: 0;">Google Pay, PhonePe, Paytm</p>
+                <strong>PayPal</strong>
+                <p style="font-size: 0.875rem; color: var(--gray);">Pay with your PayPal account</p>
               </div>
             </label>
-            
-            <label class="payment-option" data-method="cod">
-              <input type="radio" name="payment" value="cod" hidden>
+            <label class="payment-option">
+              <input type="radio" name="payment" value="applepay">
+              <i class="fab fa-apple-pay"></i>
+              <div>
+                <strong>Apple Pay</strong>
+                <p style="font-size: 0.875rem; color: var(--gray);">Quick and secure payment</p>
+              </div>
+            </label>
+            <label class="payment-option">
+              <input type="radio" name="payment" value="cod">
               <i class="fas fa-money-bill-wave"></i>
               <div>
                 <strong>Cash on Delivery</strong>
-                <p style="font-size: 0.875rem; color: var(--gray); margin: 0;">Pay when you receive</p>
+                <p style="font-size: 0.875rem; color: var(--gray);">Pay when you receive your order</p>
               </div>
             </label>
           </div>
 
-          <!-- Card Details (Hidden by default, show for direct card entry) -->
-          <div id="card-details-section" style="display: none; margin-top: 1.5rem; padding: 1.5rem; background: var(--light); border-radius: 15px;">
-            <h4 style="margin-bottom: 1rem;">Card Details</h4>
+          <!-- Card Details (shown when card is selected) -->
+          <div id="card-details" style="margin-top: 1.5rem;">
             <div class="form-group">
-              <label class="form-label">Card Number</label>
+              <label class="form-label">Card Number *</label>
               <input type="text" class="form-input" id="card-number" placeholder="1234 5678 9012 3456" maxlength="19">
             </div>
             <div class="form-row">
               <div class="form-group">
-                <label class="form-label">Expiry Date</label>
+                <label class="form-label">Expiry Date *</label>
                 <input type="text" class="form-input" id="card-expiry" placeholder="MM/YY" maxlength="5">
               </div>
               <div class="form-group">
-                <label class="form-label">CVV</label>
-                <input type="password" class="form-input" id="card-cvv" placeholder="•••" maxlength="4">
+                <label class="form-label">CVV *</label>
+                <input type="text" class="form-input" id="card-cvv" placeholder="123" maxlength="4">
               </div>
             </div>
             <div class="form-group">
-              <label class="form-label">Name on Card</label>
-              <input type="text" class="form-input" id="card-name" placeholder="As shown on card">
+              <label class="form-label">Name on Card *</label>
+              <input type="text" class="form-input" id="card-name" placeholder="John Doe">
             </div>
-          </div>
-
-          <div class="secure-badge">
-            <i class="fas fa-lock"></i>
-            <span>Your payment information is secure and encrypted</span>
           </div>
 
           <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
@@ -274,265 +220,113 @@
           </div>
         </div>
 
-        <!-- Step 3: Review & Confirm -->
+        <!-- Step 3: Review -->
         <div class="step-content" id="step-3">
           <h2><i class="fas fa-clipboard-check"></i> Review Your Order</h2>
           
-          <!-- Shipping Summary -->
           <div style="background: var(--light); padding: 1.5rem; border-radius: 15px; margin-bottom: 1.5rem;">
-            <div style="display: flex; justify-content: space-between; align-items: start;">
-              <div>
-                <h4 style="margin-bottom: 0.5rem;"><i class="fas fa-map-marker-alt"></i> Shipping Address</h4>
-                <p id="review-address" style="margin: 0; line-height: 1.6;">Loading...</p>
-              </div>
-              <button class="btn btn-sm btn-outline" onclick="goToStep(1)">Edit</button>
-            </div>
+            <h4 style="margin-bottom: 0.75rem;"><i class="fas fa-map-marker-alt"></i> Shipping Address</h4>
+            <p id="review-address">Loading...</p>
+            <button class="btn btn-sm btn-outline mt-2" onclick="goToStep(1)">Edit</button>
           </div>
 
-          <!-- Payment Summary -->
           <div style="background: var(--light); padding: 1.5rem; border-radius: 15px; margin-bottom: 1.5rem;">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-              <div>
-                <h4 style="margin-bottom: 0.5rem;"><i class="fas fa-credit-card"></i> Payment Method</h4>
-                <p id="review-payment" style="margin: 0;">Loading...</p>
-              </div>
-              <button class="btn btn-sm btn-outline" onclick="goToStep(2)">Edit</button>
-            </div>
+            <h4 style="margin-bottom: 0.75rem;"><i class="fas fa-credit-card"></i> Payment Method</h4>
+            <p id="review-payment">Loading...</p>
+            <button class="btn btn-sm btn-outline mt-2" onclick="goToStep(2)">Edit</button>
           </div>
 
-          <!-- Order Items Review -->
-          <div style="background: var(--light); padding: 1.5rem; border-radius: 15px; margin-bottom: 1.5rem;">
-            <h4 style="margin-bottom: 1rem;"><i class="fas fa-box"></i> Order Items</h4>
-            <div id="review-items"></div>
-          </div>
-
-          <!-- Terms -->
           <div style="background: var(--pastel-yellow); padding: 1rem; border-radius: 10px; margin-bottom: 1.5rem;">
-            <label style="display: flex; align-items: flex-start; gap: 0.75rem; cursor: pointer;">
-              <input type="checkbox" id="accept-terms" style="margin-top: 4px;">
-              <span style="font-size: 0.875rem;">
-                I agree to the <a href="#" style="color: var(--primary);">Terms & Conditions</a> and 
-                <a href="#" style="color: var(--primary);">Privacy Policy</a>. I confirm that all information provided is accurate.
-              </span>
-            </label>
+            <p style="font-size: 0.875rem;"><i class="fas fa-info-circle"></i> By placing your order, you agree to our Terms of Service and Privacy Policy.</p>
           </div>
 
           <div style="display: flex; gap: 1rem;">
             <button class="btn btn-outline" onclick="goToStep(2)">
               <i class="fas fa-arrow-left"></i> Back
             </button>
-            <button class="btn btn-primary btn-lg" style="flex: 1;" onclick="placeOrder()" id="place-order-btn">
-              <i class="fas fa-lock"></i> Place Order & Pay
+            <button class="btn btn-primary btn-lg" style="flex: 1;" onclick="placeOrder()">
+              <i class="fas fa-lock"></i> Place Order
             </button>
           </div>
         </div>
       </div>
 
-      <!-- Order Summary Sidebar -->
+      <!-- Order Summary -->
       <div class="order-summary-card">
         <h3 style="margin-bottom: 1rem;">Order Summary</h3>
-        
-        <!-- Free Shipping Progress -->
-        <div class="free-shipping-progress" id="shipping-progress">
-          <div style="display: flex; justify-content: space-between; font-size: 0.875rem;">
-            <span><i class="fas fa-truck"></i> Free shipping</span>
-            <span id="shipping-progress-text">₹500 away</span>
-          </div>
-          <div class="progress-bar">
-            <div class="progress-fill" id="shipping-progress-bar" style="width: 0%;"></div>
-          </div>
-        </div>
-
-        <!-- Cart Items -->
         <div class="order-items" id="order-items">
           <!-- Items rendered here -->
         </div>
-
-        <!-- Promo Code -->
-        <div class="promo-section">
-          <div class="promo-input">
-            <input type="text" class="form-input" id="promo-code" placeholder="Promo code">
-            <button class="btn btn-outline" onclick="applyPromo()">Apply</button>
-          </div>
-          <p id="promo-message" style="font-size: 0.75rem; margin: 0.5rem 0 0 0; display: none;"></p>
-        </div>
-
-        <!-- Totals -->
-        <div style="border-top: 1px solid var(--light); padding-top: 1rem; margin-top: 1rem;">
-          <div class="summary-row" style="display: flex; justify-content: space-between; padding: 0.5rem 0;">
-            <span>Subtotal</span>
-            <span id="checkout-subtotal">₹0</span>
-          </div>
-          <div class="summary-row" style="display: flex; justify-content: space-between; padding: 0.5rem 0;">
-            <span>Shipping</span>
-            <span id="checkout-shipping">₹0</span>
-          </div>
-          <div class="summary-row" style="display: flex; justify-content: space-between; padding: 0.5rem 0;" id="discount-row" style="display: none;">
-            <span style="color: var(--success);">Discount</span>
-            <span style="color: var(--success);" id="checkout-discount">-₹0</span>
-          </div>
-          <div class="summary-row" style="display: flex; justify-content: space-between; padding: 0.5rem 0;">
-            <span>Tax (GST 18%)</span>
-            <span id="checkout-tax">₹0</span>
-          </div>
-          <div class="summary-row total" style="display: flex; justify-content: space-between; padding: 1rem 0; border-top: 2px solid var(--primary); margin-top: 0.5rem; font-size: 1.25rem; font-weight: 700; color: var(--primary);">
-            <span>Total</span>
-            <span id="checkout-total">₹0</span>
-          </div>
-        </div>
-
-        <div class="secure-badge">
-          <i class="fas fa-shield-alt"></i>
-          <span>100% Secure Checkout</span>
-        </div>
+        <div class="summary-row"><span>Subtotal</span><span id="checkout-subtotal">$0.00</span></div>
+        <div class="summary-row"><span>Shipping</span><span id="checkout-shipping">$0.00</span></div>
+        <div class="summary-row"><span>Tax (8%)</span><span id="checkout-tax">$0.00</span></div>
+        <div class="summary-row total"><span>Total</span><span id="checkout-total">$0.00</span></div>
       </div>
     </div>
 
-    <!-- Order Success Page -->
+    <!-- Order Success -->
     <div class="success-page" id="success-page" style="display: none;">
       <i class="fas fa-check-circle"></i>
       <h1 style="color: var(--success);">Order Placed Successfully!</h1>
-      <p style="color: var(--gray); font-size: 1.125rem;">Thank you for shopping with KidoCart</p>
+      <p style="color: var(--gray); font-size: 1.125rem;">Thank you for shopping with KidsStore</p>
       
       <div class="order-details-box">
-        <div style="display: grid; gap: 0.75rem;">
-          <div style="display: flex; justify-content: space-between;">
-            <span style="color: var(--gray);">Order Number:</span>
-            <strong id="success-order-id"></strong>
-          </div>
-          <div style="display: flex; justify-content: space-between;">
-            <span style="color: var(--gray);">Order Date:</span>
-            <span id="success-date"></span>
-          </div>
-          <div style="display: flex; justify-content: space-between;">
-            <span style="color: var(--gray);">Payment Status:</span>
-            <span id="success-payment-status" style="color: var(--success);"></span>
-          </div>
-          <div style="display: flex; justify-content: space-between;">
-            <span style="color: var(--gray);">Estimated Delivery:</span>
-            <span id="success-delivery"></span>
-          </div>
-          <div style="display: flex; justify-content: space-between; border-top: 1px solid var(--light); padding-top: 0.75rem; margin-top: 0.5rem;">
-            <span style="color: var(--gray);">Total Amount:</span>
-            <strong style="color: var(--primary); font-size: 1.25rem;" id="success-total"></strong>
-          </div>
-        </div>
+        <p><strong>Order Number:</strong> <span id="success-order-id"></span></p>
+        <p><strong>Order Date:</strong> <span id="success-date"></span></p>
+        <p><strong>Estimated Delivery:</strong> <span id="success-delivery"></span></p>
+        <p><strong>Total Amount:</strong> <span id="success-total"></span></p>
       </div>
 
-      <p style="margin-bottom: 1.5rem; color: var(--gray);">
-        <i class="fas fa-envelope"></i> A confirmation email has been sent to your email address.
-      </p>
+      <p style="margin-bottom: 1.5rem;">A confirmation email has been sent to your email address.</p>
 
       <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-        <a href="orders.html" class="btn btn-primary btn-lg">
-          <i class="fas fa-box"></i> View Order
-        </a>
-        <a href="products.html" class="btn btn-outline btn-lg">
-          <i class="fas fa-shopping-bag"></i> Continue Shopping
-        </a>
+        <a href="orders.html" class="btn btn-primary"><i class="fas fa-box"></i> View Order</a>
+        <a href="products.html" class="btn btn-outline"><i class="fas fa-shopping-bag"></i> Continue Shopping</a>
       </div>
     </div>
   </main>
 
-  <!-- Footer -->
-  <footer class="footer" style="margin-top: 4rem;">
+  <footer class="footer">
     <div class="container">
-      <div class="footer-bottom">
-        <p>&copy; 2024 KidoCart. All rights reserved.</p>
-      </div>
+      <div class="footer-bottom"><p>&copy; 2024 KidsStore. All rights reserved.</p></div>
     </div>
   </footer>
 
   <script src="js/data.js"></script>
   <script src="js/app.js"></script>
   <script>
-    // Configuration - Load from environment or config
-    const RAZORPAY_KEY_ID = document.querySelector('meta[name="razorpay-key-id"]')?.content || 'YOUR_RAZORPAY_KEY_ID';
-    const CURRENCY = 'INR';
-    const CURRENCY_SYMBOL = '₹';
-    
     let currentStep = 1;
     let shippingData = {};
-    let paymentMethod = 'razorpay';
-    let appliedPromo = null;
-    let discountAmount = 0;
+    let paymentMethod = 'card';
 
-    // Check authentication and cart
+    // Check if user is logged in and cart has items
     document.addEventListener('DOMContentLoaded', () => {
       const user = getCurrentUser();
       if (!user) {
-        sessionStorage.setItem('redirectAfterLogin', 'checkout.html');
         window.location.href = 'login.html';
         return;
       }
-      
       const cart = getCart();
       if (cart.length === 0) {
         window.location.href = 'cart.html';
         return;
       }
 
-      // Pre-fill user data
+      // Pre-fill with user data
       const nameParts = user.name.split(' ');
       document.getElementById('ship-first-name').value = nameParts[0] || '';
       document.getElementById('ship-last-name').value = nameParts.slice(1).join(' ') || '';
-      document.getElementById('ship-email').value = user.email || '';
       document.getElementById('ship-phone').value = user.phone || '';
-
-      // Show saved addresses if available
-      if (user.addresses && user.addresses.length > 0) {
-        showSavedAddresses(user.addresses);
-      }
 
       renderOrderSummary();
       initPaymentMethods();
     });
 
-    // Show saved addresses
-    function showSavedAddresses(addresses) {
-      const section = document.getElementById('saved-addresses-section');
-      const list = document.getElementById('saved-addresses-list');
-      
-      section.style.display = 'block';
-      list.innerHTML = addresses.map((addr, index) => `
-        <div class="payment-option" style="margin-bottom: 0.5rem;" onclick="selectSavedAddress(${index})">
-          <input type="radio" name="saved-address" value="${index}" ${addr.isDefault ? 'checked' : ''}>
-          <div>
-            <strong>${addr.firstName} ${addr.lastName}</strong>
-            <p style="font-size: 0.875rem; color: var(--gray); margin: 0;">
-              ${addr.address}, ${addr.city}, ${addr.state} - ${addr.zip}
-            </p>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    function selectSavedAddress(index) {
-      const user = getCurrentUser();
-      const addr = user.addresses[index];
-      
-      document.getElementById('ship-first-name').value = addr.firstName;
-      document.getElementById('ship-last-name').value = addr.lastName;
-      document.getElementById('ship-phone').value = addr.phone;
-      document.getElementById('ship-address').value = addr.address;
-      document.getElementById('ship-address2').value = addr.address2 || '';
-      document.getElementById('ship-city').value = addr.city;
-      document.getElementById('ship-state').value = addr.state;
-      document.getElementById('ship-zip').value = addr.zip;
-      document.getElementById('ship-country').value = addr.country;
-    }
-
-    function showNewAddressForm() {
-      document.getElementById('shipping-form').reset();
-    }
-
-    // Render order summary
     function renderOrderSummary() {
       const cart = getCart();
       const products = getProducts();
-      const totals = calculateTotals();
+      const totals = getCartTotal();
 
-      // Render items
       const container = document.getElementById('order-items');
       container.innerHTML = cart.map(item => {
         const product = products.find(p => p.id === item.productId);
@@ -542,160 +336,34 @@
             <img src="${product.images[0]}" alt="${product.name}">
             <div class="order-item-details">
               <p class="order-item-name">${product.name}</p>
-              <p class="order-item-meta">Qty: ${item.quantity}${item.size ? ' | ' + item.size : ''}${item.color ? ' | ' + item.color : ''}</p>
+              <p class="order-item-meta">Qty: ${item.quantity} ${item.size ? '| Size: ' + item.size : ''} ${item.color ? '| ' + item.color : ''}</p>
             </div>
-            <span class="order-item-price">${CURRENCY_SYMBOL}${(product.price * item.quantity).toFixed(0)}</span>
+            <span class="order-item-price">$${(product.price * item.quantity).toFixed(2)}</span>
           </div>
         `;
       }).join('');
 
-      updateTotalsDisplay(totals);
-      updateShippingProgress(totals.subtotal);
+      document.getElementById('checkout-subtotal').textContent = `$${totals.subtotal.toFixed(2)}`;
+      document.getElementById('checkout-shipping').textContent = totals.shipping === 0 ? 'FREE' : `$${totals.shipping.toFixed(2)}`;
+      document.getElementById('checkout-tax').textContent = `$${totals.tax.toFixed(2)}`;
+      document.getElementById('checkout-total').textContent = `$${totals.total.toFixed(2)}`;
     }
 
-    function calculateTotals() {
-      const cart = getCart();
-      const products = getProducts();
-      let subtotal = 0;
-
-      cart.forEach(item => {
-        const product = products.find(p => p.id === item.productId);
-        if (product) {
-          subtotal += product.price * item.quantity;
-        }
-      });
-
-      // Free shipping over ₹500
-      const shipping = subtotal >= 500 ? 0 : 50;
-      
-      // Apply discount
-      const discount = discountAmount;
-      
-      // GST 18%
-      const taxableAmount = subtotal - discount;
-      const tax = taxableAmount * 0.18;
-      
-      const total = taxableAmount + shipping + tax;
-
-      return { subtotal, shipping, discount, tax, total };
-    }
-
-    function updateTotalsDisplay(totals) {
-      document.getElementById('checkout-subtotal').textContent = `${CURRENCY_SYMBOL}${totals.subtotal.toFixed(0)}`;
-      document.getElementById('checkout-shipping').textContent = totals.shipping === 0 ? 'FREE' : `${CURRENCY_SYMBOL}${totals.shipping.toFixed(0)}`;
-      document.getElementById('checkout-tax').textContent = `${CURRENCY_SYMBOL}${totals.tax.toFixed(0)}`;
-      document.getElementById('checkout-total').textContent = `${CURRENCY_SYMBOL}${totals.total.toFixed(0)}`;
-      
-      const discountRow = document.getElementById('discount-row');
-      if (totals.discount > 0) {
-        discountRow.style.display = 'flex';
-        document.getElementById('checkout-discount').textContent = `-${CURRENCY_SYMBOL}${totals.discount.toFixed(0)}`;
-      } else {
-        discountRow.style.display = 'none';
-      }
-    }
-
-    function updateShippingProgress(subtotal) {
-      const threshold = 500;
-      const remaining = Math.max(0, threshold - subtotal);
-      const progress = Math.min(100, (subtotal / threshold) * 100);
-      
-      const progressText = document.getElementById('shipping-progress-text');
-      const progressBar = document.getElementById('shipping-progress-bar');
-      
-      if (remaining > 0) {
-        progressText.textContent = `${CURRENCY_SYMBOL}${remaining.toFixed(0)} away`;
-        progressText.style.color = 'var(--gray)';
-      } else {
-        progressText.textContent = 'Unlocked! 🎉';
-        progressText.style.color = 'var(--success)';
-      }
-      
-      progressBar.style.width = `${progress}%`;
-    }
-
-    // Payment methods
     function initPaymentMethods() {
-      const options = document.querySelectorAll('.payment-option');
-      options.forEach(option => {
+      const paymentOptions = document.querySelectorAll('.payment-option');
+      paymentOptions.forEach(option => {
         option.addEventListener('click', () => {
-          options.forEach(o => o.classList.remove('selected'));
+          paymentOptions.forEach(o => o.classList.remove('selected'));
           option.classList.add('selected');
           option.querySelector('input').checked = true;
-          paymentMethod = option.dataset.method;
+          paymentMethod = option.querySelector('input').value;
           
-          // Show/hide card details
-          const cardSection = document.getElementById('card-details-section');
-          cardSection.style.display = paymentMethod === 'card' ? 'block' : 'none';
-          
-          // Update place order button text
-          updatePlaceOrderButton();
+          // Toggle card details visibility
+          document.getElementById('card-details').style.display = paymentMethod === 'card' ? 'block' : 'none';
         });
       });
     }
 
-    function updatePlaceOrderButton() {
-      const btn = document.getElementById('place-order-btn');
-      if (paymentMethod === 'cod') {
-        btn.innerHTML = '<i class="fas fa-check"></i> Place Order (COD)';
-      } else {
-        btn.innerHTML = '<i class="fas fa-lock"></i> Place Order & Pay';
-      }
-    }
-
-    // Promo code
-    function applyPromo() {
-      const code = document.getElementById('promo-code').value.trim().toUpperCase();
-      const messageEl = document.getElementById('promo-message');
-      
-      const promoCodes = {
-        'WELCOME10': { type: 'percent', value: 10, minOrder: 0 },
-        'KIDS20': { type: 'percent', value: 20, minOrder: 1000 },
-        'FLAT100': { type: 'flat', value: 100, minOrder: 500 },
-        'FREESHIP': { type: 'shipping', value: 0, minOrder: 0 }
-      };
-      
-      const promo = promoCodes[code];
-      const totals = calculateTotals();
-      
-      if (!code) {
-        showPromoMessage('Please enter a promo code', 'error');
-        return;
-      }
-      
-      if (!promo) {
-        showPromoMessage('Invalid promo code', 'error');
-        return;
-      }
-      
-      if (totals.subtotal < promo.minOrder) {
-        showPromoMessage(`Minimum order ${CURRENCY_SYMBOL}${promo.minOrder} required`, 'error');
-        return;
-      }
-      
-      // Apply discount
-      appliedPromo = promo;
-      if (promo.type === 'percent') {
-        discountAmount = (totals.subtotal * promo.value) / 100;
-        showPromoMessage(`${promo.value}% discount applied!`, 'success');
-      } else if (promo.type === 'flat') {
-        discountAmount = promo.value;
-        showPromoMessage(`${CURRENCY_SYMBOL}${promo.value} discount applied!`, 'success');
-      } else if (promo.type === 'shipping') {
-        showPromoMessage('Free shipping applied!', 'success');
-      }
-      
-      renderOrderSummary();
-    }
-
-    function showPromoMessage(message, type) {
-      const el = document.getElementById('promo-message');
-      el.textContent = message;
-      el.style.display = 'block';
-      el.style.color = type === 'success' ? 'var(--success)' : 'var(--danger)';
-    }
-
-    // Step navigation
     function goToStep(step) {
       // Validate current step before moving forward
       if (step > currentStep) {
@@ -705,12 +373,10 @@
             form.reportValidity();
             return;
           }
-          
           // Save shipping data
           shippingData = {
             firstName: document.getElementById('ship-first-name').value,
             lastName: document.getElementById('ship-last-name').value,
-            email: document.getElementById('ship-email').value,
             phone: document.getElementById('ship-phone').value,
             address: document.getElementById('ship-address').value,
             address2: document.getElementById('ship-address2').value,
@@ -719,17 +385,11 @@
             zip: document.getElementById('ship-zip').value,
             country: document.getElementById('ship-country').value
           };
-          
-          // Save address if checked
-          if (document.getElementById('save-address').checked) {
-            saveUserAddress(shippingData);
-          }
         }
       }
 
+      // Update step display
       currentStep = step;
-      
-      // Update step content
       document.querySelectorAll('.step-content').forEach(el => el.classList.remove('active'));
       document.getElementById(`step-${step}`).classList.add('active');
 
@@ -740,246 +400,57 @@
         if (index + 1 === step) el.classList.add('active');
       });
 
-      // Populate review step
+      // Update review step content
       if (step === 3) {
-        populateReviewStep();
-      }
-      
-      // Scroll to top
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    function populateReviewStep() {
-      // Address
-      document.getElementById('review-address').innerHTML = `
-        <strong>${shippingData.firstName} ${shippingData.lastName}</strong><br>
-        ${shippingData.address}${shippingData.address2 ? ', ' + shippingData.address2 : ''}<br>
-        ${shippingData.city}, ${shippingData.state} - ${shippingData.zip}<br>
-        ${shippingData.country}<br>
-        <i class="fas fa-phone"></i> ${shippingData.phone}<br>
-        <i class="fas fa-envelope"></i> ${shippingData.email}
-      `;
-
-      // Payment
-      const paymentLabels = {
-        'razorpay': '<i class="fas fa-bolt" style="color: #528FF0;"></i> Razorpay (Cards, UPI, Wallets)',
-        'card': '<i class="fas fa-credit-card"></i> Credit/Debit Card',
-        'upi': '<i class="fas fa-wallet"></i> UPI',
-        'cod': '<i class="fas fa-money-bill-wave"></i> Cash on Delivery'
-      };
-      document.getElementById('review-payment').innerHTML = paymentLabels[paymentMethod];
-
-      // Items
-      const cart = getCart();
-      const products = getProducts();
-      document.getElementById('review-items').innerHTML = cart.map(item => {
-        const product = products.find(p => p.id === item.productId);
-        if (!product) return '';
-        return `
-          <div style="display: flex; gap: 1rem; padding: 0.75rem 0; border-bottom: 1px solid var(--light);">
-            <img src="${product.images[0]}" style="width: 50px; height: 50px; border-radius: 8px; object-fit: cover;">
-            <div style="flex: 1;">
-              <p style="margin: 0; font-weight: 500;">${product.name}</p>
-              <p style="margin: 0; font-size: 0.75rem; color: var(--gray);">Qty: ${item.quantity}</p>
-            </div>
-            <span style="font-weight: 600;">${CURRENCY_SYMBOL}${(product.price * item.quantity).toFixed(0)}</span>
-          </div>
+        document.getElementById('review-address').innerHTML = `
+          ${shippingData.firstName} ${shippingData.lastName}<br>
+          ${shippingData.address}${shippingData.address2 ? ', ' + shippingData.address2 : ''}<br>
+          ${shippingData.city}, ${shippingData.state} ${shippingData.zip}<br>
+          ${shippingData.country}<br>
+          Phone: ${shippingData.phone}
         `;
-      }).join('');
-    }
-
-    function saveUserAddress(address) {
-      const user = getCurrentUser();
-      if (!user) return;
-      
-      if (!user.addresses) user.addresses = [];
-      
-      const newAddress = {
-        id: Date.now(),
-        ...address,
-        isDefault: user.addresses.length === 0
-      };
-      
-      user.addresses.push(newAddress);
-      
-      const users = getUsers();
-      const userIndex = users.findIndex(u => u.id === user.id);
-      if (userIndex > -1) {
-        users[userIndex] = user;
-        saveUsers(users);
-        setCurrentUser(user);
+        
+        const paymentLabels = {
+          'card': 'Credit/Debit Card',
+          'paypal': 'PayPal',
+          'applepay': 'Apple Pay',
+          'cod': 'Cash on Delivery'
+        };
+        document.getElementById('review-payment').textContent = paymentLabels[paymentMethod];
       }
     }
 
-    // Shipping form submit
+    // Handle shipping form submit
     document.getElementById('shipping-form').addEventListener('submit', (e) => {
       e.preventDefault();
       goToStep(2);
     });
 
-    // Place order
     function placeOrder() {
-      // Validate terms
-      if (!document.getElementById('accept-terms').checked) {
-        showToast('Please accept the terms and conditions', 'error');
-        return;
-      }
-
-      const totals = calculateTotals();
+      const totals = getCartTotal();
       
-      if (paymentMethod === 'cod') {
-        // Direct order for COD
-        processOrder(null, 'pending');
-      } else {
-        // Initiate Razorpay payment
-        initiateRazorpayPayment(totals);
-      }
-    }
-
-    // Razorpay Integration
-    function initiateRazorpayPayment(totals) {
-      if (RAZORPAY_KEY_ID === 'YOUR_RAZORPAY_KEY_ID') {
-        showToast('Payment gateway not configured. Please contact support.', 'error');
-        // For demo, process order without payment
-        processOrder('DEMO_PAYMENT_' + Date.now(), 'demo');
-        return;
-      }
-
-      const user = getCurrentUser();
-      
-      const options = {
-        key: RAZORPAY_KEY_ID,
-        amount: Math.round(totals.total * 100), // Amount in paise
-        currency: CURRENCY,
-        name: 'KidoCart',
-        description: 'Order Payment',
-        image: 'https://i.imgur.com/your-logo.png', // Add your logo URL
-        handler: function(response) {
-          // Payment successful
-          processOrder(response.razorpay_payment_id, 'paid');
-        },
-        prefill: {
-          name: `${shippingData.firstName} ${shippingData.lastName}`,
-          email: shippingData.email,
-          contact: shippingData.phone
-        },
-        notes: {
-          address: `${shippingData.address}, ${shippingData.city}`
-        },
-        theme: {
-          color: '#6366f1'
-        },
-        modal: {
-          ondismiss: function() {
-            showToast('Payment cancelled', 'warning');
-          }
-        }
-      };
-
-      const rzp = new Razorpay(options);
-      
-      rzp.on('payment.failed', function(response) {
-        showToast('Payment failed: ' + response.error.description, 'error');
-      });
-      
-      rzp.open();
-    }
-
-    // Process order after payment
-    function processOrder(paymentId, paymentStatus) {
-      const cart = getCart();
-      const products = getProducts();
-      const totals = calculateTotals();
-      const user = getCurrentUser();
-
-      // Create order items
-      const orderItems = cart.map(item => {
-        const product = products.find(p => p.id === item.productId);
-        return {
-          productId: item.productId,
-          name: product.name,
-          price: product.price,
-          quantity: item.quantity,
-          size: item.size,
-          color: item.color,
-          image: product.images[0]
-        };
-      });
-
-      // Create order
-      const order = {
-        id: 'ORD-' + Date.now(),
-        userId: user.id,
-        items: orderItems,
-        subtotal: totals.subtotal,
-        shipping: totals.shipping,
-        discount: totals.discount,
-        tax: totals.tax,
-        total: totals.total,
+      const orderData = {
         shippingAddress: shippingData,
-        paymentMethod: paymentMethod,
-        paymentId: paymentId,
-        paymentStatus: paymentStatus,
-        status: 'confirmed',
-        createdAt: new Date().toISOString()
+        paymentMethod: paymentMethod
       };
 
-      // Save order
-      const orders = getOrders();
-      orders.push(order);
-      saveOrders(orders);
+      const order = createOrder(orderData);
 
-      // Update product stock
-      cart.forEach(item => {
-        const productIndex = products.findIndex(p => p.id === item.productId);
-        if (productIndex > -1) {
-          products[productIndex].stock -= item.quantity;
-          if (products[productIndex].stock <= 0) {
-            products[productIndex].availability = false;
-          }
-        }
-      });
-      saveProducts(products);
+      if (order) {
+        // Show success page
+        document.getElementById('checkout-layout').style.display = 'none';
+        document.getElementById('checkout-steps').style.display = 'none';
+        document.getElementById('success-page').style.display = 'block';
 
-      // Clear cart
-      saveCart([]);
-      updateCartCount();
-
-      // Show success page
-      showSuccessPage(order);
-    }
-
-    function showSuccessPage(order) {
-      document.getElementById('checkout-layout').style.display = 'none';
-      document.getElementById('checkout-steps').style.display = 'none';
-      document.getElementById('success-page').style.display = 'block';
-
-      document.getElementById('success-order-id').textContent = order.id;
-      document.getElementById('success-date').textContent = new Date().toLocaleDateString('en-IN', {
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-      });
-      
-      const paymentStatusText = {
-        'paid': 'Paid ✓',
-        'pending': 'Pending (COD)',
-        'demo': 'Demo Mode'
-      };
-      document.getElementById('success-payment-status').textContent = paymentStatusText[order.paymentStatus] || order.paymentStatus;
-      
-      // Estimated delivery: 5-7 days
-      const deliveryDate = new Date();
-      deliveryDate.setDate(deliveryDate.getDate() + 5);
-      const deliveryDateEnd = new Date();
-      deliveryDateEnd.setDate(deliveryDateEnd.getDate() + 7);
-      document.getElementById('success-delivery').textContent = `${deliveryDate.toLocaleDateString('en-IN', { month: 'short', day: 'numeric' })} - ${deliveryDateEnd.toLocaleDateString('en-IN', { month: 'short', day: 'numeric' })}`;
-      
-      document.getElementById('success-total').textContent = `${CURRENCY_SYMBOL}${order.total.toFixed(0)}`;
-      
-      // Scroll to top
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+        document.getElementById('success-order-id').textContent = order.id;
+        document.getElementById('success-date').textContent = new Date().toLocaleDateString();
+        
+        const deliveryDate = new Date();
+        deliveryDate.setDate(deliveryDate.getDate() + 5);
+        document.getElementById('success-delivery').textContent = deliveryDate.toLocaleDateString();
+        
+        document.getElementById('success-total').textContent = `$${order.total.toFixed(2)}`;
+      }
     }
   </script>
 </body>
