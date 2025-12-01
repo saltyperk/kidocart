@@ -288,21 +288,15 @@ const INITIAL_PRODUCTS = [
 
 // Admin credentials (in real app, this would be server-side)
 const ADMIN_CREDENTIALS = {
-  username: 'saltyperk',
-  password: 'Ansari@717'
+  username: 'admin',
+  password: 'admin123'
 };
 
 // Initialize data in localStorage if not exists
 function initializeData() {
-  // Only initialize if products don't exist
   if (!localStorage.getItem('kidsstore_products')) {
-    console.log('Initializing products for first time...');
     localStorage.setItem('kidsstore_products', JSON.stringify(INITIAL_PRODUCTS));
-  } else {
-    console.log('Products already exist, not overwriting');
   }
-  
-  // Initialize other data stores if they don't exist
   if (!localStorage.getItem('kidsstore_users')) {
     localStorage.setItem('kidsstore_users', JSON.stringify([]));
   }
@@ -324,7 +318,6 @@ function getProducts() {
 
 function saveProducts(products) {
   localStorage.setItem('kidsstore_products', JSON.stringify(products));
-  console.log('Products saved:', products.length, 'items');
 }
 
 function getUsers() {
@@ -377,52 +370,6 @@ function isAdminLoggedIn() {
 
 function setAdminLoggedIn(status) {
   localStorage.setItem('kidsstore_adminLoggedIn', status.toString());
-}
-
-// Helper functions for product management
-function addProduct(product) {
-  const products = getProducts();
-  products.push(product);
-  saveProducts(products);
-  console.log('Product added:', product.name);
-  return product;
-}
-
-function updateProduct(productId, updates) {
-  const products = getProducts();
-  const index = products.findIndex(p => p.id === productId);
-  if (index !== -1) {
-    products[index] = { ...products[index], ...updates };
-    saveProducts(products);
-    console.log('Product updated:', productId);
-    return products[index];
-  }
-  return null;
-}
-
-function deleteProduct(productId) {
-  let products = getProducts();
-  const initialLength = products.length;
-  products = products.filter(p => p.id !== productId);
-  if (products.length < initialLength) {
-    saveProducts(products);
-    console.log('Product deleted:', productId);
-    return true;
-  }
-  return false;
-}
-
-// Reset function (only use when you want to reset everything)
-function resetToDefaults() {
-  console.warn('Resetting all data to defaults!');
-  localStorage.setItem('kidsstore_products', JSON.stringify(INITIAL_PRODUCTS));
-  localStorage.setItem('kidsstore_users', JSON.stringify([]));
-  localStorage.setItem('kidsstore_orders', JSON.stringify([]));
-  localStorage.setItem('kidsstore_cart', JSON.stringify([]));
-  localStorage.setItem('kidsstore_wishlist', JSON.stringify([]));
-  localStorage.removeItem('kidsstore_currentUser');
-  localStorage.removeItem('kidsstore_adminLoggedIn');
-  console.log('All data reset to defaults');
 }
 
 // Initialize on load
