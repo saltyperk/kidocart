@@ -15,7 +15,7 @@ function registerUser(userData) {
   }
 
   // Validate email format
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+/;
   if (!emailRegex.test(userData.email)) {
     return { success: false, message: 'Please enter a valid email address' };
   }
