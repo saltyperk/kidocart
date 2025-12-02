@@ -93,7 +93,6 @@
       </ul>
     </nav>
   </header>
-
   <!-- Breadcrumb -->
   <div class="container" style="padding: 1rem;">
     <nav style="color: var(--gray); font-size: 0.875rem;" id="breadcrumb">
@@ -102,7 +101,6 @@
       <span id="breadcrumb-product">Loading...</span>
     </nav>
   </div>
-
   <!-- Product Detail -->
   <main class="container product-detail-page" id="product-container">
     <!-- Loading State -->
@@ -112,14 +110,12 @@
       <p style="color: var(--gray);">Please wait while we fetch product details</p>
     </div>
   </main>
-
   <!-- Footer -->
   <footer class="footer">
     <div class="container">
       <div class="footer-bottom"><p>&copy; 2024 KidoCart. All rights reserved.</p></div>
     </div>
   </footer>
-
   <script src="js/data.js"></script>
   <script src="js/app.js"></script>
   <script>
@@ -127,13 +123,11 @@
     let selectedSize = null;
     let selectedColor = null;
     let quantity = 1;
-
     // Get product ID from URL
     function getProductIdFromURL() {
       const params = new URLSearchParams(window.location.search);
       return params.get('id');
     }
-
     // Load product from MongoDB
     async function loadProduct() {
       const productId = getProductIdFromURL();
@@ -143,7 +137,6 @@
         showError('No product ID specified');
         return;
       }
-
       try {
         console.log('Loading product:', productId);
         
@@ -172,7 +165,6 @@
         showError(error.message || 'Failed to load product');
       }
     }
-
     // Show error state
     function showError(message) {
       const container = document.getElementById('product-container');
@@ -187,7 +179,6 @@
         </div>
       `;
     }
-
     // Render product details
     function renderProduct() {
       const container = document.getElementById('product-container');
@@ -200,9 +191,26 @@
       
       // Get product data
       const productId = currentProduct._id || currentProduct.id;
-      const images = currentProduct.images || [];
+      
+      // Robust Image Handling
+      let images = [];
+      if (currentProduct.images) {
+        if (Array.isArray(currentProduct.images)) {
+          images = currentProduct.images.filter(img => img && img.trim() !== '');
+        } else if (typeof currentProduct.images === 'string') {
+          images = [currentProduct.images];
+        }
+      }
+      // Also check for legacy 'image' field (singular)
+      if (images.length === 0 && currentProduct.image) {
+        images = [currentProduct.image];
+      }
       const firstImage = images.length > 0 ? images[0] : 'https://via.placeholder.com/500x500?text=No+Image';
-      const ageGroup = AGE_GROUPS ? AGE_GROUPS.find(ag => ag.id === currentProduct.ageGroup) : null;
+      
+      const ageGroup = typeof AGE_GROUPS !== 'undefined' 
+        ? AGE_GROUPS.find(ag => ag.id === currentProduct.ageGroup) 
+        : null;
+        
       const discount = currentProduct.originalPrice ? Math.round((1 - currentProduct.price / currentProduct.originalPrice) * 100) : 0;
       
       // Render HTML
@@ -223,7 +231,6 @@
               </div>
             ` : ''}
           </div>
-
           <!-- Product Info -->
           <div class="product-info-section">
             <span class="age-badge">${ageGroup ? ageGroup.label : currentProduct.ageGroup || 'All Ages'}</span>
@@ -238,16 +245,14 @@
               <span style="color: var(--gray);">|</span>
               <span style="color: var(--gray);">Brand: <strong>${currentProduct.brand || 'N/A'}</strong></span>
             </div>
-
             <div class="price-section">
               <div class="price-row">
-                <span class="big-price">$${parseFloat(currentProduct.price).toFixed(2)}</span>
-                ${currentProduct.originalPrice ? `<span class="old-price">$${parseFloat(currentProduct.originalPrice).toFixed(2)}</span>` : ''}
+                <span class="big-price">₹${parseFloat(currentProduct.price).toFixed(0)}</span>
+                ${currentProduct.originalPrice ? `<span class="old-price">₹${parseFloat(currentProduct.originalPrice).toFixed(0)}</span>` : ''}
                 ${discount > 0 ? `<span class="save-badge">Save ${discount}%</span>` : ''}
               </div>
               <p class="stock-status ${getStockClass(currentProduct)}">${getStockText(currentProduct)}</p>
             </div>
-
             <!-- Size Options -->
             ${currentProduct.sizes && currentProduct.sizes.length > 0 ? `
               <div class="options-section">
@@ -259,7 +264,6 @@
                 </div>
               </div>
             ` : ''}
-
             <!-- Color Options -->
             ${currentProduct.colors && currentProduct.colors.length > 0 ? `
               <div class="options-section">
@@ -272,7 +276,6 @@
                 </div>
               </div>
             ` : ''}
-
             <!-- Quantity -->
             <div class="quantity-section">
               <span class="option-title">Quantity:</span>
@@ -283,7 +286,6 @@
               </div>
               <span style="color: var(--gray); font-size: 0.875rem;">(${currentProduct.stock || 0} available)</span>
             </div>
-
             <!-- Action Buttons -->
             <div class="action-buttons">
               <button class="btn btn-primary" onclick="handleAddToCartDetail()" ${!currentProduct.availability || currentProduct.stock < 1 ? 'disabled' : ''}>
@@ -293,18 +295,16 @@
                 <i class="fas fa-bolt"></i> Buy Now
               </button>
             </div>
-
             <button class="btn btn-outline w-full" onclick="handleWishlistDetail()">
               <i class="far fa-heart"></i> Add to Wishlist
             </button>
-
             <!-- Features -->
             <div class="product-features">
               <div class="feature-item">
                 <i class="fas fa-truck"></i>
                 <div>
                   <strong>Free Shipping</strong>
-                  <small style="display: block; color: var(--gray);">Orders over $50</small>
+                  <small style="display: block; color: var(--gray);">Orders over ₹499</small>
                 </div>
               </div>
               <div class="feature-item">
@@ -322,12 +322,10 @@
                 </div>
               </div>
             </div>
-
             <!-- Description -->
             <div class="description-section">
               <h3>Product Description</h3>
               <p>${currentProduct.description || 'No description available.'}</p>
-
               <table class="specs-table">
                 <tr><td>Category</td><td style="text-transform: capitalize;">${currentProduct.category || 'N/A'}</td></tr>
                 <tr><td>Age Group</td><td>${ageGroup ? ageGroup.label : currentProduct.ageGroup || 'All Ages'}</td></tr>
@@ -338,7 +336,6 @@
             </div>
           </div>
         </div>
-
         <!-- Related Products -->
         <section class="related-products">
           <h2 class="section-title">You May Also <span>Like</span></h2>
@@ -350,21 +347,18 @@
         </section>
       `;
     }
-
     // Get stock status class
     function getStockClass(product) {
       if (!product.availability || product.stock === 0) return 'out-of-stock';
       if (product.stock < 10) return 'low-stock';
       return 'in-stock';
     }
-
     // Get stock status text
     function getStockText(product) {
       if (!product.availability || product.stock === 0) return '✗ Out of Stock';
       if (product.stock < 10) return `✓ Only ${product.stock} left in stock - order soon!`;
       return '✓ In Stock';
     }
-
     // Get color code from color name
     function getColorCode(color) {
       const colorMap = {
@@ -377,21 +371,18 @@
       };
       return colorMap[color.toLowerCase()] || '#999999';
     }
-
     // Change main image
     function changeMainImage(src, thumbEl) {
       document.getElementById('main-product-image').src = src;
       document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
       if (thumbEl) thumbEl.classList.add('active');
     }
-
     // Select size
     function selectSize(size, btn) {
       selectedSize = size;
       document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
     }
-
     // Select color
     function selectColor(color, btn) {
       selectedColor = color;
@@ -400,7 +391,6 @@
       document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
     }
-
     // Change quantity
     function changeQuantity(delta) {
       const newQty = quantity + delta;
@@ -410,7 +400,6 @@
         document.getElementById('quantity-input').value = quantity;
       }
     }
-
     // Add to cart from detail page
     async function handleAddToCartDetail() {
       if (currentProduct.sizes && currentProduct.sizes.length > 0 && !selectedSize) {
@@ -425,7 +414,6 @@
       const productId = currentProduct._id || currentProduct.id;
       await addToCart(productId, quantity, selectedSize, selectedColor);
     }
-
     // Buy now
     async function handleBuyNow() {
       if (currentProduct.sizes && currentProduct.sizes.length > 0 && !selectedSize) {
@@ -441,13 +429,11 @@
       await addToCart(productId, quantity, selectedSize, selectedColor);
       window.location.href = 'checkout.html';
     }
-
     // Add to wishlist from detail page
     async function handleWishlistDetail() {
       const productId = currentProduct._id || currentProduct.id;
       await toggleWishlist(productId);
     }
-
     // Load related products
     async function loadRelatedProducts() {
       try {
@@ -476,7 +462,6 @@
         console.error('Error loading related products:', error);
       }
     }
-
     // Initialize
     document.addEventListener('DOMContentLoaded', () => {
       loadProduct();
