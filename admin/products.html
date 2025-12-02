@@ -356,12 +356,12 @@
         
         <div class="form-row">
           <div class="form-group">
-            <label class="form-label">Selling Price ($) *</label>
-            <input type="number" class="form-input" id="product-price" step="0.01" min="0" placeholder="29.99" required>
+            <label class="form-label">Selling Price (₹) *</label>
+            <input type="number" class="form-input" id="product-price" step="1" min="0" placeholder="999" required>
           </div>
           <div class="form-group">
-            <label class="form-label">Original Price ($) <small style="color: var(--gray);">for discounts</small></label>
-            <input type="number" class="form-input" id="product-original-price" step="0.01" min="0" placeholder="39.99">
+            <label class="form-label">Original Price (₹) <small style="color: var(--gray);">for discounts</small></label>
+            <input type="number" class="form-input" id="product-original-price" step="1" min="0" placeholder="1499">
           </div>
         </div>
         
@@ -395,6 +395,13 @@
           <button type="button" class="btn btn-sm btn-outline" onclick="addImageInput()" style="margin-top: 0.5rem;">
             <i class="fas fa-plus"></i> Add Another Image
           </button>
+          <div style="margin-top: 0.75rem; padding: 0.75rem; background: var(--pastel-yellow); border-radius: 8px; border-left: 4px solid var(--warning);">
+            <small style="color: var(--dark); display: block;">
+              <strong>💡 ImgBB Users:</strong> Use the "Direct Link" option (URL must end in .jpg or .png).<br>
+              ❌ Wrong: <code>https://ibb.co/0VYFR7hq</code><br>
+              ✅ Correct: <code>https://i.ibb.co/abcd/image.jpg</code>
+            </small>
+          </div>
         </div>
         
         <div class="form-row">
@@ -554,7 +561,18 @@
           : '';
 
         const productId = product._id || product.id;
-        const firstImage = product.images && product.images.length > 0 ? product.images[0] : '/placeholder.jpg';
+        
+        // Robust image handling
+        let firstImage = '/placeholder.jpg';
+        if (product.images) {
+          if (Array.isArray(product.images) && product.images.length > 0) {
+            firstImage = product.images[0];
+          } else if (typeof product.images === 'string') {
+            firstImage = product.images;
+          }
+        } else if (product.image) {
+          firstImage = product.image;
+        }
 
         return `
           <tr>
@@ -572,8 +590,8 @@
             <td><span style="text-transform: capitalize;">${product.category}</span></td>
             <td>${product.ageGroup}</td>
             <td>
-              <strong style="color: var(--primary);">$${parseFloat(product.price).toFixed(2)}</strong>
-              ${product.originalPrice ? `<br><small style="text-decoration: line-through; color: var(--gray);">$${parseFloat(product.originalPrice).toFixed(2)}</small>` : ''}
+              <strong style="color: var(--primary);">₹${parseFloat(product.price).toFixed(0)}</strong>
+              ${product.originalPrice ? `<br><small style="text-decoration: line-through; color: var(--gray);">₹${parseFloat(product.originalPrice).toFixed(0)}</small>` : ''}
             </td>
             <td><span class="${stockClass}">${stockText}</span></td>
             <td>
@@ -702,14 +720,23 @@
       const container = document.getElementById('image-inputs');
       container.innerHTML = '';
       
-      if (product.images && product.images.length > 0) {
-        product.images.forEach((url, index) => {
+      // Handle different image structures
+      let images = [];
+      if (product.images) {
+        if (Array.isArray(product.images)) images = product.images;
+        else if (typeof product.images === 'string') images = [product.images];
+      } else if (product.image) {
+        images = [product.image];
+      }
+      
+      if (images.length > 0) {
+        images.forEach((url, index) => {
           const div = document.createElement('div');
           div.className = 'image-input-group';
           div.style = 'display: flex; gap: 0.5rem; margin-bottom: 0.5rem;';
           div.innerHTML = `
             <input type="url" class="form-input" name="product-images" value="${url}" placeholder="https://example.com/image${index + 1}.jpg" required>
-            <button type="button" class="btn btn-sm btn-outline" onclick="removeImageInput(this)" ${index === 0 && product.images.length === 1 ? 'style="display: none;"' : ''}>
+            <button type="button" class="btn btn-sm btn-outline" onclick="removeImageInput(this)" ${index === 0 && images.length === 1 ? 'style="display: none;"' : ''}>
               <i class="fas fa-times"></i>
             </button>
           `;
