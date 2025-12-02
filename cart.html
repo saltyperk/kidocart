@@ -10,38 +10,39 @@
     .cart-page {
       padding: 2rem 0;
       min-height: 60vh;
+      background: #f8f9fa;
     }
     .cart-container {
       display: grid;
-      grid-template-columns: 1fr 350px;
+      grid-template-columns: 1fr 380px;
       gap: 2rem;
       max-width: 1200px;
       margin: 0 auto;
       padding: 0 1rem;
     }
-    @media (max-width: 768px) {
+    @media (max-width: 900px) {
       .cart-container {
         grid-template-columns: 1fr;
       }
     }
     .cart-items {
       background: white;
-      border-radius: 12px;
+      border-radius: 16px;
       padding: 1.5rem;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
     }
     .cart-item {
       display: grid;
       grid-template-columns: 100px 1fr auto auto auto;
       gap: 1rem;
       align-items: center;
-      padding: 1rem 0;
-      border-bottom: 1px solid #eee;
+      padding: 1.25rem 0;
+      border-bottom: 1px solid #f0f0f0;
     }
     @media (max-width: 600px) {
       .cart-item {
         grid-template-columns: 80px 1fr;
-        gap: 0.5rem;
+        gap: 0.75rem;
       }
       .cart-item-quantity,
       .cart-item-total,
@@ -56,7 +57,8 @@
       width: 100px;
       height: 100px;
       object-fit: cover;
-      border-radius: 8px;
+      border-radius: 12px;
+      border: 2px solid #f0f0f0;
     }
     @media (max-width: 600px) {
       .cart-item img {
@@ -66,104 +68,128 @@
     }
     .cart-item-details h3 {
       font-size: 1rem;
-      margin-bottom: 0.25rem;
+      margin-bottom: 0.35rem;
       color: #333;
+      font-weight: 600;
     }
     .cart-item-details p {
-      font-size: 0.875rem;
-      color: #666;
-      margin: 0.125rem 0;
+      font-size: 0.85rem;
+      color: #888;
+      margin: 0.2rem 0;
     }
     .cart-item-details .price {
-      color: #e91e63;
-      font-weight: 600;
+      color: var(--primary, #e91e63);
+      font-weight: 700;
+      font-size: 1rem;
     }
     .cart-item-quantity {
       display: flex;
       align-items: center;
       gap: 0.5rem;
+      background: #f8f9fa;
+      padding: 0.35rem;
+      border-radius: 8px;
     }
     .cart-item-quantity button {
       width: 32px;
       height: 32px;
-      border: 1px solid #ddd;
+      border: none;
       background: white;
       border-radius: 6px;
       cursor: pointer;
-      font-size: 1rem;
+      font-size: 0.9rem;
+      color: #666;
       transition: all 0.2s;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
     .cart-item-quantity button:hover {
-      background: #e91e63;
+      background: var(--primary, #e91e63);
       color: white;
-      border-color: #e91e63;
     }
     .cart-item-quantity span {
-      min-width: 30px;
+      min-width: 35px;
       text-align: center;
-      font-weight: 600;
+      font-weight: 700;
+      font-size: 1rem;
     }
     .cart-item-total {
       font-weight: 700;
       color: #333;
-      min-width: 80px;
+      min-width: 90px;
       text-align: right;
+      font-size: 1.1rem;
     }
     .remove-btn {
-      background: none;
+      background: #fff0f0;
       border: none;
-      color: #999;
+      color: #e53935;
       cursor: pointer;
-      padding: 0.5rem;
-      transition: color 0.2s;
+      padding: 0.6rem;
+      border-radius: 8px;
+      transition: all 0.2s;
     }
     .remove-btn:hover {
-      color: #e53935;
+      background: #e53935;
+      color: white;
     }
     .cart-summary {
       background: white;
-      border-radius: 12px;
-      padding: 1.5rem;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      border-radius: 16px;
+      padding: 1.75rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
       height: fit-content;
       position: sticky;
       top: 100px;
     }
     .cart-summary h2 {
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.25rem;
       color: #333;
+      font-size: 1.35rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .cart-summary h2 i {
+      color: var(--primary, #e91e63);
     }
     .summary-row {
       display: flex;
       justify-content: space-between;
-      padding: 0.75rem 0;
-      border-bottom: 1px solid #eee;
+      padding: 0.85rem 0;
+      border-bottom: 1px solid #f0f0f0;
+      font-size: 1rem;
     }
     .summary-row:last-of-type {
       border-bottom: none;
     }
     .summary-row.total {
-      font-size: 1.25rem;
+      font-size: 1.3rem;
       font-weight: 700;
       color: #333;
       border-top: 2px solid #333;
-      margin-top: 0.5rem;
+      margin-top: 0.75rem;
       padding-top: 1rem;
+      border-bottom: none;
     }
     .free-shipping-note {
-      background: #e8f5e9;
+      background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
       color: #2e7d32;
-      padding: 0.75rem;
-      border-radius: 8px;
+      padding: 1rem;
+      border-radius: 10px;
       margin: 1rem 0;
-      font-size: 0.875rem;
+      font-size: 0.9rem;
       text-align: center;
+      font-weight: 500;
+    }
+    .free-shipping-note.warning {
+      background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+      color: #e65100;
     }
     .shipping-progress {
-      background: #eee;
+      background: rgba(255,255,255,0.7);
       height: 8px;
       border-radius: 4px;
-      margin-top: 0.5rem;
+      margin-top: 0.65rem;
       overflow: hidden;
     }
     .shipping-progress-bar {
@@ -174,58 +200,80 @@
     }
     .checkout-btn {
       width: 100%;
-      padding: 1rem;
-      background: #e91e63;
+      padding: 1.1rem;
+      background: linear-gradient(135deg, var(--primary, #e91e63), #c2185b);
       color: white;
       border: none;
-      border-radius: 8px;
-      font-size: 1rem;
+      border-radius: 10px;
+      font-size: 1.1rem;
       font-weight: 600;
       cursor: pointer;
-      margin-top: 1rem;
-      transition: background 0.2s;
+      margin-top: 1.25rem;
+      transition: all 0.3s;
+      box-shadow: 0 4px 15px rgba(233, 30, 99, 0.3);
     }
     .checkout-btn:hover {
-      background: #c2185b;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(233, 30, 99, 0.4);
     }
     .checkout-btn:disabled {
       background: #ccc;
       cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
     }
     .continue-shopping {
-      display: block;
-      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
       margin-top: 1rem;
       color: #666;
       text-decoration: none;
+      font-size: 0.95rem;
+      padding: 0.75rem;
+      border-radius: 8px;
+      transition: all 0.2s;
     }
     .continue-shopping:hover {
-      color: #e91e63;
+      color: var(--primary, #e91e63);
+      background: #fce4ec;
     }
     .empty-cart {
       text-align: center;
-      padding: 3rem;
+      padding: 4rem 2rem;
     }
     .empty-cart i {
-      font-size: 4rem;
-      color: #ddd;
-      margin-bottom: 1rem;
+      font-size: 5rem;
+      color: #e0e0e0;
+      margin-bottom: 1.5rem;
     }
     .empty-cart h2 {
-      color: #666;
-      margin-bottom: 0.5rem;
+      color: #555;
+      margin-bottom: 0.75rem;
+      font-size: 1.5rem;
     }
     .empty-cart p {
       color: #999;
-      margin-bottom: 1.5rem;
+      margin-bottom: 2rem;
+      font-size: 1rem;
     }
     .empty-cart a {
-      display: inline-block;
-      padding: 0.75rem 2rem;
-      background: #e91e63;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 1rem 2rem;
+      background: linear-gradient(135deg, var(--primary, #e91e63), #c2185b);
       color: white;
       text-decoration: none;
-      border-radius: 8px;
+      border-radius: 10px;
+      font-weight: 600;
+      transition: all 0.3s;
+      box-shadow: 0 4px 15px rgba(233, 30, 99, 0.3);
+    }
+    .empty-cart a:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(233, 30, 99, 0.4);
     }
     .cart-header {
       display: flex;
@@ -233,21 +281,31 @@
       align-items: center;
       margin-bottom: 1rem;
       padding-bottom: 1rem;
-      border-bottom: 2px solid #eee;
+      border-bottom: 2px solid #f0f0f0;
     }
     .cart-header h1 {
-      font-size: 1.5rem;
+      font-size: 1.4rem;
       color: #333;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .cart-header h1 i {
+      color: var(--primary, #e91e63);
     }
     .clear-cart-btn {
-      background: none;
-      border: 1px solid #e53935;
+      background: white;
+      border: 2px solid #e53935;
       color: #e53935;
-      padding: 0.5rem 1rem;
-      border-radius: 6px;
+      padding: 0.6rem 1.2rem;
+      border-radius: 8px;
       cursor: pointer;
-      font-size: 0.875rem;
+      font-size: 0.9rem;
+      font-weight: 600;
       transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
     }
     .clear-cart-btn:hover {
       background: #e53935;
@@ -255,27 +313,84 @@
     }
     .loading {
       text-align: center;
-      padding: 2rem;
-      color: #666;
+      padding: 3rem;
+      color: #888;
     }
     .loading i {
-      font-size: 2rem;
+      font-size: 2.5rem;
       margin-bottom: 1rem;
+      color: var(--primary, #e91e63);
       animation: spin 1s linear infinite;
+    }
+    .loading p {
+      font-size: 1rem;
     }
     @keyframes spin {
       to { transform: rotate(360deg); }
     }
+    .secure-badge {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-top: 1rem;
+      color: #888;
+      font-size: 0.85rem;
+    }
+    .secure-badge i {
+      color: #4caf50;
+    }
   </style>
 </head>
 <body>
-  <!-- Header -->
+  <!-- Header - Same as index.html -->
   <header class="header">
     <div class="container">
+      <button class="mobile-menu-btn" id="mobile-menu-btn">
+        <i class="fas fa-bars"></i>
+      </button>
+      
       <a href="index.html" class="logo">
         <i class="fas fa-baby"></i>
         Kido<span>Cart</span>
+      </a>
+      
+      <nav class="nav-menu" id="nav-menu">
+        <a href="index.html">Home</a>
+        <a href="products.html">Products</a>
+        <div class="dropdown">
+          <a href="#" class="dropdown-trigger">Categories <i class="fas fa-chevron-down"></i></a>
+          <div class="dropdown-menu">
+            <a href="products.html?category=clothing"><i class="fas fa-tshirt"></i> Clothing</a>
+            <a href="products.html?category=toys"><i class="fas fa-gamepad"></i> Toys</a>
+            <a href="products.html?category=feeding"><i class="fas fa-utensils"></i> Feeding</a>
+            <a href="products.html?category=diapers"><i class="fas fa-baby"></i> Diapers & Care</a>
+            <a href="products.html?category=furniture"><i class="fas fa-couch"></i> Furniture</a>
+            <a href="products.html?category=gear"><i class="fas fa-car"></i> Gear & Travel</a>
+            <a href="products.html?category=bath"><i class="fas fa-bath"></i> Bath & Safety</a>
+            <a href="products.html?category=books"><i class="fas fa-book"></i> Books & Media</a>
+          </div>
+        </div>
+        <a href="orders.html">My Orders</a>
+      </nav>
+      
+      <div class="header-actions">
+        <button class="search-btn" id="search-btn">
+          <i class="fas fa-search"></i>
+        </button>
+        <a href="account.html" class="account-btn">
+          <i class="fas fa-user"></i>
+        </a>
+        <a href="wishlist.html" class="wishlist-btn">
+          <i class="fas fa-heart"></i>
+          <span class="wishlist-count" id="wishlist-count">0</span>
+        </a>
+        <a href="cart.html" class="cart-btn active">
+          <i class="fas fa-shopping-cart"></i>
+          <span class="cart-count" id="cart-count">0</span>
+        </a>
       </div>
+    </div>
   </header>
 
   <!-- Cart Page -->
@@ -284,9 +399,9 @@
       <!-- Cart Items -->
       <div class="cart-items">
         <div class="cart-header">
-          <h1><i class="fas fa-shopping-cart"></i> Your Cart</h1>
+          <h1><i class="fas fa-shopping-bag"></i> Shopping Cart</h1>
           <button class="clear-cart-btn" id="clear-cart-btn" style="display: none;">
-            <i class="fas fa-trash"></i> Clear All
+            <i class="fas fa-trash-alt"></i> Clear All
           </button>
         </div>
         <div id="cart-items">
@@ -299,7 +414,7 @@
 
       <!-- Cart Summary -->
       <div class="cart-summary" id="cart-summary" style="display: none;">
-        <h2>Order Summary</h2>
+        <h2><i class="fas fa-receipt"></i> Order Summary</h2>
         
         <div id="shipping-message"></div>
         
@@ -323,38 +438,87 @@
         <a href="products.html" class="continue-shopping">
           <i class="fas fa-arrow-left"></i> Continue Shopping
         </a>
+        
+        <div class="secure-badge">
+          <i class="fas fa-shield-alt"></i>
+          <span>Secure checkout powered by Razorpay</span>
+        </div>
       </div>
     </div>
   </main>
 
-  <!-- Footer -->
+  <!-- Footer - Same as index.html -->
   <footer class="footer">
     <div class="container">
-      <div class="footer-content">
+      <div class="footer-grid">
         <div class="footer-section">
-          <h3><i class="fas fa-baby"></i> KidoCart</h3>
-          <p>Your one-stop shop for all kids' needs.</p>
+          <a href="index.html" class="footer-logo">
+            <i class="fas fa-baby"></i>
+            Kido<span>Cart</span>
+          </a>
+          <p>Your one-stop shop for all kids' essentials. Quality products for your little ones at the best prices.</p>
+          <div class="social-links">
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-youtube"></i></a>
+          </div>
         </div>
+        
         <div class="footer-section">
-          <h4>Quick Links</h4>
-          <a href="index.html">Home</a>
-          <a href="products.html">Products</a>
-          <a href="cart.html">Cart</a>
-          <a href="account.html">My Account</a>
+          <h3>Quick Links</h3>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="products.html">All Products</a></li>
+            <li><a href="products.html?badge=sale">Sale Items</a></li>
+            <li><a href="products.html?badge=new">New Arrivals</a></li>
+          </ul>
         </div>
+        
         <div class="footer-section">
-          <h4>Help</h4>
-          <a href="#">Contact Us</a>
-          <a href="#">FAQs</a>
-          <a href="#">Shipping Info</a>
-          <a href="#">Returns</a>
+          <h3>Categories</h3>
+          <ul>
+            <li><a href="products.html?category=clothing">Clothing</a></li>
+            <li><a href="products.html?category=toys">Toys</a></li>
+            <li><a href="products.html?category=feeding">Feeding</a></li>
+            <li><a href="products.html?category=gear">Gear & Travel</a></li>
+          </ul>
+        </div>
+        
+        <div class="footer-section">
+          <h3>Customer Service</h3>
+          <ul>
+            <li><a href="account.html">My Account</a></li>
+            <li><a href="orders.html">Track Order</a></li>
+            <li><a href="wishlist.html">Wishlist</a></li>
+            <li><a href="cart.html">Shopping Cart</a></li>
+          </ul>
+        </div>
+        
+        <div class="footer-section">
+          <h3>Contact Us</h3>
+          <ul class="contact-info">
+            <li><i class="fas fa-phone"></i> +91 98765 43210</li>
+            <li><i class="fas fa-envelope"></i> support@kidocart.com</li>
+            <li><i class="fas fa-map-marker-alt"></i> Mumbai, India</li>
+          </ul>
         </div>
       </div>
+      
       <div class="footer-bottom">
-        <p>&copy; 2024 KidoCart. All rights reserved.</p>
+        <p>&copy; 2024 KidoCart. All rights reserved. Made with <i class="fas fa-heart" style="color: #e91e63;"></i> for kids</p>
+        <div class="payment-icons">
+          <i class="fab fa-cc-visa"></i>
+          <i class="fab fa-cc-mastercard"></i>
+          <i class="fab fa-cc-amex"></i>
+          <i class="fab fa-google-pay"></i>
+        </div>
       </div>
     </div>
   </footer>
+
+  <!-- Toast Notification -->
+  <div class="toast" id="toast"></div>
 
   <script src="js/data.js"></script>
   <script src="js/app.js"></script>
@@ -363,7 +527,30 @@
     const SHIPPING_COST = 49;
 
     // Load cart when page loads
-    document.addEventListener('DOMContentLoaded', loadCartPage);
+    document.addEventListener('DOMContentLoaded', function() {
+      loadCartPage();
+      updateWishlistCount();
+    });
+
+    // Update wishlist count
+    function updateWishlistCount() {
+      const wishlistCount = document.getElementById('wishlist-count');
+      const token = localStorage.getItem('kidocart_token');
+      if (token) {
+        fetch('/api/wishlist', {
+          headers: { 'Authorization': 'Bearer ' + token }
+        })
+        .then(r => r.json())
+        .then(data => {
+          const count = data.items ? data.items.length : 0;
+          if (wishlistCount) {
+            wishlistCount.textContent = count;
+            wishlistCount.style.display = count > 0 ? 'flex' : 'none';
+          }
+        })
+        .catch(() => {});
+      }
+    }
 
     // Load cart from API
     async function loadCartPage() {
@@ -378,7 +565,7 @@
             <i class="fas fa-user-lock"></i>
             <h2>Please Login</h2>
             <p>You need to login to view your cart</p>
-            <a href="login.html">Login Now</a>
+            <a href="login.html"><i class="fas fa-sign-in-alt"></i> Login Now</a>
           </div>
         `;
         return;
@@ -398,7 +585,7 @@
               <i class="fas fa-shopping-cart"></i>
               <h2>Your Cart is Empty</h2>
               <p>Looks like you haven't added anything to your cart yet</p>
-              <a href="products.html">Start Shopping</a>
+              <a href="products.html"><i class="fas fa-shopping-bag"></i> Start Shopping</a>
             </div>
           `;
           cartSummary.style.display = 'none';
@@ -409,7 +596,7 @@
         renderCartItems(cart.items);
         updateCartTotals(cart.items);
         cartSummary.style.display = 'block';
-        clearBtn.style.display = 'block';
+        clearBtn.style.display = 'flex';
         
       } catch (error) {
         console.error('Error loading cart:', error);
@@ -418,7 +605,7 @@
             <i class="fas fa-exclamation-triangle"></i>
             <h2>Error Loading Cart</h2>
             <p>Something went wrong. Please try again.</p>
-            <a href="javascript:location.reload()">Reload Page</a>
+            <a href="javascript:location.reload()"><i class="fas fa-redo"></i> Reload Page</a>
           </div>
         `;
       }
@@ -436,7 +623,7 @@
             <i class="fas fa-shopping-cart"></i>
             <h2>Your Cart is Empty</h2>
             <p>Looks like you haven't added anything to your cart yet</p>
-            <a href="products.html">Start Shopping</a>
+            <a href="products.html"><i class="fas fa-shopping-bag"></i> Start Shopping</a>
           </div>
         `;
         return;
@@ -453,8 +640,8 @@
             <img src="${imageUrl}" alt="${product.name}" onerror="this.src='https://via.placeholder.com/100x100?text=No+Image'">
             <div class="cart-item-details">
               <h3>${product.name}</h3>
-              ${item.size ? `<p>Size: ${item.size}</p>` : ''}
-              ${item.color ? `<p>Color: ${item.color}</p>` : ''}
+              ${item.size ? `<p><i class="fas fa-ruler"></i> Size: ${item.size}</p>` : ''}
+              ${item.color ? `<p><i class="fas fa-palette"></i> Color: ${item.color}</p>` : ''}
               <p class="price">₹${product.price.toFixed(2)}</p>
             </div>
             <div class="cart-item-quantity">
@@ -469,8 +656,8 @@
             <div class="cart-item-total">
               ₹${(product.price * item.quantity).toFixed(2)}
             </div>
-            <button class="remove-btn" onclick="removeItem('${product._id}', '${item.size || ''}', '${item.color || ''}')">
-              <i class="fas fa-trash"></i>
+            <button class="remove-btn" onclick="removeItem('${product._id}', '${item.size || ''}', '${item.color || ''}')" title="Remove item">
+              <i class="fas fa-trash-alt"></i>
             </button>
           </div>
         `;
@@ -501,17 +688,17 @@
       if (subtotal >= FREE_SHIPPING_THRESHOLD) {
         shippingMessage.innerHTML = `
           <div class="free-shipping-note">
-            <i class="fas fa-check-circle"></i> You've got FREE shipping!
+            <i class="fas fa-check-circle"></i> Yay! You've got FREE shipping!
           </div>
         `;
       } else {
         const remaining = FREE_SHIPPING_THRESHOLD - subtotal;
         const progress = (subtotal / FREE_SHIPPING_THRESHOLD) * 100;
         shippingMessage.innerHTML = `
-          <div class="free-shipping-note" style="background: #fff3e0; color: #e65100;">
+          <div class="free-shipping-note warning">
             <i class="fas fa-truck"></i> Add ₹${remaining.toFixed(2)} more for FREE shipping!
             <div class="shipping-progress">
-              <div class="shipping-progress-bar" style="width: ${progress}%"></div>
+              <div class="shipping-progress-bar" style="width: ${Math.min(progress, 100)}%"></div>
             </div>
           </div>
         `;
@@ -580,7 +767,7 @@
 
     // Clear all items
     document.getElementById('clear-cart-btn').addEventListener('click', async function() {
-      if (!confirm('Are you sure you want to clear your cart?')) return;
+      if (!confirm('Are you sure you want to clear your entire cart?')) return;
       
       const token = localStorage.getItem('kidocart_token');
       if (!token) return;
@@ -593,7 +780,7 @@
           }
         });
         
-        showToast('Cart cleared', 'success');
+        showToast('Cart cleared successfully', 'success');
         loadCartPage();
       } catch (error) {
         console.error('Error clearing cart:', error);
@@ -608,11 +795,11 @@
 
     // Update cart count in header
     function updateCartCount(count) {
-      const cartCountElements = document.querySelectorAll('.cart-count');
-      cartCountElements.forEach(el => {
-        el.textContent = count;
-        el.style.display = count > 0 ? 'flex' : 'none';
-      });
+      const cartCountEl = document.getElementById('cart-count');
+      if (cartCountEl) {
+        cartCountEl.textContent = count;
+        cartCountEl.style.display = count > 0 ? 'flex' : 'none';
+      }
     }
   </script>
 </body>
