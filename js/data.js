@@ -288,88 +288,88 @@ const INITIAL_PRODUCTS = [
 
 // Admin credentials (in real app, this would be server-side)
 const ADMIN_CREDENTIALS = {
-  username: 'admin',
-  password: 'admin123'
+  username: 'saltyperk',
+  password: 'Salty@717'
 };
 
 // Initialize data in localStorage if not exists
 function initializeData() {
-  if (!localStorage.getItem('kidsstore_products')) {
-    localStorage.setItem('kidsstore_products', JSON.stringify(INITIAL_PRODUCTS));
+  if (!localStorage.getItem('_products')) {
+    localStorage.setItem('_products', JSON.stringify(INITIAL_PRODUCTS));
   }
-  if (!localStorage.getItem('kidsstore_users')) {
-    localStorage.setItem('kidsstore_users', JSON.stringify([]));
+  if (!localStorage.getItem('_users')) {
+    localStorage.setItem('_users', JSON.stringify([]));
   }
-  if (!localStorage.getItem('kidsstore_orders')) {
-    localStorage.setItem('kidsstore_orders', JSON.stringify([]));
+  if (!localStorage.getItem('_orders')) {
+    localStorage.setItem('_orders', JSON.stringify([]));
   }
-  if (!localStorage.getItem('kidsstore_cart')) {
-    localStorage.setItem('kidsstore_cart', JSON.stringify([]));
+  if (!localStorage.getItem('_cart')) {
+    localStorage.setItem('_cart', JSON.stringify([]));
   }
-  if (!localStorage.getItem('kidsstore_wishlist')) {
-    localStorage.setItem('kidsstore_wishlist', JSON.stringify([]));
+  if (!localStorage.getItem('_wishlist')) {
+    localStorage.setItem('_wishlist', JSON.stringify([]));
   }
 }
 
 // Data access functions
 function getProducts() {
-  return JSON.parse(localStorage.getItem('kidsstore_products')) || [];
+  return JSON.parse(localStorage.getItem('_products')) || [];
 }
 
 function saveProducts(products) {
-  localStorage.setItem('kidsstore_products', JSON.stringify(products));
+  localStorage.setItem('_products', JSON.stringify(products));
 }
 
 function getUsers() {
-  return JSON.parse(localStorage.getItem('kidsstore_users')) || [];
+  return JSON.parse(localStorage.getItem('_users')) || [];
 }
 
 function saveUsers(users) {
-  localStorage.setItem('kidsstore_users', JSON.stringify(users));
+  localStorage.setItem('_users', JSON.stringify(users));
 }
 
 function getOrders() {
-  return JSON.parse(localStorage.getItem('kidsstore_orders')) || [];
+  return JSON.parse(localStorage.getItem('_orders')) || [];
 }
 
 function saveOrders(orders) {
-  localStorage.setItem('kidsstore_orders', JSON.stringify(orders));
+  localStorage.setItem('_orders', JSON.stringify(orders));
 }
 
 function getCurrentUser() {
-  return JSON.parse(localStorage.getItem('kidsstore_currentUser'));
+  return JSON.parse(localStorage.getItem('_currentUser'));
 }
 
 function setCurrentUser(user) {
   if (user) {
-    localStorage.setItem('kidsstore_currentUser', JSON.stringify(user));
+    localStorage.setItem('_currentUser', JSON.stringify(user));
   } else {
-    localStorage.removeItem('kidsstore_currentUser');
+    localStorage.removeItem('_currentUser');
   }
 }
 
 function getCart() {
-  return JSON.parse(localStorage.getItem('kidsstore_cart')) || [];
+  return JSON.parse(localStorage.getItem('_cart')) || [];
 }
 
 function saveCart(cart) {
-  localStorage.setItem('kidsstore_cart', JSON.stringify(cart));
+  localStorage.setItem('_cart', JSON.stringify(cart));
 }
 
 function getWishlist() {
-  return JSON.parse(localStorage.getItem('kidsstore_wishlist')) || [];
+  return JSON.parse(localStorage.getItem('_wishlist')) || [];
 }
 
 function saveWishlist(wishlist) {
-  localStorage.setItem('kidsstore_wishlist', JSON.stringify(wishlist));
+  localStorage.setItem('_wishlist', JSON.stringify(wishlist));
 }
 
 function isAdminLoggedIn() {
-  return localStorage.getItem('kidsstore_adminLoggedIn') === 'true';
+  return localStorage.getItem('_adminLoggedIn') === 'true';
 }
 
 function setAdminLoggedIn(status) {
-  localStorage.setItem('kidsstore_adminLoggedIn', status.toString());
+  localStorage.setItem('_adminLoggedIn', status.toString());
 }
 
 // Initialize on load
