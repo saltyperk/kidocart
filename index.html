@@ -1,254 +1,77 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>kidoCart - Premium Kids Products</title>
-  <link rel="stylesheet" href="css/styles.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-</head>
-<body>
-  <!-- Header -->
-  <header class="header">
-    <div class="header-top container">
-      <a href="index.html" class="logo">
-        <i class="fas fa-baby"></i>
-        Kido<span>Cart</span>
-      </a>
-      
-      <div class="search-bar">
-        <input type="text" id="search-input" placeholder="Search for products...">
-        <button id="search-btn"><i class="fas fa-search"></i> Search</button>
-      </div>
-      
-      <div class="header-actions">
-        <a href="wishlist.html" class="header-action">
-          <i class="fas fa-heart"></i>
-          <span class="wishlist-count" style="display: none;">0</span>
-          <span>Wishlist</span>
-        </a>
-        <a href="cart.html" class="header-action">
-          <i class="fas fa-shopping-cart"></i>
-          <span class="cart-count" style="display: none;">0</span>
-          <span>Cart</span>
-        </a>
-        <div id="user-action">
-          <a href="login.html" class="header-action">
-            <i class="fas fa-user"></i>
-            <span>Login</span>
-          </a>
-        </div>
-      </div>
-      
-      <button class="mobile-menu-btn">
-        <i class="fas fa-bars"></i>
-      </button>
-    </div>
+<!-- Replace the script section at the bottom of index.html -->
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+<script>
+  // Render Age Groups
+  function renderAgeGroups() {
+    const container = document.getElementById('age-groups-grid');
+    const icons = ['👶', '🍼', '🚼', '🧒', '👦', '🎒'];
     
-    <nav class="nav">
-      <ul class="nav-list container">
-        <li><a href="index.html" class="active">Home</a></li>
-        <li><a href="products.html">All Products</a></li>
-        <li><a href="products.html?category=clothing">Clothing</a></li>
-        <li><a href="products.html?category=toys">Toys</a></li>
-        <li><a href="products.html?category=feeding">Feeding</a></li>
-        <li><a href="products.html?category=gear">Gear & Travel</a></li>
-        <li><a href="products.html?ageGroup=newborn">Newborn</a></li>
-      </ul>
-    </nav>
-  </header>
+    container.innerHTML = AGE_GROUPS.map((ag, index) => `
+      <a href="products.html?ageGroup=${ag.id}" class="category-card">
+        <div style="font-size: 3rem; margin-bottom: 1rem;">${icons[index]}</div>
+        <h3>${ag.label}</h3>
+        <p>Shop Now</p>
+      </a>
+    `).join('');
+  }
 
-  <!-- Hero Section -->
-  <section class="hero">
-    <div class="container">
-      <h1>🎈 Welcome to kidoCart!</h1>
-      <p>Discover amazing products for your little ones - from newborns to kids up to 10 years</p>
-      <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-        <a href="products.html" class="btn btn-primary btn-lg">
-          <i class="fas fa-shopping-bag"></i> Shop Now
-        </a>
-        <a href="products.html?badge=sale" class="btn btn-secondary btn-lg">
-          <i class="fas fa-percent"></i> View Deals
-        </a>
-      </div>
-    </div>
-  </section>
+  // Render Categories
+  function renderCategories() {
+    const container = document.getElementById('categories-grid');
+    
+    container.innerHTML = CATEGORIES.map(cat => `
+      <a href="products.html?category=${cat.id}" class="category-card">
+        <div style="font-size: 3rem; margin-bottom: 1rem;">${cat.icon}</div>
+        <h3>${cat.name}</h3>
+        <p>${cat.description}</p>
+      </a>
+    `).join('');
+  }
 
-  <!-- Age Groups Section -->
-  <section class="categories container">
-    <h2 class="section-title">Shop by <span>Age Group</span></h2>
-    <div class="category-grid" id="age-groups-grid">
-      <!-- Age groups will be rendered here -->
-    </div>
-  </section>
-
-  <!-- Categories Section -->
-  <section class="categories container" style="background: var(--pastel-yellow); margin: 2rem auto; border-radius: 20px; padding: 3rem 2rem;">
-    <h2 class="section-title">Shop by <span>Category</span></h2>
-    <div class="category-grid" id="categories-grid">
-      <!-- Categories will be rendered here -->
-    </div>
-  </section>
-
-  <!-- Featured Products -->
-  <section class="products-section">
-    <div class="container">
-      <h2 class="section-title">Featured <span>Products</span></h2>
-      <div class="product-grid" id="featured-products">
-        <!-- Products will be rendered here -->
-      </div>
-      <div style="text-align: center; margin-top: 2rem;">
-        <a href="products.html" class="btn btn-primary btn-lg">View All Products</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- New Arrivals -->
-  <section class="container" style="padding: 4rem 1rem;">
-    <h2 class="section-title">New <span>Arrivals</span></h2>
-    <div class="product-grid" id="new-arrivals">
-      <!-- New products will be rendered here -->
-    </div>
-  </section>
-
-  <!-- Features Section -->
-  <section style="background: linear-gradient(135deg, var(--pastel-green) 0%, var(--pastel-blue) 100%); padding: 4rem 1rem;">
-    <div class="container">
-      <div class="category-grid" style="text-align: center;">
-        <div class="category-card">
-          <i class="fas fa-truck fa-2x" style="color: var(--primary); margin-bottom: 1rem;"></i>
-          <h3>Free Shipping</h3>
-          <p>On orders over $50</p>
-        </div>
-        <div class="category-card">
-          <i class="fas fa-undo fa-2x" style="color: var(--primary); margin-bottom: 1rem;"></i>
-          <h3>Easy Returns</h3>
-          <p>30-day return policy</p>
-        </div>
-        <div class="category-card">
-          <i class="fas fa-shield-alt fa-2x" style="color: var(--primary); margin-bottom: 1rem;"></i>
-          <h3>Secure Payment</h3>
-          <p>100% secure checkout</p>
-        </div>
-        <div class="category-card">
-          <i class="fas fa-headset fa-2x" style="color: var(--primary); margin-bottom: 1rem;"></i>
-          <h3>24/7 Support</h3>
-          <p>Dedicated support team</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Footer -->
-  <footer class="footer">
-    <div class="container">
-      <div class="footer-grid">
-        <div class="footer-col">
-          <h4>KidsStore</h4>
-          <p style="margin-bottom: 1rem;">Your one-stop shop for premium kids products from newborns to 10 years.</p>
-          <div style="display: flex; gap: 1rem;">
-            <a href="#"><i class="fab fa-facebook fa-lg"></i></a>
-            <a href="#"><i class="fab fa-instagram fa-lg"></i></a>
-            <a href="#"><i class="fab fa-twitter fa-lg"></i></a>
-            <a href="#"><i class="fab fa-pinterest fa-lg"></i></a>
-          </div>
-        </div>
-        <div class="footer-col">
-          <h4>Quick Links</h4>
-          <ul>
-            <li><a href="products.html">All Products</a></li>
-            <li><a href="products.html?badge=sale">Sale</a></li>
-            <li><a href="products.html?badge=new">New Arrivals</a></li>
-            <li><a href="products.html?category=toys">Toys</a></li>
-          </ul>
-        </div>
-        <div class="footer-col">
-          <h4>Customer Service</h4>
-          <ul>
-            <li><a href="#">Contact Us</a></li>
-            <li><a href="#">FAQs</a></li>
-            <li><a href="#">Shipping Info</a></li>
-            <li><a href="#">Returns</a></li>
-          </ul>
-        </div>
-        <div class="footer-col">
-          <h4>My Account</h4>
-          <ul>
-            <li><a href="login.html">Login</a></li>
-            <li><a href="register.html">Register</a></li>
-            <li><a href="orders.html">Order History</a></li>
-            <li><a href="wishlist.html">Wishlist</a></li>
-          </ul>
-        </div>
-      </div>
-      <div class="footer-bottom">
-        <p>&copy; 2025 kidoCart. All rights reserved. | <a href="admin/login.html" style="color: var(--gray);">Admin</a></p>
-      </div>
-    </div>
-  </footer>
-
-  <script src="js/data.js"></script>
-  <script src="js/app.js"></script>
-  <script>
-    // Render Age Groups
-    function renderAgeGroups() {
-      const container = document.getElementById('age-groups-grid');
-      const icons = ['👶', '🍼', '🚼', '🧒', '👦', '🎒'];
-      
-      container.innerHTML = AGE_GROUPS.map((ag, index) => `
-        <a href="products.html?ageGroup=${ag.id}" class="category-card">
-          <div style="font-size: 3rem; margin-bottom: 1rem;">${icons[index]}</div>
-          <h3>${ag.label}</h3>
-          <p>${getProducts().filter(p => p.ageGroup === ag.id).length} Products</p>
-        </a>
-      `).join('');
-    }
-
-    // Render Categories
-    function renderCategories() {
-      const container = document.getElementById('categories-grid');
-      
-      container.innerHTML = CATEGORIES.map(cat => `
-        <a href="products.html?category=${cat.id}" class="category-card">
-          <div style="font-size: 3rem; margin-bottom: 1rem;">${cat.icon}</div>
-          <h3>${cat.name}</h3>
-          <p>${cat.description}</p>
-        </a>
-      `).join('');
-    }
-
-    // Render Featured Products
-    function renderFeaturedProducts() {
-      const container = document.getElementById('featured-products');
-      const products = getProducts().filter(p => p.featured).slice(0, 4);
-      
-      container.innerHTML = products.map(p => renderProductCard(p)).join('');
-    }
-
-    // Render New Arrivals
-    function renderNewArrivals() {
-      const container = document.getElementById('new-arrivals');
-      const products = getProducts()
-        .filter(p => p.badge === 'new')
-        .slice(0, 4);
+  // Render Featured Products from MongoDB
+  async function renderFeaturedProducts() {
+    const container = document.getElementById('featured-products');
+    container.innerHTML = '<div style="text-align: center; padding: 2rem;"><div class="loading-spinner" style="width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid #6366f1; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto;"></div><p style="margin-top: 1rem; color: var(--gray);">Loading products...</p></div><style>@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }</style>';
+    
+    try {
+      const products = await getProducts({ featured: 'true' });
       
       if (products.length === 0) {
-        const allProducts = getProducts()
-          .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-          .slice(0, 4);
-        container.innerHTML = allProducts.map(p => renderProductCard(p)).join('');
+        // If no featured, get all products
+        const allProducts = await getProducts();
+        container.innerHTML = allProducts.slice(0, 4).map(p => renderProductCard(p)).join('');
       } else {
-        container.innerHTML = products.map(p => renderProductCard(p)).join('');
+        container.innerHTML = products.slice(0, 4).map(p => renderProductCard(p)).join('');
       }
+    } catch (error) {
+      console.error('Error loading featured products:', error);
+      container.innerHTML = '<p style="text-align: center; color: var(--gray);">Failed to load products. Please refresh.</p>';
     }
+  }
 
-    // Initialize
-    document.addEventListener('DOMContentLoaded', () => {
-      renderAgeGroups();
-      renderCategories();
-      renderFeaturedProducts();
-      renderNewArrivals();
-    });
-  </script>
-</body>
-</html>
+  // Render New Arrivals from MongoDB
+  async function renderNewArrivals() {
+    const container = document.getElementById('new-arrivals');
+    container.innerHTML = '<div style="text-align: center; padding: 2rem;"><div class="loading-spinner" style="width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid #6366f1; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto;"></div></div>';
+    
+    try {
+      const products = await getProducts();
+      
+      // Sort by createdAt and get newest
+      const sorted = products.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      container.innerHTML = sorted.slice(0, 4).map(p => renderProductCard(p)).join('');
+    } catch (error) {
+      console.error('Error loading new arrivals:', error);
+      container.innerHTML = '<p style="text-align: center; color: var(--gray);">Failed to load products.</p>';
+    }
+  }
+
+  // Initialize
+  document.addEventListener('DOMContentLoaded', async () => {
+    renderAgeGroups();
+    renderCategories();
+    await renderFeaturedProducts();
+    await renderNewArrivals();
+  });
+</script>
