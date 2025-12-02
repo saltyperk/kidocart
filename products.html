@@ -1556,6 +1556,7 @@ Here's the complete `products.html` with sidebar filters, matching your homepage
   <!-- ==================== SCRIPTS ==================== -->
   <script src="js/data.js"></script>
   <script src="js/app.js"></script>
+  <script>
     // ==================== GLOBAL VARIABLES ====================
     let allProducts = [];
     let filteredProducts = [];
@@ -1574,17 +1575,7 @@ Here's the complete `products.html` with sidebar filters, matching your homepage
       sort: 'relevance'
     };
 
-    // Categories configuration
-    const CATEGORIES = [
-      { id: 'clothing', name: 'Clothing', icon: 'fa-tshirt' },
-      { id: 'toys', name: 'Toys', icon: 'fa-gamepad' },
-      { id: 'feeding', name: 'Feeding', icon: 'fa-utensils' },
-      { id: 'diapers', name: 'Diapers & Care', icon: 'fa-baby' },
-      { id: 'furniture', name: 'Furniture', icon: 'fa-couch' },
-      { id: 'gear', name: 'Gear & Travel', icon: 'fa-car' },
-      { id: 'bath', name: 'Bath & Safety', icon: 'fa-bath' },
-      { id: 'books', name: 'Books & Media', icon: 'fa-book' }
-    ];
+
 
     // ==================== HEADER SCROLL BEHAVIOR ====================
     let lastScroll = 0;
