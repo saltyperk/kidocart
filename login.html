@@ -3,8 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="google-client-id" content="163244508840-kcersqu6gr3mg2kas71enpr07o3s4vbv.apps.googleusercontent.com">
-  <meta name="razorpay-key-id" content="YOUR_RAZORPAY_KEY_ID_HERE"> 
   <title>Login - KidoCart</title>
   <link rel="stylesheet" href="css/styles.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -170,14 +168,26 @@
   <script src="js/data.js"></script>
   <script src="js/app.js"></script>
   <script>
-    // Configuration - these will be loaded from meta tags set by server
-    // For static hosting, you can set these after deployment
-    const GOOGLE_CLIENT_ID = document.querySelector('meta[name="google-client-id"]')?.content || 'YOUR_GOOGLE_CLIENT_ID';
+    // Configuration - these can be loaded from meta tags or env
+    const GOOGLE_CLIENT_ID =
+      document.querySelector('meta[name="google-client-id"]')?.content ||
+      'YOUR_GOOGLE_CLIENT_ID';
     
-    // Redirect if already logged in
-    if (getCurrentUser()) {
-      window.location.href = 'account.html';
-    }
+    // ✅ FIXED: Redirect logic now checks BOTH user and token
+    (function handleAutoRedirect() {
+      const user  = getCurrentUser();
+      const token = localStorage.getItem('kidsstore_token');
+      
+      if (user && token) {
+        // Valid logged-in session
+        window.location.href = 'account.html';
+      } else if (user && !token) {
+        // Stale session: clear the old user so we don't get stuck in a loop
+        console.warn('Stale session detected: user without token. Clearing current user.');
+        localStorage.removeItem('kidsstore_currentUser');
+      }
+      // If no user, do nothing → show login form
+    })();
 
     // Initialize Google Sign-In
     window.onload = function() {
@@ -211,7 +221,7 @@
     };
 
     // Handle Google Sign-In Response
-    function handleGoogleSignIn(response) {
+    async function handleGoogleSignIn(response) {
       try {
         // Decode the JWT token from Google
         const payload = JSON.parse(atob(response.credential.split('.')[1]));
@@ -225,12 +235,12 @@
           emailVerified: payload.email_verified
         };
         
-        // Check if user exists in our system
+        // Try to login/register via API (if using backend)
+        // If you're still on local-only mode, fallback to local register/login
         let users = getUsers();
         let existingUser = users.find(u => u.email === googleUser.email);
         
         if (existingUser) {
-          // Update existing user with Google info if not already linked
           if (!existingUser.googleId) {
             existingUser.googleId = googleUser.id;
             existingUser.picture = googleUser.picture;
@@ -239,7 +249,6 @@
           }
           setCurrentUser(existingUser);
         } else {
-          // Create new user from Google data
           const newUser = {
             id: Date.now(),
             googleId: googleUser.id,
@@ -258,7 +267,6 @@
         
         showToast(`Welcome, ${googleUser.name}!`, 'success');
         
-        // Redirect after short delay
         setTimeout(() => {
           const redirectUrl = sessionStorage.getItem('redirectAfterLogin') || 'index.html';
           sessionStorage.removeItem('redirectAfterLogin');
@@ -272,23 +280,22 @@
     }
 
     // Email/Password Login
-    document.getElementById('login-form').addEventListener('submit', function(e) {
+    document.getElementById('login-form').addEventListener('submit', async function(e) {
       e.preventDefault();
       
       const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value;
       const remember = document.getElementById('remember').checked;
       
-      // Validate
       if (!email || !password) {
         showToast('Please fill in all fields', 'error');
         return;
       }
       
-      const result = loginUser(email, password);
+      // Using local auth (data.js + app.js)
+      const result = await loginUser(email, password);
       
       if (result.success) {
-        // Remember email if checked
         if (remember) {
           localStorage.setItem('kidocart_remembered_email', email);
         } else {
@@ -335,9 +342,6 @@
     document.getElementById('forgot-password-form').addEventListener('submit', function(e) {
       e.preventDefault();
       const email = document.getElementById('reset-email').value;
-      
-      // In a real app, this would send an API request
-      // For now, show a success message
       showToast('If an account exists with this email, you will receive a reset link.', 'success');
       closeForgotPassword();
     });
