@@ -1,8 +1,6 @@
-// Kids Store - Main Application Logic with MongoDB
-
+// Kids Store - Main Application Logic with MongoDB & INR Currency
 // ============ CONFIGURATION ============
 const IS_ADMIN_PAGE = window.location.pathname.includes('/admin/');
-
 // ============ TOAST NOTIFICATION SYSTEM ============
 function showToast(message, type = 'success') {
   const container = document.getElementById('toast-container') || createToastContainer();
@@ -15,7 +13,6 @@ function showToast(message, type = 'success') {
   container.appendChild(toast);
   setTimeout(() => toast.remove(), 3000);
 }
-
 function createToastContainer() {
   const container = document.createElement('div');
   container.id = 'toast-container';
@@ -23,9 +20,7 @@ function createToastContainer() {
   document.body.appendChild(container);
   return container;
 }
-
 // ============ PRODUCT FUNCTIONS (MongoDB) ============
-
 async function getProducts(filters = {}) {
   try {
     const params = new URLSearchParams(filters).toString();
@@ -40,7 +35,6 @@ async function getProducts(filters = {}) {
   }
   return [];
 }
-
 async function getProductById(id) {
   try {
     const response = await fetch(`/api/products?id=${id}`);
@@ -52,13 +46,10 @@ async function getProductById(id) {
   }
   return null;
 }
-
 async function filterProducts(filters) {
   return await getProducts(filters);
 }
-
 // ============ CART FUNCTIONS (MongoDB) ============
-
 async function addToCart(productId, quantity = 1, selectedSize = null, selectedColor = null) {
   try {
     const token = localStorage.getItem('kidsstore_token');
@@ -67,7 +58,6 @@ async function addToCart(productId, quantity = 1, selectedSize = null, selectedC
       window.location.href = 'login.html';
       return;
     }
-
     const response = await fetch('/api/cart', {
       method: 'POST',
       headers: {
@@ -81,12 +71,10 @@ async function addToCart(productId, quantity = 1, selectedSize = null, selectedC
         color: selectedColor
       })
     });
-
     if (!response.ok) {
       const error = await response.json();
       throw new Error(error.error || 'Failed to add to cart');
     }
-
     const cart = await response.json();
     updateCartCount(cart.items ? cart.items.length : 0);
     showToast('Added to cart!', 'success');
@@ -96,23 +84,19 @@ async function addToCart(productId, quantity = 1, selectedSize = null, selectedC
     showToast(error.message || 'Failed to add to cart', 'error');
   }
 }
-
 async function removeFromCart(productId, size = null, color = null) {
   try {
     const token = localStorage.getItem('kidsstore_token');
     if (!token) return;
-
     const params = new URLSearchParams({ productId });
     if (size) params.append('size', size);
     if (color) params.append('color', color);
-
     const response = await fetch(`/api/cart?${params}`, {
       method: 'DELETE',
       headers: {
         'Authorization': `Bearer ${token}`
       }
     });
-
     if (response.ok) {
       await loadCart();
       showToast('Removed from cart', 'success');
@@ -122,12 +106,10 @@ async function removeFromCart(productId, size = null, color = null) {
     showToast('Failed to remove from cart', 'error');
   }
 }
-
 async function updateCartQuantity(productId, quantity, size = null, color = null) {
   try {
     const token = localStorage.getItem('kidsstore_token');
     if (!token) return;
-
     const response = await fetch('/api/cart', {
       method: 'PUT',
       headers: {
@@ -141,7 +123,6 @@ async function updateCartQuantity(productId, quantity, size = null, color = null
         color
       })
     });
-
     if (response.ok) {
       return await response.json();
     }
@@ -150,18 +131,15 @@ async function updateCartQuantity(productId, quantity, size = null, color = null
     showToast('Failed to update cart', 'error');
   }
 }
-
 async function loadCart() {
   try {
     const token = localStorage.getItem('kidsstore_token');
     if (!token) return { items: [] };
-
     const response = await fetch('/api/cart', {
       headers: {
         'Authorization': `Bearer ${token}`
       }
     });
-
     if (response.ok) {
       const cart = await response.json();
       updateCartCount(cart.items ? cart.items.length : 0);
@@ -172,17 +150,14 @@ async function loadCart() {
   }
   return { items: [] };
 }
-
 async function getCart() {
   const cart = await loadCart();
   return cart.items || [];
 }
-
 async function clearCart() {
   try {
     const token = localStorage.getItem('kidsstore_token');
     if (!token) return;
-
     await fetch('/api/cart?clear=true', {
       method: 'DELETE',
       headers: {
@@ -195,14 +170,12 @@ async function clearCart() {
     console.error('Clear cart error:', error);
   }
 }
-
 async function getCartTotal() {
   const cart = await loadCart();
   const items = cart.items || [];
   
   let subtotal = 0;
   let itemCount = 0;
-
   items.forEach(item => {
     if (item.productId) {
       const price = item.productId.price || 0;
@@ -210,16 +183,16 @@ async function getCartTotal() {
       itemCount += item.quantity;
     }
   });
-
-  const shipping = subtotal > 50 ? 0 : 9.99;
-  const tax = subtotal * 0.08;
+  // Free shipping over ₹499
+  const shipping = subtotal > 499 ? 0 : 49;
+  
+  // Tax (GST 18% in India)
+  const tax = subtotal * 0.18;
+  
   const total = subtotal + shipping + tax;
-
   return { subtotal, shipping, tax, total, itemCount };
 }
-
 // ============ WISHLIST FUNCTIONS (MongoDB) ============
-
 async function toggleWishlist(productId) {
   try {
     const token = localStorage.getItem('kidsstore_token');
@@ -228,7 +201,6 @@ async function toggleWishlist(productId) {
       window.location.href = 'login.html';
       return false;
     }
-
     const response = await fetch('/api/wishlist?toggle=true', {
       method: 'POST',
       headers: {
@@ -237,7 +209,6 @@ async function toggleWishlist(productId) {
       },
       body: JSON.stringify({ productId })
     });
-
     if (response.ok) {
       const result = await response.json();
       await updateWishlistCount();
@@ -250,18 +221,15 @@ async function toggleWishlist(productId) {
   }
   return false;
 }
-
 async function loadWishlist() {
   try {
     const token = localStorage.getItem('kidsstore_token');
     if (!token) return { items: [] };
-
     const response = await fetch('/api/wishlist', {
       headers: {
         'Authorization': `Bearer ${token}`
       }
     });
-
     if (response.ok) {
       return await response.json();
     }
@@ -270,7 +238,6 @@ async function loadWishlist() {
   }
   return { items: [] };
 }
-
 async function getWishlist() {
   const wishlist = await loadWishlist();
   if (wishlist.items) {
@@ -278,7 +245,6 @@ async function getWishlist() {
   }
   return [];
 }
-
 async function isInWishlist(productId) {
   try {
     const wishlist = await getWishlist();
@@ -288,9 +254,7 @@ async function isInWishlist(productId) {
   }
   return false;
 }
-
 // ============ AUTH FUNCTIONS ============
-
 async function registerUser(userData) {
   try {
     const response = await fetch('/api/users?action=register', {
@@ -298,7 +262,6 @@ async function registerUser(userData) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(userData)
     });
-
     const data = await response.json();
     
     if (response.ok && data.token) {
@@ -313,7 +276,6 @@ async function registerUser(userData) {
     return { success: false, message: error.message };
   }
 }
-
 async function loginUser(email, password) {
   try {
     const response = await fetch('/api/users?action=login', {
@@ -321,7 +283,6 @@ async function loginUser(email, password) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password })
     });
-
     const data = await response.json();
     
     if (response.ok && data.token) {
@@ -336,17 +297,14 @@ async function loginUser(email, password) {
     return { success: false, message: error.message };
   }
 }
-
 function logoutUser() {
   localStorage.removeItem('kidsstore_token');
   localStorage.removeItem('kidsstore_currentUser');
   window.location.href = 'index.html';
 }
-
 function getCurrentUser() {
   return JSON.parse(localStorage.getItem('kidsstore_currentUser'));
 }
-
 function setCurrentUser(user) {
   if (user) {
     localStorage.setItem('kidsstore_currentUser', JSON.stringify(user));
@@ -354,14 +312,11 @@ function setCurrentUser(user) {
     localStorage.removeItem('kidsstore_currentUser');
   }
 }
-
 // ============ ORDER FUNCTIONS ============
-
 async function createOrder(orderData) {
   try {
     const token = localStorage.getItem('kidsstore_token');
     if (!token) return null;
-
     const response = await fetch('/api/orders', {
       method: 'POST',
       headers: {
@@ -370,7 +325,6 @@ async function createOrder(orderData) {
       },
       body: JSON.stringify(orderData)
     });
-
     if (response.ok) {
       const order = await response.json();
       await clearCart();
@@ -381,16 +335,13 @@ async function createOrder(orderData) {
   }
   return null;
 }
-
 async function getUserOrders() {
   try {
     const token = localStorage.getItem('kidsstore_token');
     if (!token) return [];
-
     const response = await fetch('/api/orders', {
       headers: { 'Authorization': `Bearer ${token}` }
     });
-
     if (response.ok) {
       return await response.json();
     }
@@ -399,9 +350,7 @@ async function getUserOrders() {
   }
   return [];
 }
-
 // ============ UI UPDATE FUNCTIONS ============
-
 function updateCartCount(count) {
   const cartCountElements = document.querySelectorAll('.cart-count');
   cartCountElements.forEach(el => {
@@ -409,7 +358,6 @@ function updateCartCount(count) {
     el.style.display = count > 0 ? 'flex' : 'none';
   });
 }
-
 async function updateWishlistCount() {
   const wishlistCountElements = document.querySelectorAll('.wishlist-count');
   try {
@@ -426,9 +374,7 @@ async function updateWishlistCount() {
     });
   }
 }
-
 // ============ HELPER FUNCTIONS ============
-
 function renderStars(rating) {
   let stars = '';
   const ratingNum = parseFloat(rating) || 0;
@@ -443,18 +389,22 @@ function renderStars(rating) {
   }
   return stars;
 }
-
-// THIS IS THE KEY FIX - Regular function, NOT async
+// Renders a product card with INR currency
 function renderProductCard(product) {
   const ageGroup = typeof AGE_GROUPS !== 'undefined' 
     ? AGE_GROUPS.find(ag => ag.id === product.ageGroup) 
     : null;
   const discount = product.originalPrice ? Math.round((1 - product.price / product.originalPrice) * 100) : 0;
   const productId = product._id || product.id;
-  const firstImage = product.images && product.images.length > 0 
-    ? product.images[0] 
-    : 'https://via.placeholder.com/300x250?text=No+Image';
-
+  
+  // Image handling
+  let firstImage = '/placeholder.jpg';
+  if (product.images) {
+    if (Array.isArray(product.images) && product.images.length > 0) firstImage = product.images[0];
+    else if (typeof product.images === 'string') firstImage = product.images;
+  } else if (product.image) {
+    firstImage = product.image;
+  }
   return `
     <div class="product-card" data-id="${productId}">
       ${product.badge ? `<span class="product-badge badge-${product.badge}">${product.badge.toUpperCase()}</span>` : ''}
@@ -473,8 +423,8 @@ function renderProductCard(product) {
           <span class="rating-count">(${product.reviewCount || 0})</span>
         </div>
         <div class="product-price">
-          <span class="current-price">$${parseFloat(product.price).toFixed(2)}</span>
-          ${product.originalPrice ? `<span class="original-price">$${parseFloat(product.originalPrice).toFixed(2)}</span>` : ''}
+          <span class="current-price">₹${parseFloat(product.price).toFixed(0)}</span>
+          ${product.originalPrice ? `<span class="original-price">₹${parseFloat(product.originalPrice).toFixed(0)}</span>` : ''}
           ${discount > 0 ? `<span class="discount">-${discount}%</span>` : ''}
         </div>
         <div class="product-actions">
@@ -486,7 +436,6 @@ function renderProductCard(product) {
     </div>
   `;
 }
-
 async function handleWishlistClick(event, productId) {
   event.stopPropagation();
   const btn = event.currentTarget;
@@ -494,13 +443,10 @@ async function handleWishlistClick(event, productId) {
   btn.classList.toggle('active', isNowInWishlist);
   btn.innerHTML = `<i class="fa${isNowInWishlist ? 's' : 'r'} fa-heart"></i>`;
 }
-
 async function handleAddToCart(productId) {
   await addToCart(productId);
 }
-
 // ============ HEADER UPDATE ============
-
 async function updateHeader() {
   const user = getCurrentUser();
   const userAction = document.getElementById('user-action');
@@ -522,7 +468,6 @@ async function updateHeader() {
       `;
     }
   }
-
   // Only load cart/wishlist counts if user is logged in and NOT on admin page
   if (user && !IS_ADMIN_PAGE) {
     try {
@@ -537,9 +482,7 @@ async function updateHeader() {
     updateCartCount(0);
   }
 }
-
 // ============ SEARCH FUNCTIONALITY ============
-
 function initSearch() {
   const searchInput = document.getElementById('search-input');
   const searchBtn = document.getElementById('search-btn');
@@ -551,7 +494,6 @@ function initSearch() {
         window.location.href = `products.html?search=${encodeURIComponent(query)}`;
       }
     });
-
     searchInput.addEventListener('keypress', (e) => {
       if (e.key === 'Enter') {
         const query = searchInput.value.trim();
@@ -562,9 +504,7 @@ function initSearch() {
     });
   }
 }
-
 // ============ MOBILE MENU ============
-
 function initMobileMenu() {
   const menuBtn = document.querySelector('.mobile-menu-btn');
   const navList = document.querySelector('.nav-list');
@@ -575,19 +515,14 @@ function initMobileMenu() {
     });
   }
 }
-
 // ============ ADMIN FUNCTIONS ============
-
 function isAdminLoggedIn() {
   return localStorage.getItem('kidsstore_adminLoggedIn') === 'true';
 }
-
 function setAdminLoggedIn(status) {
   localStorage.setItem('kidsstore_adminLoggedIn', status.toString());
 }
-
 // ============ INITIALIZE ON PAGE LOAD ============
-
 document.addEventListener('DOMContentLoaded', async () => {
   // Skip heavy loading for admin pages
   if (IS_ADMIN_PAGE) {
