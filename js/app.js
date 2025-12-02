@@ -1,4 +1,4 @@
-// Kids Store - Main Application Logic with MongoDB & INR Currency
+// kido cart - Main Application Logic with MongoDB & INR Currency
 // ============ CONFIGURATION ============
 const IS_ADMIN_PAGE = window.location.pathname.includes('/admin/');
 // ============ TOAST NOTIFICATION SYSTEM ============
@@ -52,7 +52,7 @@ async function filterProducts(filters) {
 // ============ CART FUNCTIONS (MongoDB) ============
 async function addToCart(productId, quantity = 1, selectedSize = null, selectedColor = null) {
   try {
-    const token = localStorage.getItem('kidsstore_token');
+    const token = localStorage.getItem('kidocart_token');
     if (!token) {
       showToast('Please login to add items to cart', 'warning');
       window.location.href = 'login.html';
@@ -86,7 +86,7 @@ async function addToCart(productId, quantity = 1, selectedSize = null, selectedC
 }
 async function removeFromCart(productId, size = null, color = null) {
   try {
-    const token = localStorage.getItem('kidsstore_token');
+    const token = localStorage.getItem('kidocart_token');
     if (!token) return;
     const params = new URLSearchParams({ productId });
     if (size) params.append('size', size);
@@ -108,7 +108,7 @@ async function removeFromCart(productId, size = null, color = null) {
 }
 async function updateCartQuantity(productId, quantity, size = null, color = null) {
   try {
-    const token = localStorage.getItem('kidsstore_token');
+    const token = localStorage.getItem('kidocart_token');
     if (!token) return;
     const response = await fetch('/api/cart', {
       method: 'PUT',
@@ -133,7 +133,7 @@ async function updateCartQuantity(productId, quantity, size = null, color = null
 }
 async function loadCart() {
   try {
-    const token = localStorage.getItem('kidsstore_token');
+    const token = localStorage.getItem('kidocart_token');
     if (!token) return { items: [] };
     const response = await fetch('/api/cart', {
       headers: {
@@ -156,7 +156,7 @@ async function getCart() {
 }
 async function clearCart() {
   try {
-    const token = localStorage.getItem('kidsstore_token');
+    const token = localStorage.getItem('kidocart_token');
     if (!token) return;
     await fetch('/api/cart?clear=true', {
       method: 'DELETE',
@@ -195,7 +195,7 @@ async function getCartTotal() {
 // ============ WISHLIST FUNCTIONS (MongoDB) ============
 async function toggleWishlist(productId) {
   try {
-    const token = localStorage.getItem('kidsstore_token');
+    const token = localStorage.getItem('kidocart_token');
     if (!token) {
       showToast('Please login to use wishlist', 'warning');
       window.location.href = 'login.html';
@@ -223,7 +223,7 @@ async function toggleWishlist(productId) {
 }
 async function loadWishlist() {
   try {
-    const token = localStorage.getItem('kidsstore_token');
+    const token = localStorage.getItem('kidocart_token');
     if (!token) return { items: [] };
     const response = await fetch('/api/wishlist', {
       headers: {
@@ -265,8 +265,8 @@ async function registerUser(userData) {
     const data = await response.json();
     
     if (response.ok && data.token) {
-      localStorage.setItem('kidsstore_token', data.token);
-      localStorage.setItem('kidsstore_currentUser', JSON.stringify(data.user));
+      localStorage.setItem('kidocart_token', data.token);
+      localStorage.setItem('kidocart_currentUser', JSON.stringify(data.user));
       return { success: true, user: data.user };
     }
     
@@ -286,8 +286,8 @@ async function loginUser(email, password) {
     const data = await response.json();
     
     if (response.ok && data.token) {
-      localStorage.setItem('kidsstore_token', data.token);
-      localStorage.setItem('kidsstore_currentUser', JSON.stringify(data.user));
+      localStorage.setItem('kidocart_token', data.token);
+      localStorage.setItem('kidocart_currentUser', JSON.stringify(data.user));
       return { success: true, user: data.user };
     }
     
@@ -298,24 +298,24 @@ async function loginUser(email, password) {
   }
 }
 function logoutUser() {
-  localStorage.removeItem('kidsstore_token');
-  localStorage.removeItem('kidsstore_currentUser');
+  localStorage.removeItem('kidocart_token');
+  localStorage.removeItem('kidocart_currentUser');
   window.location.href = 'index.html';
 }
 function getCurrentUser() {
-  return JSON.parse(localStorage.getItem('kidsstore_currentUser'));
+  return JSON.parse(localStorage.getItem('kidocart_currentUser'));
 }
 function setCurrentUser(user) {
   if (user) {
-    localStorage.setItem('kidsstore_currentUser', JSON.stringify(user));
+    localStorage.setItem('kidocart_currentUser', JSON.stringify(user));
   } else {
-    localStorage.removeItem('kidsstore_currentUser');
+    localStorage.removeItem('kidocart_currentUser');
   }
 }
 // ============ ORDER FUNCTIONS ============
 async function createOrder(orderData) {
   try {
-    const token = localStorage.getItem('kidsstore_token');
+    const token = localStorage.getItem('kidocart_token');
     if (!token) return null;
     const response = await fetch('/api/orders', {
       method: 'POST',
@@ -337,7 +337,7 @@ async function createOrder(orderData) {
 }
 async function getUserOrders() {
   try {
-    const token = localStorage.getItem('kidsstore_token');
+    const token = localStorage.getItem('kidocart_token');
     if (!token) return [];
     const response = await fetch('/api/orders', {
       headers: { 'Authorization': `Bearer ${token}` }
@@ -517,10 +517,10 @@ function initMobileMenu() {
 }
 // ============ ADMIN FUNCTIONS ============
 function isAdminLoggedIn() {
-  return localStorage.getItem('kidsstore_adminLoggedIn') === 'true';
+  return localStorage.getItem('kidocart_adminLoggedIn') === 'true';
 }
 function setAdminLoggedIn(status) {
-  localStorage.setItem('kidsstore_adminLoggedIn', status.toString());
+  localStorage.setItem('kidocart_adminLoggedIn', status.toString());
 }
 // ============ INITIALIZE ON PAGE LOAD ============
 document.addEventListener('DOMContentLoaded', async () => {
