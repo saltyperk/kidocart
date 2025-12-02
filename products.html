@@ -327,76 +327,67 @@
     sort: null
   };
 
-  // Initialize filters from URL
   function initFromURL() {
     const params = new URLSearchParams(window.location.search);
-    
-    if (params.get('category')) {
-      currentFilters.category = params.get('category');
-    }
-    if (params.get('ageGroup')) {
-      currentFilters.ageGroup = params.get('ageGroup');
-    }
+    if (params.get('category')) currentFilters.category = params.get('category');
+    if (params.get('ageGroup')) currentFilters.ageGroup = params.get('ageGroup');
     if (params.get('search')) {
       currentFilters.search = params.get('search');
-      document.getElementById('search-input').value = params.get('search');
+      const searchInput = document.getElementById('search-input');
+      if (searchInput) searchInput.value = params.get('search');
     }
-    if (params.get('brand')) {
-      currentFilters.brand = params.get('brand');
-    }
+    if (params.get('brand')) currentFilters.brand = params.get('brand');
   }
 
-  // Render filter options
   function renderFilterOptions() {
-    // Age filters
     const ageContainer = document.getElementById('age-filters');
-    ageContainer.innerHTML = AGE_GROUPS.map(ag => `
-      <label class="filter-option">
-        <input type="radio" name="ageGroup" value="${ag.id}" 
-          ${currentFilters.ageGroup === ag.id ? 'checked' : ''}
-          onchange="setFilter('ageGroup', '${ag.id}')">
-        <span>${ag.label}</span>
-      </label>
-    `).join('');
+    if (ageContainer) {
+      ageContainer.innerHTML = AGE_GROUPS.map(ag => `
+        <label class="filter-option">
+          <input type="radio" name="ageGroup" value="${ag.id}" 
+            ${currentFilters.ageGroup === ag.id ? 'checked' : ''}
+            onchange="setFilter('ageGroup', '${ag.id}')">
+          <span>${ag.label}</span>
+        </label>
+      `).join('');
+    }
 
-    // Category filters
     const catContainer = document.getElementById('category-filters');
-    catContainer.innerHTML = CATEGORIES.map(cat => `
-      <label class="filter-option">
-        <input type="radio" name="category" value="${cat.id}"
-          ${currentFilters.category === cat.id ? 'checked' : ''}
-          onchange="setFilter('category', '${cat.id}')">
-        <span>${cat.icon} ${cat.name}</span>
-      </label>
-    `).join('');
+    if (catContainer) {
+      catContainer.innerHTML = CATEGORIES.map(cat => `
+        <label class="filter-option">
+          <input type="radio" name="category" value="${cat.id}"
+            ${currentFilters.category === cat.id ? 'checked' : ''}
+            onchange="setFilter('category', '${cat.id}')">
+          <span>${cat.icon} ${cat.name}</span>
+        </label>
+      `).join('');
+    }
 
-    // Brand filters
     const brandContainer = document.getElementById('brand-filters');
-    brandContainer.innerHTML = BRANDS.map(brand => `
-      <label class="filter-option">
-        <input type="radio" name="brand" value="${brand}"
-          ${currentFilters.brand === brand ? 'checked' : ''}
-          onchange="setFilter('brand', '${brand}')">
-        <span>${brand}</span>
-      </label>
-    `).join('');
+    if (brandContainer) {
+      brandContainer.innerHTML = BRANDS.map(brand => `
+        <label class="filter-option">
+          <input type="radio" name="brand" value="${brand}"
+            ${currentFilters.brand === brand ? 'checked' : ''}
+            onchange="setFilter('brand', '${brand}')">
+          <span>${brand}</span>
+        </label>
+      `).join('');
+    }
   }
 
-  // Set filter
   function setFilter(key, value) {
     currentFilters[key] = value;
     applyFilters();
   }
 
-  // Clear single filter
   function clearFilter(key) {
     currentFilters[key] = null;
-    const radios = document.querySelectorAll(`input[name="${key}"]`);
-    radios.forEach(r => r.checked = false);
+    document.querySelectorAll(`input[name="${key}"]`).forEach(r => r.checked = false);
     applyFilters();
   }
 
-  // Clear price filter
   function clearPriceFilter() {
     currentFilters.minPrice = null;
     currentFilters.maxPrice = null;
@@ -405,27 +396,17 @@
     applyFilters();
   }
 
-  // Apply price filter
   function applyPriceFilter() {
-    const min = document.getElementById('min-price').value;
-    const max = document.getElementById('max-price').value;
-    currentFilters.minPrice = min || null;
-    currentFilters.maxPrice = max || null;
+    currentFilters.minPrice = document.getElementById('min-price').value || null;
+    currentFilters.maxPrice = document.getElementById('max-price').value || null;
     applyFilters();
   }
 
-  // Clear all filters
   function clearAllFilters() {
     currentFilters = {
-      category: null,
-      ageGroup: null,
-      brand: null,
-      minPrice: null,
-      maxPrice: null,
-      rating: null,
-      availability: false,
-      search: null,
-      sort: null
+      category: null, ageGroup: null, brand: null,
+      minPrice: null, maxPrice: null, rating: null,
+      availability: false, search: null, sort: null
     };
     
     document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
@@ -439,24 +420,26 @@
     applyFilters();
   }
 
-  // Apply all filters and load from MongoDB
   async function applyFilters() {
-    // Show loading
     const container = document.getElementById('products-grid');
-    container.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 3rem;"><div class="loading-spinner" style="width: 50px; height: 50px; border: 4px solid #f3f3f3; border-top: 4px solid #6366f1; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto;"></div><p style="margin-top: 1rem; color: var(--gray);">Loading products...</p></div><style>@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }</style>';
+    container.innerHTML = `
+      <div style="grid-column: 1/-1; text-align: center; padding: 3rem;">
+        <div style="width: 50px; height: 50px; border: 4px solid #f3f3f3; border-top: 4px solid #6366f1; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto;"></div>
+        <p style="margin-top: 1rem; color: var(--gray);">Loading products...</p>
+      </div>
+      <style>@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }</style>
+    `;
 
-    // Get rating filter
     const ratingInput = document.querySelector('input[name="rating"]:checked');
     currentFilters.rating = ratingInput ? ratingInput.value : null;
     
-    // Get availability filter
-    currentFilters.availability = document.getElementById('in-stock')?.checked || false;
+    const inStockEl = document.getElementById('in-stock');
+    currentFilters.availability = inStockEl ? inStockEl.checked : false;
     
-    // Get sort
-    currentFilters.sort = document.getElementById('sort-select')?.value || null;
+    const sortEl = document.getElementById('sort-select');
+    currentFilters.sort = sortEl ? sortEl.value : null;
 
     try {
-      // Build query params for API
       const queryParams = {};
       if (currentFilters.category) queryParams.category = currentFilters.category;
       if (currentFilters.ageGroup) queryParams.ageGroup = currentFilters.ageGroup;
@@ -464,10 +447,9 @@
       if (currentFilters.search) queryParams.search = currentFilters.search;
       if (currentFilters.availability) queryParams.availability = 'true';
 
-      // Fetch from MongoDB
       let products = await getProducts(queryParams);
 
-      // Client-side filtering for price and rating
+      // Client-side filtering
       if (currentFilters.minPrice) {
         products = products.filter(p => p.price >= parseFloat(currentFilters.minPrice));
       }
@@ -475,62 +457,55 @@
         products = products.filter(p => p.price <= parseFloat(currentFilters.maxPrice));
       }
       if (currentFilters.rating) {
-        products = products.filter(p => p.rating >= parseFloat(currentFilters.rating));
+        products = products.filter(p => (p.rating || 0) >= parseFloat(currentFilters.rating));
       }
 
-      // Client-side sorting
+      // Sorting
       if (currentFilters.sort) {
         switch (currentFilters.sort) {
-          case 'price-low':
-            products.sort((a, b) => a.price - b.price);
-            break;
-          case 'price-high':
-            products.sort((a, b) => b.price - a.price);
-            break;
-          case 'rating':
-            products.sort((a, b) => b.rating - a.rating);
-            break;
-          case 'newest':
-            products.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-            break;
-          case 'popular':
-            products.sort((a, b) => b.reviewCount - a.reviewCount);
-            break;
+          case 'price-low': products.sort((a, b) => a.price - b.price); break;
+          case 'price-high': products.sort((a, b) => b.price - a.price); break;
+          case 'rating': products.sort((a, b) => (b.rating || 0) - (a.rating || 0)); break;
+          case 'newest': products.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); break;
+          case 'popular': products.sort((a, b) => (b.reviewCount || 0) - (a.reviewCount || 0)); break;
         }
       }
 
-      // Render products
       renderProducts(products);
       updatePageTitle();
       updateURL();
       
     } catch (error) {
       console.error('Error loading products:', error);
-      container.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--danger);">Failed to load products. Please try again.</p>';
+      container.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--danger); padding: 2rem;">Failed to load products. Please refresh the page.</p>';
     }
   }
 
-  // Render products
   function renderProducts(products) {
     const container = document.getElementById('products-grid');
     const noProducts = document.getElementById('no-products');
     const countEl = document.getElementById('products-count');
     
-    countEl.textContent = `${products.length} product${products.length !== 1 ? 's' : ''} found`;
+    if (countEl) {
+      countEl.textContent = `${products.length} product${products.length !== 1 ? 's' : ''} found`;
+    }
     
     if (products.length === 0) {
       container.style.display = 'none';
-      noProducts.style.display = 'block';
+      if (noProducts) noProducts.style.display = 'block';
     } else {
       container.style.display = 'grid';
-      noProducts.style.display = 'none';
-      container.innerHTML = products.map(p => renderProductCard(p)).join('');
+      if (noProducts) noProducts.style.display = 'none';
+      
+      // KEY FIX: renderProductCard returns a string, not a Promise
+      container.innerHTML = products.map(product => renderProductCard(product)).join('');
     }
   }
 
-  // Update page title
   function updatePageTitle() {
     const titleEl = document.getElementById('page-title');
+    if (!titleEl) return;
+    
     let title = 'All Products';
     
     if (currentFilters.search) {
@@ -547,10 +522,8 @@
     document.title = `${title} - KidoCart`;
   }
 
-  // Update URL with filters
   function updateURL() {
     const params = new URLSearchParams();
-    
     if (currentFilters.category) params.set('category', currentFilters.category);
     if (currentFilters.ageGroup) params.set('ageGroup', currentFilters.ageGroup);
     if (currentFilters.search) params.set('search', currentFilters.search);
@@ -560,12 +533,13 @@
     window.history.pushState({}, '', newURL);
   }
 
-  // Toggle filters on mobile
   function toggleFilters() {
     const sidebar = document.getElementById('filters-sidebar');
     const closeBtn = document.querySelector('.close-filters');
-    sidebar.classList.toggle('active');
-    closeBtn.style.display = sidebar.classList.contains('active') ? 'flex' : 'none';
+    if (sidebar) {
+      sidebar.classList.toggle('active');
+      if (closeBtn) closeBtn.style.display = sidebar.classList.contains('active') ? 'flex' : 'none';
+    }
   }
 
   // Initialize
