@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Order Management - KidoCart Admin</title>
+  <title>Order Management - KidsStore Admin</title>
   <link rel="stylesheet" href="../css/styles.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
@@ -34,7 +34,7 @@
     <!-- Sidebar -->
     <aside class="admin-sidebar">
       <div class="logo">
-        <i class="fas fa-baby"></i> Kido<span>Cart</span>
+        <i class="fas fa-baby"></i> Kids<span>Store</span>
         <small style="display: block; font-size: 0.7rem; opacity: 0.7;">Admin Panel</small>
       </div>
       <ul class="admin-nav">
@@ -180,7 +180,7 @@
                 ${order.items.length > 3 ? `<span style="font-size: 0.75rem; color: var(--gray);">+${order.items.length - 3}</span>` : ''}
               </div>
             </td>
-            <td><strong>$${order.total.toFixed(2)}</strong></td>
+            <td><strong>₹${order.total.toFixed(0)}</strong></td>
             <td>${paymentLabels[order.paymentMethod] || order.paymentMethod}</td>
             <td>
               <select class="status-select ${order.status}" onchange="updateOrderStatus(event, '${order.id}')" onclick="event.stopPropagation()">
@@ -224,7 +224,7 @@
       }
 
       if (date) {
-        orders = orders.filter(o => o.createdAt.startsWith(date));
+        orders = orders.filter(o => o.createdAt && o.createdAt.startsWith(date));
       }
 
       renderOrdersTable(orders);
@@ -261,11 +261,11 @@
             <div>
               <p><strong>Customer:</strong> ${user ? user.name : 'Unknown'}</p>
               <p><strong>Email:</strong> ${user ? user.email : '-'}</p>
-              <p><strong>Phone:</strong> ${order.shippingAddress.phone}</p>
+              <p><strong>Phone:</strong> ${order.shippingAddress ? order.shippingAddress.phone : '-'}</p>
             </div>
             <div>
               <p><strong>Order Date:</strong> ${new Date(order.createdAt).toLocaleString()}</p>
-              <p><strong>Payment:</strong> ${paymentLabels[order.paymentMethod]}</p>
+              <p><strong>Payment:</strong> ${paymentLabels[order.paymentMethod] || order.paymentMethod}</p>
               <p><strong>Status:</strong> <span class="status-badge status-${order.status === 'delivered' ? 'active' : order.status === 'cancelled' ? 'inactive' : 'pending'}">${order.status.toUpperCase()}</span></p>
             </div>
           </div>
@@ -274,10 +274,12 @@
         <div class="order-detail-section">
           <h4><i class="fas fa-map-marker-alt"></i> Shipping Address</h4>
           <p>
-            ${order.shippingAddress.firstName} ${order.shippingAddress.lastName}<br>
-            ${order.shippingAddress.address}${order.shippingAddress.address2 ? ', ' + order.shippingAddress.address2 : ''}<br>
-            ${order.shippingAddress.city}, ${order.shippingAddress.state} ${order.shippingAddress.zip}<br>
-            ${order.shippingAddress.country}
+            ${order.shippingAddress ? `
+              ${order.shippingAddress.firstName} ${order.shippingAddress.lastName}<br>
+              ${order.shippingAddress.address}${order.shippingAddress.address2 ? ', ' + order.shippingAddress.address2 : ''}<br>
+              ${order.shippingAddress.city}, ${order.shippingAddress.state} ${order.shippingAddress.zip}<br>
+              ${order.shippingAddress.country}
+            ` : 'No address available'}
           </p>
         </div>
 
@@ -295,8 +297,8 @@
                 </p>
               </div>
               <div style="text-align: right;">
-                <p>$${item.price.toFixed(2)} × ${item.quantity}</p>
-                <strong style="color: var(--primary);">$${(item.price * item.quantity).toFixed(2)}</strong>
+                <p>₹${item.price.toFixed(0)} × ${item.quantity}</p>
+                <strong style="color: var(--primary);">₹${(item.price * item.quantity).toFixed(0)}</strong>
               </div>
             </div>
           `).join('')}
@@ -306,16 +308,16 @@
           <h4><i class="fas fa-calculator"></i> Order Summary</h4>
           <div style="max-width: 300px; margin-left: auto;">
             <div style="display: flex; justify-content: space-between; padding: 0.5rem 0;">
-              <span>Subtotal</span><span>$${order.subtotal.toFixed(2)}</span>
+              <span>Subtotal</span><span>₹${order.subtotal.toFixed(0)}</span>
             </div>
             <div style="display: flex; justify-content: space-between; padding: 0.5rem 0;">
-              <span>Shipping</span><span>${order.shipping === 0 ? 'FREE' : '$' + order.shipping.toFixed(2)}</span>
+              <span>Shipping</span><span>${order.shipping === 0 ? 'FREE' : '₹' + order.shipping.toFixed(0)}</span>
             </div>
             <div style="display: flex; justify-content: space-between; padding: 0.5rem 0;">
-              <span>Tax</span><span>$${order.tax.toFixed(2)}</span>
+              <span>Tax (18% GST)</span><span>₹${order.tax.toFixed(0)}</span>
             </div>
             <div style="display: flex; justify-content: space-between; padding: 1rem 0; border-top: 2px solid var(--primary); margin-top: 0.5rem; font-size: 1.25rem; font-weight: 700; color: var(--primary);">
-              <span>Total</span><span>$${order.total.toFixed(2)}</span>
+              <span>Total</span><span>₹${order.total.toFixed(0)}</span>
             </div>
           </div>
         </div>
@@ -342,7 +344,7 @@
       let csv = 'Order ID,Customer,Email,Total,Status,Payment,Date\n';
       orders.forEach(order => {
         const user = users.find(u => u.id === order.userId);
-        csv += `${order.id},${user ? user.name : 'Unknown'},${user ? user.email : '-'},$${order.total.toFixed(2)},${order.status},${order.paymentMethod},${order.createdAt}\n`;
+        csv += `${order.id},${user ? user.name : 'Unknown'},${user ? user.email : '-'},₹${order.total.toFixed(0)},${order.status},${order.paymentMethod},"${order.createdAt}"\n`;
       });
 
       const blob = new Blob([csv], { type: 'text/csv' });
