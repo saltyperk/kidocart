@@ -1,321 +1,109 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Products - KidoCart</title>
-  <link rel="stylesheet" href="css/styles.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    .products-page {
-      display: grid;
-      grid-template-columns: 280px 1fr;
-      gap: 2rem;
-      padding: 2rem 1rem;
-    }
-    
-    .products-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1.5rem;
-      flex-wrap: wrap;
-      gap: 1rem;
-    }
-    
-    .products-count {
-      color: var(--gray);
-    }
-    
-    .sort-select {
-      padding: 0.5rem 1rem;
-      border: 2px solid var(--light);
-      border-radius: 10px;
-      font-size: 1rem;
-      background: white;
-      cursor: pointer;
-    }
-    
-    .filter-toggle {
-      display: none;
-      margin-bottom: 1rem;
-    }
-    
-    .clear-filters {
-      color: var(--primary);
-      cursor: pointer;
-      font-size: 0.875rem;
-    }
-    
-    .no-products {
-      text-align: center;
-      padding: 4rem 2rem;
-      background: white;
-      border-radius: 20px;
-    }
-    
-    .no-products i {
-      font-size: 4rem;
-      color: var(--light);
-      margin-bottom: 1rem;
-    }
-    
-    @media (max-width: 900px) {
-      .products-page {
-        grid-template-columns: 1fr;
-      }
-      
-      .filters-sidebar {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        z-index: 1000;
-        overflow-y: auto;
-        margin: 0;
-        border-radius: 0;
-      }
-      
-      .filters-sidebar.active {
-        display: block;
-      }
-      
-      .filter-toggle {
-        display: block;
-      }
-      
-      .close-filters {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 1rem;
-        padding-bottom: 1rem;
-        border-bottom: 1px solid var(--light);
-      }
-    }
-  </style>
-</head>
-<body>
-  <!-- Header -->
-  <header class="header">
-    <div class="header-top container">
-      <a href="index.html" class="logo">
-        <i class="fas fa-baby"></i>
-        Kido<span>Cart</span>
-      </a>
-      
-      <div class="search-bar">
-        <input type="text" id="search-input" placeholder="Search for products...">
-        <button id="search-btn"><i class="fas fa-search"></i> Search</button>
-      </div>
-      
-      <div class="header-actions">
-        <a href="wishlist.html" class="header-action">
-          <i class="fas fa-heart"></i>
-          <span class="wishlist-count" style="display: none;">0</span>
-          <span>Wishlist</span>
-        </a>
-        <a href="cart.html" class="header-action">
-          <i class="fas fa-shopping-cart"></i>
-          <span class="cart-count" style="display: none;">0</span>
-          <span>Cart</span>
-        </a>
-        <div id="user-action">
-          <a href="login.html" class="header-action">
-            <i class="fas fa-user"></i>
-            <span>Login</span>
-          </a>
-        </div>
-      </div>
-      
-      <button class="mobile-menu-btn">
-        <i class="fas fa-bars"></i>
-      </button>
-    </div>
-    
-    <nav class="nav">
-      <ul class="nav-list container">
-        <li><a href="index.html">Home</a></li>
-        <li><a href="products.html" class="active">All Products</a></li>
-        <li><a href="products.html?category=clothing">Clothing</a></li>
-        <li><a href="products.html?category=toys">Toys</a></li>
-        <li><a href="products.html?category=feeding">Feeding</a></li>
-        <li><a href="products.html?category=gear">Gear & Travel</a></li>
-        <li><a href="products.html?ageGroup=newborn">Newborn</a></li>
-      </ul>
-    </nav>
-  </header>
+<!-- Replace the script section at the bottom of products.html -->
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+<script>
+  let currentFilters = {
+    category: null,
+    ageGroup: null,
+    brand: null,
+    minPrice: null,
+    maxPrice: null,
+    rating: null,
+    availability: false,
+    search: null,
+    sort: null
+  };
 
-  <!-- Main Content -->
-  <main class="container">
-    <button class="btn btn-primary filter-toggle" onclick="toggleFilters()">
-      <i class="fas fa-filter"></i> Filters
-    </button>
+  // Initialize filters from URL
+  function initFromURL() {
+    const params = new URLSearchParams(window.location.search);
     
-    <div class="products-page">
-      <!-- Filters Sidebar -->
-      <aside class="filters-sidebar" id="filters-sidebar">
-        <div class="close-filters" style="display: none;">
-          <h3>Filters</h3>
-          <button class="btn btn-sm" onclick="toggleFilters()">
-            <i class="fas fa-times"></i> Close
-          </button>
-        </div>
-        
-        <div class="filter-group">
-          <h4 class="filter-title">
-            Age Group
-            <span class="clear-filters" onclick="clearFilter('ageGroup')">Clear</span>
-          </h4>
-          <div class="filter-options" id="age-filters">
-            <!-- Age filters rendered by JS -->
-          </div>
-        </div>
-        
-        <div class="filter-group">
-          <h4 class="filter-title">
-            Category
-            <span class="clear-filters" onclick="clearFilter('category')">Clear</span>
-          </h4>
-          <div class="filter-options" id="category-filters">
-            <!-- Category filters rendered by JS -->
-          </div>
-        </div>
-        
-        <div class="filter-group">
-          <h4 class="filter-title">
-            Price Range
-            <span class="clear-filters" onclick="clearPriceFilter()">Clear</span>
-          </h4>
-          <div class="price-range">
-            <input type="number" id="min-price" placeholder="Min" min="0">
-            <span>-</span>
-            <input type="number" id="max-price" placeholder="Max" min="0">
-          </div>
-          <button class="btn btn-sm btn-primary mt-2" onclick="applyPriceFilter()" style="width: 100%;">
-            Apply
-          </button>
-        </div>
-        
-        <div class="filter-group">
-          <h4 class="filter-title">
-            Brand
-            <span class="clear-filters" onclick="clearFilter('brand')">Clear</span>
-          </h4>
-          <div class="filter-options" id="brand-filters">
-            <!-- Brand filters rendered by JS -->
-          </div>
-        </div>
-        
-        <div class="filter-group">
-          <h4 class="filter-title">Rating</h4>
-          <div class="filter-options">
-            <label class="filter-option">
-              <input type="radio" name="rating" value="4" onchange="applyFilters()">
-              <span>4 Stars & Above</span>
-            </label>
-            <label class="filter-option">
-              <input type="radio" name="rating" value="3" onchange="applyFilters()">
-              <span>3 Stars & Above</span>
-            </label>
-            <label class="filter-option">
-              <input type="radio" name="rating" value="2" onchange="applyFilters()">
-              <span>2 Stars & Above</span>
-            </label>
-          </div>
-        </div>
-        
-        <div class="filter-group">
-          <h4 class="filter-title">Availability</h4>
-          <div class="filter-options">
-            <label class="filter-option">
-              <input type="checkbox" id="in-stock" onchange="applyFilters()">
-              <span>In Stock Only</span>
-            </label>
-          </div>
-        </div>
-        
-        <button class="btn btn-outline w-full" onclick="clearAllFilters()">
-          <i class="fas fa-times"></i> Clear All Filters
-        </button>
-      </aside>
-      
-      <!-- Products Grid -->
-      <section class="products-content">
-        <div class="products-header">
-          <div>
-            <h1 id="page-title">All Products</h1>
-            <p class="products-count" id="products-count">0 products found</p>
-          </div>
-          <select class="sort-select" id="sort-select" onchange="applyFilters()">
-            <option value="">Sort by</option>
-            <option value="popular">Most Popular</option>
-            <option value="newest">Newest First</option>
-            <option value="price-low">Price: Low to High</option>
-            <option value="price-high">Price: High to Low</option>
-            <option value="rating">Highest Rated</option>
-          </select>
-        </div>
-        
-        <div class="product-grid" id="products-grid">
-          <!-- Products will be rendered here -->
-        </div>
-        
-        <div class="no-products" id="no-products" style="display: none;">
-          <i class="fas fa-search"></i>
-          <h2>No products found</h2>
-          <p>Try adjusting your filters or search terms</p>
-          <button class="btn btn-primary mt-2" onclick="clearAllFilters()">Clear Filters</button>
-        </div>
-      </section>
-    </div>
-  </main>
+    if (params.get('category')) {
+      currentFilters.category = params.get('category');
+    }
+    if (params.get('ageGroup')) {
+      currentFilters.ageGroup = params.get('ageGroup');
+    }
+    if (params.get('search')) {
+      currentFilters.search = params.get('search');
+      document.getElementById('search-input').value = params.get('search');
+    }
+    if (params.get('brand')) {
+      currentFilters.brand = params.get('brand');
+    }
+  }
 
-  <!-- Footer -->
-  <footer class="footer">
-    <div class="container">
-      <div class="footer-grid">
-        <div class="footer-col">
-          <h4>KidsStore</h4>
-          <p style="margin-bottom: 1rem;">Your one-stop shop for premium kids products.</p>
-        </div>
-        <div class="footer-col">
-          <h4>Quick Links</h4>
-          <ul>
-            <li><a href="products.html">All Products</a></li>
-            <li><a href="products.html?badge=sale">Sale</a></li>
-            <li><a href="products.html?badge=new">New Arrivals</a></li>
-          </ul>
-        </div>
-        <div class="footer-col">
-          <h4>Customer Service</h4>
-          <ul>
-            <li><a href="#">Contact Us</a></li>
-            <li><a href="#">Shipping Info</a></li>
-            <li><a href="#">Returns</a></li>
-          </ul>
-        </div>
-        <div class="footer-col">
-          <h4>My Account</h4>
-          <ul>
-            <li><a href="login.html">Login</a></li>
-            <li><a href="register.html">Register</a></li>
-            <li><a href="orders.html">Order History</a></li>
-          </ul>
-        </div>
-      </div>
-      <div class="footer-bottom">
-        <p>&copy; 2024 KidsStore. All rights reserved.</p>
-      </div>
-    </div>
-  </footer>
+  // Render filter options
+  function renderFilterOptions() {
+    // Age filters
+    const ageContainer = document.getElementById('age-filters');
+    ageContainer.innerHTML = AGE_GROUPS.map(ag => `
+      <label class="filter-option">
+        <input type="radio" name="ageGroup" value="${ag.id}" 
+          ${currentFilters.ageGroup === ag.id ? 'checked' : ''}
+          onchange="setFilter('ageGroup', '${ag.id}')">
+        <span>${ag.label}</span>
+      </label>
+    `).join('');
 
-  <script src="js/data.js"></script>
-  <script src="js/app.js"></script>
-  <script>
-    let currentFilters = {
+    // Category filters
+    const catContainer = document.getElementById('category-filters');
+    catContainer.innerHTML = CATEGORIES.map(cat => `
+      <label class="filter-option">
+        <input type="radio" name="category" value="${cat.id}"
+          ${currentFilters.category === cat.id ? 'checked' : ''}
+          onchange="setFilter('category', '${cat.id}')">
+        <span>${cat.icon} ${cat.name}</span>
+      </label>
+    `).join('');
+
+    // Brand filters
+    const brandContainer = document.getElementById('brand-filters');
+    brandContainer.innerHTML = BRANDS.map(brand => `
+      <label class="filter-option">
+        <input type="radio" name="brand" value="${brand}"
+          ${currentFilters.brand === brand ? 'checked' : ''}
+          onchange="setFilter('brand', '${brand}')">
+        <span>${brand}</span>
+      </label>
+    `).join('');
+  }
+
+  // Set filter
+  function setFilter(key, value) {
+    currentFilters[key] = value;
+    applyFilters();
+  }
+
+  // Clear single filter
+  function clearFilter(key) {
+    currentFilters[key] = null;
+    const radios = document.querySelectorAll(`input[name="${key}"]`);
+    radios.forEach(r => r.checked = false);
+    applyFilters();
+  }
+
+  // Clear price filter
+  function clearPriceFilter() {
+    currentFilters.minPrice = null;
+    currentFilters.maxPrice = null;
+    document.getElementById('min-price').value = '';
+    document.getElementById('max-price').value = '';
+    applyFilters();
+  }
+
+  // Apply price filter
+  function applyPriceFilter() {
+    const min = document.getElementById('min-price').value;
+    const max = document.getElementById('max-price').value;
+    currentFilters.minPrice = min || null;
+    currentFilters.maxPrice = max || null;
+    applyFilters();
+  }
+
+  // Clear all filters
+  function clearAllFilters() {
+    currentFilters = {
       category: null,
       ageGroup: null,
       brand: null,
@@ -326,206 +114,151 @@
       search: null,
       sort: null
     };
+    
+    document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+    document.querySelectorAll('input[type="checkbox"]').forEach(c => c.checked = false);
+    document.getElementById('min-price').value = '';
+    document.getElementById('max-price').value = '';
+    document.getElementById('sort-select').value = '';
+    document.getElementById('search-input').value = '';
+    
+    window.history.pushState({}, '', 'products.html');
+    applyFilters();
+  }
 
-    // Initialize filters from URL
-    function initFromURL() {
-      const params = new URLSearchParams(window.location.search);
-      
-      if (params.get('category')) {
-        currentFilters.category = params.get('category');
+  // Apply all filters and load from MongoDB
+  async function applyFilters() {
+    // Show loading
+    const container = document.getElementById('products-grid');
+    container.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 3rem;"><div class="loading-spinner" style="width: 50px; height: 50px; border: 4px solid #f3f3f3; border-top: 4px solid #6366f1; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto;"></div><p style="margin-top: 1rem; color: var(--gray);">Loading products...</p></div><style>@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }</style>';
+
+    // Get rating filter
+    const ratingInput = document.querySelector('input[name="rating"]:checked');
+    currentFilters.rating = ratingInput ? ratingInput.value : null;
+    
+    // Get availability filter
+    currentFilters.availability = document.getElementById('in-stock')?.checked || false;
+    
+    // Get sort
+    currentFilters.sort = document.getElementById('sort-select')?.value || null;
+
+    try {
+      // Build query params for API
+      const queryParams = {};
+      if (currentFilters.category) queryParams.category = currentFilters.category;
+      if (currentFilters.ageGroup) queryParams.ageGroup = currentFilters.ageGroup;
+      if (currentFilters.brand) queryParams.brand = currentFilters.brand;
+      if (currentFilters.search) queryParams.search = currentFilters.search;
+      if (currentFilters.availability) queryParams.availability = 'true';
+
+      // Fetch from MongoDB
+      let products = await getProducts(queryParams);
+
+      // Client-side filtering for price and rating
+      if (currentFilters.minPrice) {
+        products = products.filter(p => p.price >= parseFloat(currentFilters.minPrice));
       }
-      if (params.get('ageGroup')) {
-        currentFilters.ageGroup = params.get('ageGroup');
+      if (currentFilters.maxPrice) {
+        products = products.filter(p => p.price <= parseFloat(currentFilters.maxPrice));
       }
-      if (params.get('search')) {
-        currentFilters.search = params.get('search');
-        document.getElementById('search-input').value = params.get('search');
+      if (currentFilters.rating) {
+        products = products.filter(p => p.rating >= parseFloat(currentFilters.rating));
       }
-      if (params.get('brand')) {
-        currentFilters.brand = params.get('brand');
+
+      // Client-side sorting
+      if (currentFilters.sort) {
+        switch (currentFilters.sort) {
+          case 'price-low':
+            products.sort((a, b) => a.price - b.price);
+            break;
+          case 'price-high':
+            products.sort((a, b) => b.price - a.price);
+            break;
+          case 'rating':
+            products.sort((a, b) => b.rating - a.rating);
+            break;
+          case 'newest':
+            products.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+            break;
+          case 'popular':
+            products.sort((a, b) => b.reviewCount - a.reviewCount);
+            break;
+        }
       }
-    }
 
-    // Render filter options
-    function renderFilterOptions() {
-      // Age filters
-      const ageContainer = document.getElementById('age-filters');
-      ageContainer.innerHTML = AGE_GROUPS.map(ag => `
-        <label class="filter-option">
-          <input type="radio" name="ageGroup" value="${ag.id}" 
-            ${currentFilters.ageGroup === ag.id ? 'checked' : ''}
-            onchange="setFilter('ageGroup', '${ag.id}')">
-          <span>${ag.label}</span>
-        </label>
-      `).join('');
-
-      // Category filters
-      const catContainer = document.getElementById('category-filters');
-      catContainer.innerHTML = CATEGORIES.map(cat => `
-        <label class="filter-option">
-          <input type="radio" name="category" value="${cat.id}"
-            ${currentFilters.category === cat.id ? 'checked' : ''}
-            onchange="setFilter('category', '${cat.id}')">
-          <span>${cat.icon} ${cat.name}</span>
-        </label>
-      `).join('');
-
-      // Brand filters
-      const brandContainer = document.getElementById('brand-filters');
-      brandContainer.innerHTML = BRANDS.map(brand => `
-        <label class="filter-option">
-          <input type="radio" name="brand" value="${brand}"
-            ${currentFilters.brand === brand ? 'checked' : ''}
-            onchange="setFilter('brand', '${brand}')">
-          <span>${brand}</span>
-        </label>
-      `).join('');
-    }
-
-    // Set filter
-    function setFilter(key, value) {
-      currentFilters[key] = value;
-      applyFilters();
-    }
-
-    // Clear single filter
-    function clearFilter(key) {
-      currentFilters[key] = null;
-      const radios = document.querySelectorAll(`input[name="${key}"]`);
-      radios.forEach(r => r.checked = false);
-      applyFilters();
-    }
-
-    // Clear price filter
-    function clearPriceFilter() {
-      currentFilters.minPrice = null;
-      currentFilters.maxPrice = null;
-      document.getElementById('min-price').value = '';
-      document.getElementById('max-price').value = '';
-      applyFilters();
-    }
-
-    // Apply price filter
-    function applyPriceFilter() {
-      const min = document.getElementById('min-price').value;
-      const max = document.getElementById('max-price').value;
-      currentFilters.minPrice = min || null;
-      currentFilters.maxPrice = max || null;
-      applyFilters();
-    }
-
-    // Clear all filters
-    function clearAllFilters() {
-      currentFilters = {
-        category: null,
-        ageGroup: null,
-        brand: null,
-        minPrice: null,
-        maxPrice: null,
-        rating: null,
-        availability: false,
-        search: null,
-        sort: null
-      };
-      
-      document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
-      document.querySelectorAll('input[type="checkbox"]').forEach(c => c.checked = false);
-      document.getElementById('min-price').value = '';
-      document.getElementById('max-price').value = '';
-      document.getElementById('sort-select').value = '';
-      document.getElementById('search-input').value = '';
-      
-      window.history.pushState({}, '', 'products.html');
-      applyFilters();
-    }
-
-    // Apply all filters
-    function applyFilters() {
-      // Get rating
-      const ratingInput = document.querySelector('input[name="rating"]:checked');
-      currentFilters.rating = ratingInput ? ratingInput.value : null;
-      
-      // Get availability
-      currentFilters.availability = document.getElementById('in-stock').checked;
-      
-      // Get sort
-      currentFilters.sort = document.getElementById('sort-select').value || null;
-
-      // Filter products
-      const products = filterProducts(currentFilters);
-      
-      // Update UI
+      // Render products
       renderProducts(products);
       updatePageTitle();
-      
-      // Update URL
       updateURL();
+      
+    } catch (error) {
+      console.error('Error loading products:', error);
+      container.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--danger);">Failed to load products. Please try again.</p>';
     }
+  }
 
-    // Render products
-    function renderProducts(products) {
-      const container = document.getElementById('products-grid');
-      const noProducts = document.getElementById('no-products');
-      const countEl = document.getElementById('products-count');
-      
-      countEl.textContent = `${products.length} product${products.length !== 1 ? 's' : ''} found`;
-      
-      if (products.length === 0) {
-        container.style.display = 'none';
-        noProducts.style.display = 'block';
-      } else {
-        container.style.display = 'grid';
-        noProducts.style.display = 'none';
-        container.innerHTML = products.map(p => renderProductCard(p)).join('');
-      }
+  // Render products
+  function renderProducts(products) {
+    const container = document.getElementById('products-grid');
+    const noProducts = document.getElementById('no-products');
+    const countEl = document.getElementById('products-count');
+    
+    countEl.textContent = `${products.length} product${products.length !== 1 ? 's' : ''} found`;
+    
+    if (products.length === 0) {
+      container.style.display = 'none';
+      noProducts.style.display = 'block';
+    } else {
+      container.style.display = 'grid';
+      noProducts.style.display = 'none';
+      container.innerHTML = products.map(p => renderProductCard(p)).join('');
     }
+  }
 
-    // Update page title
-    function updatePageTitle() {
-      const titleEl = document.getElementById('page-title');
-      let title = 'All Products';
-      
-      if (currentFilters.search) {
-        title = `Search: "${currentFilters.search}"`;
-      } else if (currentFilters.category) {
-        const cat = CATEGORIES.find(c => c.id === currentFilters.category);
-        title = cat ? cat.name : 'Products';
-      } else if (currentFilters.ageGroup) {
-        const ag = AGE_GROUPS.find(a => a.id === currentFilters.ageGroup);
-        title = ag ? ag.label : 'Products';
-      }
-      
-      titleEl.textContent = title;
-      document.title = `${title} - KidsStore`;
+  // Update page title
+  function updatePageTitle() {
+    const titleEl = document.getElementById('page-title');
+    let title = 'All Products';
+    
+    if (currentFilters.search) {
+      title = `Search: "${currentFilters.search}"`;
+    } else if (currentFilters.category) {
+      const cat = CATEGORIES.find(c => c.id === currentFilters.category);
+      title = cat ? cat.name : 'Products';
+    } else if (currentFilters.ageGroup) {
+      const ag = AGE_GROUPS.find(a => a.id === currentFilters.ageGroup);
+      title = ag ? ag.label : 'Products';
     }
+    
+    titleEl.textContent = title;
+    document.title = `${title} - KidoCart`;
+  }
 
-    // Update URL with filters
-    function updateURL() {
-      const params = new URLSearchParams();
-      
-      if (currentFilters.category) params.set('category', currentFilters.category);
-      if (currentFilters.ageGroup) params.set('ageGroup', currentFilters.ageGroup);
-      if (currentFilters.search) params.set('search', currentFilters.search);
-      if (currentFilters.brand) params.set('brand', currentFilters.brand);
-      
-      const newURL = params.toString() ? `products.html?${params.toString()}` : 'products.html';
-      window.history.pushState({}, '', newURL);
-    }
+  // Update URL with filters
+  function updateURL() {
+    const params = new URLSearchParams();
+    
+    if (currentFilters.category) params.set('category', currentFilters.category);
+    if (currentFilters.ageGroup) params.set('ageGroup', currentFilters.ageGroup);
+    if (currentFilters.search) params.set('search', currentFilters.search);
+    if (currentFilters.brand) params.set('brand', currentFilters.brand);
+    
+    const newURL = params.toString() ? `products.html?${params.toString()}` : 'products.html';
+    window.history.pushState({}, '', newURL);
+  }
 
-    // Toggle filters on mobile
-    function toggleFilters() {
-      const sidebar = document.getElementById('filters-sidebar');
-      const closeBtn = document.querySelector('.close-filters');
-      sidebar.classList.toggle('active');
-      closeBtn.style.display = sidebar.classList.contains('active') ? 'flex' : 'none';
-    }
+  // Toggle filters on mobile
+  function toggleFilters() {
+    const sidebar = document.getElementById('filters-sidebar');
+    const closeBtn = document.querySelector('.close-filters');
+    sidebar.classList.toggle('active');
+    closeBtn.style.display = sidebar.classList.contains('active') ? 'flex' : 'none';
+  }
 
-    // Initialize
-    document.addEventListener('DOMContentLoaded', () => {
-      initFromURL();
-      renderFilterOptions();
-      applyFilters();
-    });
-  </script>
-</body>
-</html>
+  // Initialize
+  document.addEventListener('DOMContentLoaded', () => {
+    initFromURL();
+    renderFilterOptions();
+    applyFilters();
+  });
+</script>
