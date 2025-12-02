@@ -15,6 +15,29 @@ async function connectToDatabase() {
   return cachedDb;
 }
 
+// Product Schema (needed for populate)
+const productSchema = new mongoose.Schema({
+  name: String,
+  description: String,
+  price: Number,
+  originalPrice: Number,
+  category: String,
+  ageGroup: String,
+  brand: String,
+  images: [String],
+  stock: Number,
+  availability: Boolean,
+  rating: Number,
+  reviewCount: Number,
+  sizes: [String],
+  colors: [String],
+  badge: String,
+  featured: Boolean,
+  createdAt: { type: Date, default: Date.now }
+});
+
+const Product = mongoose.models.Product || mongoose.model('Product', productSchema);
+
 // Cart Schema
 const cartSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
