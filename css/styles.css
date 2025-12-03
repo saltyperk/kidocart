@@ -76,6 +76,27 @@ img {
   color: #374151;
 }
 
+/* Product Detail - Image & Text Fixes */
+.product-gallery {
+  max-width: 500px;
+}
+
+.gallery-main img {
+  max-width: 100%;
+  height: auto;
+}
+
+.product-title {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
+}
+
+.product-description {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
 /* Container */
 .container {
   max-width: 1280px;
