@@ -141,7 +141,7 @@ function getRelatedProducts(product, limit = 4) {
 // Render star rating
 function renderStars(rating) {
   let stars = '';
-  for (let i = 1; i <= 7; i++) {
+  for (let i = 1; i <= 5; i++) {
     if (i <= rating) {
       stars += '<i class="fas fa-star"></i>';
     } else if (i - 0.5 <= rating) {
