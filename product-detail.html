@@ -1767,7 +1767,7 @@ You're right! Let me fix the product fetching and add a modern skeleton loading 
     let selectedColor = null;
     let quantity = 1;
     let currentImageIndex = 0;
-    let isInWishlist = false;
+    let productIsInWishlist = false;
 
     // ==================== HEADER SCROLL BEHAVIOR ====================
     let lastScroll = 0;
@@ -2014,8 +2014,8 @@ You're right! Let me fix the product fetching and add a modern skeleton loading 
                 <i class="fas fa-bolt"></i>
                 Buy Now
               </button>
-              <button class="btn-wishlist ${isInWishlist ? 'active' : ''}" onclick="toggleWishlist()" id="btn-wishlist">
-                <i class="${isInWishlist ? 'fas' : 'far'} fa-heart"></i>
+              <button class="btn-wishlist ${productIsInWishlist ? 'active' : ''}" onclick="toggleWishlist()" id="btn-wishlist">
+                <i class="${productIsInWishlist ? 'fas' : 'far'} fa-heart"></i>
               </button>
             </div>
             
@@ -2427,7 +2427,7 @@ You're right! Let me fix the product fetching and add a modern skeleton loading 
         if (response.ok) {
           const wishlist = await response.json();
           const items = wishlist.items || [];
-          isInWishlist = items.some(item => {
+          productIsInWishlist = items.some(item => {
             const itemId = item.productId?._id || item.productId;
             return itemId === productId || String(itemId) === String(productId);
           });
@@ -2450,7 +2450,7 @@ You're right! Let me fix the product fetching and add a modern skeleton loading 
       const btn = document.getElementById('btn-wishlist');
       
       try {
-        if (isInWishlist) {
+        if (productIsInWishlist) {
           // Remove from wishlist
           const response = await fetch(`/api/wishlist?productId=${productId}`, {
             method: 'DELETE',
@@ -2458,7 +2458,7 @@ You're right! Let me fix the product fetching and add a modern skeleton loading 
           });
           
           if (response.ok) {
-            isInWishlist = false;
+            productIsInWishlist = false;
             btn.classList.remove('active');
             btn.innerHTML = '<i class="far fa-heart"></i>';
             showToast('Removed from wishlist', 'success');
@@ -2476,7 +2476,7 @@ You're right! Let me fix the product fetching and add a modern skeleton loading 
           });
           
           if (response.ok) {
-            isInWishlist = true;
+            productIsInWishlist = true;
             btn.classList.add('active');
             btn.innerHTML = '<i class="fas fa-heart"></i>';
             showToast('Added to wishlist!', 'success');
