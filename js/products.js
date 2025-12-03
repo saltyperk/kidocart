@@ -160,7 +160,7 @@ function renderProductCard(product) {
   const inWishlist = isInWishlist(product.id);
 
   return `
-    <div class="product-card" data-id="${product.id}">
+    <div class="product-card" data-id="${product._id}">
       ${product.badge ? `<span class="product-badge badge-${product.badge}">${product.badge.toUpperCase()}</span>` : ''}
       <button class="product-wishlist ${inWishlist ? 'active' : ''}" onclick="handleWishlistClick(event, ${product._id})">
         <i class="fa${inWishlist ? 's' : 'r'} fa-heart"></i>
@@ -182,7 +182,7 @@ function renderProductCard(product) {
           ${discount > 0 ? `<span class="discount">-${discount}%</span>` : ''}
         </div>
         <div class="product-actions">
-          <button class="btn btn-primary btn-sm" onclick="handleAddToCart(${product.id})" ${!product.availability || product.stock < 1 ? 'disabled' : ''}>
+          <button class="btn btn-primary btn-sm" onclick="handleAddToCart(${product._id})" ${!product.availability || product.stock < 1 ? 'disabled' : ''}>
             <i class="fas fa-shopping-cart"></i> ${product.availability && product.stock > 0 ? 'Add to Cart' : 'Out of Stock'}
           </button>
         </div>
