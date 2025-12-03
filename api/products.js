@@ -32,19 +32,6 @@ const productSchema = new mongoose.Schema({
   availability: { type: Boolean, default: true },
   rating: { type: Number, default: 4.5 },
   reviewCount: { type: Number, default: 0 },
-  reviews: [{
-    userName: String,
-    rating: Number,
-    comment: String,
-    date: {type: Date, default: Date.now }
-  }],
-  dimentions: {
-    length: Number,
-    width: Number,
-    height: Number,
-    weight: Number,
-    unit: {type: String, default: 'cm'}
-  },
   sizes: [String],
   colors: [String],
   badge: String,
