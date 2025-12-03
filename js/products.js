@@ -162,10 +162,10 @@ function renderProductCard(product) {
   return `
     <div class="product-card" data-id="${product.id}">
       ${product.badge ? `<span class="product-badge badge-${product.badge}">${product.badge.toUpperCase()}</span>` : ''}
-      <button class="product-wishlist ${inWishlist ? 'active' : ''}" onclick="handleWishlistClick(event, ${product.id})">
+      <button class="product-wishlist ${inWishlist ? 'active' : ''}" onclick="handleWishlistClick(event, ${product._id})">
         <i class="fa${inWishlist ? 's' : 'r'} fa-heart"></i>
       </button>
-      <div class="product-image" onclick="window.location.href='product-detail.html?id=${product.id}'">
+      <div class="product-image" onclick="window.location.href='product-detail.html?id=${product._id}'">
         <img src="${product.images[0]}" alt="${product.name}" loading="lazy">
       </div>
       <div class="product-info">
