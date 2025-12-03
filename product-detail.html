@@ -2094,17 +2094,18 @@ You're right! Let me fix the product fetching and add a modern skeleton loading 
                 </tr>
               ` : ''}
               ${p.dimensions ? `
-      <tr style="border-bottom: 1px solid var(--gray-200);">
-        <td style="padding: 0.75rem 0; font-weight: 600;">Dimensions (L×W×H)</td>
-        <td style="padding: 0.75rem 0; color: var(--gray-700);">${p.dimensions.length} × ${p.dimensions.width} × ${p.dimensions.height} ${p.dimensions.unit}</td>
-      </tr>
-      ${p.dimensions.weight ? `
-        <tr style="border-bottom: 1px solid var(--gray-200);">
-          <td style="padding: 0.75rem 0; font-weight: 600;">Weight</td>
-          <td style="padding: 0.75rem 0; color: var(--gray-700);">${p.dimensions.weight} kg</td>
-        </tr>
-      ` : ''}
-    ` : ''}
+                <tr style="border-bottom: 1px solid var(--gray-200);">
+                  <td style="padding: 0.75rem 0; font-weight: 600;">Dimensions (L×W×H)</td>
+                  <td style="padding: 0.75rem 0; color: var(--gray-700);">${p.dimensions.length} × ${p.dimensions.width} × ${p.dimensions.height} ${p.dimensions.unit}</td>
+                </tr>
+              ` : ''}
+              ${p.dimensions.weight ? `
+                <tr style="border-bottom: 1px solid var(--gray-200);">
+                  <td style="padding: 0.75rem 0; font-weight: 600;">Weight</td>
+                  <td style="padding: 0.75rem 0; color: var(--gray-700);">${p.dimensions.weight} kg</td>
+                </tr>
+              ` : ''}
+    
               <tr style="border-bottom: 1px solid var(--gray-200);">
                 <td style="padding: 0.75rem 0; font-weight: 600;">Availability</td>
                 <td style="padding: 0.75rem 0; color: var(--gray-700);">${p.availability !== false ? 'In Stock' : 'Out of Stock'}</td>
@@ -2112,96 +2113,7 @@ You're right! Let me fix the product fetching and add a modern skeleton loading 
             </table>
           </div>
           
-          <div class="tab-content" id="tab-reviews">
-            <div class="reviews-summary">
-              <div class="reviews-average">
-                <div class="big-rating">${(p.rating || 4.0).toFixed(1)}</div>
-                <div class="stars">
-                  ${generateStars(p.rating || 4)}
-                </div>
-                <div class="total-reviews">${p.reviewCount || 0} reviews</div>
-              </div>
-              <div class="reviews-breakdown">
-                <div class="rating-bar">
-                  <span class="label">5 stars</span>
-                  <div class="bar"><div class="bar-fill" style="width: 70%;"></div></div>
-                  <span class="count">70%</span>
-                </div>
-                <div class="rating-bar">
-                  <span class="label">4 stars</span>
-                  <div class="bar"><div class="bar-fill" style="width: 20%;"></div></div>
-                  <span class="count">20%</span>
-                </div>
-                <div class="rating-bar">
-                  <span class="label">3 stars</span>
-                  <div class="bar"><div class="bar-fill" style="width: 7%;"></div></div>
-                  <span class="count">7%</span>
-                </div>
-                <div class="rating-bar">
-                  <span class="label">2 stars</span>
-                  <div class="bar"><div class="bar-fill" style="width: 2%;"></div></div>
-                  <span class="count">2%</span>
-                </div>
-                <div class="rating-bar">
-                  <span class="label">1 star</span>
-                  <div class="bar"><div class="bar-fill" style="width: 1%;"></div></div>
-                  <span class="count">1%</span>
-                </div>
-              </div>
-            </div>
-            
-            <!-- Sample Reviews -->
-            <div class="review-card">
-              <div class="review-header">
-                <div class="reviewer-info">
-                  <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Reviewer" class="reviewer-avatar">
-                  <div>
-                    <div class="reviewer-name">Priya Sharma</div>
-                    <div class="reviewer-meta">Verified Buyer • 2 weeks ago</div>
-                  </div>
-                </div>
-                <div class="review-rating">
-                  <i class="fas fa-star"></i>
-                  <i class="fas fa-star"></i>
-                  <i class="fas fa-star"></i>
-                  <i class="fas fa-star"></i>
-                  <i class="fas fa-star"></i>
-                </div>
-              </div>
-              <p class="review-text">Absolutely love this product! The quality is amazing and it arrived quickly. My baby loves it. Would definitely recommend to other parents.</p>
-              <div class="review-helpful">
-                <span>Was this helpful?</span>
-                <button><i class="far fa-thumbs-up"></i> Yes (12)</button>
-                <button><i class="far fa-thumbs-down"></i> No (1)</button>
-              </div>
-            </div>
-            
-            <div class="review-card">
-              <div class="review-header">
-                <div class="reviewer-info">
-                  <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Reviewer" class="reviewer-avatar">
-                  <div>
-                    <div class="reviewer-name">Rahul Patel</div>
-                    <div class="reviewer-meta">Verified Buyer • 1 month ago</div>
-                  </div>
-                </div>
-                <div class="review-rating">
-                  <i class="fas fa-star"></i>
-                  <i class="fas fa-star"></i>
-                  <i class="fas fa-star"></i>
-                  <i class="fas fa-star"></i>
-                  <i class="far fa-star"></i>
-                </div>
-              </div>
-              <p class="review-text">Great value for money. The product looks exactly like the pictures. Shipping was fast too!</p>
-              <div class="review-helpful">
-                <span>Was this helpful?</span>
-                <button><i class="far fa-thumbs-up"></i> Yes (8)</button>
-                <button><i class="far fa-thumbs-down"></i> No (0)</button>
-              </div>
-            </div>
           </div>
-        </div>
         
         <!-- Related Products -->
         <div class="related-products-section" id="related-products"></div>
