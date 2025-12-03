@@ -1,6 +1,6 @@
-# Product Detail Page 🛍️
+# Fixed Product Detail Page - With Skeleton Loading 🎨
 
-Here's the complete `product-detail.html` matching your theme:
+You're right! Let me fix the product fetching and add a modern skeleton loading animation.
 
 ```html
 <!DOCTYPE html>
@@ -229,6 +229,144 @@ Here's the complete `product-detail.html` matching your theme:
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+    }
+
+    /* ==================== SKELETON LOADING ==================== */
+    .skeleton {
+      background: linear-gradient(90deg, var(--gray-200) 25%, var(--gray-100) 50%, var(--gray-200) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s ease-in-out infinite;
+      border-radius: 8px;
+    }
+
+    @keyframes shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    .skeleton-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 2rem 3rem 4rem;
+    }
+
+    .skeleton-product {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      background: var(--white);
+      border-radius: 20px;
+      padding: 2.5rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+    }
+
+    .skeleton-gallery {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .skeleton-thumbnails {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .skeleton-thumb {
+      width: 80px;
+      height: 80px;
+      border-radius: 10px;
+    }
+
+    .skeleton-main-image {
+      flex: 1;
+      aspect-ratio: 1;
+      border-radius: 16px;
+    }
+
+    .skeleton-info {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .skeleton-category {
+      width: 100px;
+      height: 16px;
+    }
+
+    .skeleton-title {
+      width: 90%;
+      height: 36px;
+    }
+
+    .skeleton-title-2 {
+      width: 60%;
+      height: 36px;
+    }
+
+    .skeleton-rating {
+      width: 200px;
+      height: 24px;
+    }
+
+    .skeleton-price {
+      width: 180px;
+      height: 40px;
+    }
+
+    .skeleton-stock {
+      width: 120px;
+      height: 20px;
+    }
+
+    .skeleton-description {
+      width: 100%;
+      height: 80px;
+      margin-top: 0.5rem;
+    }
+
+    .skeleton-options {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+
+    .skeleton-option {
+      width: 60px;
+      height: 45px;
+      border-radius: 8px;
+    }
+
+    .skeleton-buttons {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .skeleton-btn {
+      flex: 1;
+      height: 55px;
+      border-radius: 12px;
+    }
+
+    .skeleton-btn-small {
+      width: 55px;
+      height: 55px;
+      border-radius: 12px;
+    }
+
+    .skeleton-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--gray-200);
+    }
+
+    .skeleton-meta-item {
+      width: 200px;
+      height: 20px;
     }
 
     /* ==================== PRODUCT DETAIL ==================== */
@@ -555,11 +693,6 @@ Here's the complete `product-detail.html` matching your theme:
       border-color: var(--accent);
       background: var(--accent-light);
       color: var(--accent);
-    }
-
-    .size-option.disabled {
-      opacity: 0.4;
-      cursor: not-allowed;
     }
 
     .color-options {
@@ -1069,7 +1202,7 @@ Here's the complete `product-detail.html` matching your theme:
       font-weight: 600;
     }
 
-    .product-card .product-info {
+    .product-card .card-product-info {
       padding: 1rem;
     }
 
@@ -1088,6 +1221,7 @@ Here's the complete `product-detail.html` matching your theme:
       display: flex;
       align-items: center;
       gap: 0.5rem;
+      font-size: 1rem;
     }
 
     .product-card .price-current {
@@ -1149,33 +1283,14 @@ Here's the complete `product-detail.html` matching your theme:
       color: white;
     }
 
-    /* ==================== LOADING ==================== */
-    .loading-state {
-      text-align: center;
-      padding: 4rem;
-    }
-
-    .loading-state i {
-      font-size: 3rem;
-      color: var(--accent);
-      animation: spin 1s linear infinite;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    .loading-state p {
-      margin-top: 1rem;
-      color: var(--gray-500);
-    }
-
     /* ==================== ERROR STATE ==================== */
     .error-state {
       text-align: center;
       padding: 4rem;
       background: var(--white);
       border-radius: 20px;
+      max-width: 500px;
+      margin: 2rem auto;
     }
 
     .error-state i {
@@ -1343,23 +1458,27 @@ Here's the complete `product-detail.html` matching your theme:
     }
 
     @media (max-width: 992px) {
-      .product-detail-container {
+      .product-detail-container,
+      .skeleton-product {
         grid-template-columns: 1fr;
         gap: 2rem;
         padding: 1.5rem;
       }
 
-      .product-gallery {
+      .product-gallery,
+      .skeleton-gallery {
         flex-direction: column-reverse;
       }
 
-      .gallery-thumbnails {
+      .gallery-thumbnails,
+      .skeleton-thumbnails {
         flex-direction: row;
         width: 100%;
         overflow-x: auto;
       }
 
-      .thumbnail {
+      .thumbnail,
+      .skeleton-thumb {
         flex-shrink: 0;
       }
 
@@ -1399,7 +1518,8 @@ Here's the complete `product-detail.html` matching your theme:
         margin-top: 60px;
       }
 
-      .product-detail-page {
+      .product-detail-page,
+      .skeleton-container {
         padding: 1rem;
       }
 
@@ -1523,13 +1643,54 @@ Here's the complete `product-detail.html` matching your theme:
     </div>
   </div>
 
-  <!-- ==================== MAIN CONTENT ==================== -->
-  <main class="product-detail-page" id="product-detail-page">
-    <div class="loading-state" id="loading-state">
-      <i class="fas fa-spinner"></i>
-      <p>Loading product details...</p>
+  <!-- ==================== SKELETON LOADING ==================== -->
+  <div class="skeleton-container" id="skeleton-loading">
+    <div class="skeleton-product">
+      <!-- Skeleton Gallery -->
+      <div class="skeleton-gallery">
+        <div class="skeleton-thumbnails">
+          <div class="skeleton skeleton-thumb"></div>
+          <div class="skeleton skeleton-thumb"></div>
+          <div class="skeleton skeleton-thumb"></div>
+          <div class="skeleton skeleton-thumb"></div>
+        </div>
+        <div class="skeleton skeleton-main-image"></div>
+      </div>
+      
+      <!-- Skeleton Info -->
+      <div class="skeleton-info">
+        <div class="skeleton skeleton-category"></div>
+        <div class="skeleton skeleton-title"></div>
+        <div class="skeleton skeleton-title-2"></div>
+        <div class="skeleton skeleton-rating"></div>
+        <div class="skeleton skeleton-price"></div>
+        <div class="skeleton skeleton-stock"></div>
+        <div class="skeleton skeleton-description"></div>
+        
+        <div class="skeleton-options">
+          <div class="skeleton skeleton-option"></div>
+          <div class="skeleton skeleton-option"></div>
+          <div class="skeleton skeleton-option"></div>
+          <div class="skeleton skeleton-option"></div>
+        </div>
+        
+        <div class="skeleton-buttons">
+          <div class="skeleton skeleton-btn"></div>
+          <div class="skeleton skeleton-btn"></div>
+          <div class="skeleton skeleton-btn-small"></div>
+        </div>
+        
+        <div class="skeleton-meta">
+          <div class="skeleton skeleton-meta-item"></div>
+          <div class="skeleton skeleton-meta-item"></div>
+          <div class="skeleton skeleton-meta-item"></div>
+        </div>
+      </div>
     </div>
-  </main>
+  </div>
+
+  <!-- ==================== MAIN CONTENT ==================== -->
+  <main class="product-detail-page" id="product-detail-page" style="display: none;"></main>
 
   <!-- ==================== ZOOM MODAL ==================== -->
   <div class="zoom-modal" id="zoom-modal">
@@ -1601,6 +1762,7 @@ Here's the complete `product-detail.html` matching your theme:
   <script>
     // ==================== GLOBAL VARIABLES ====================
     let currentProduct = null;
+    let allProducts = [];
     let selectedSize = null;
     let selectedColor = null;
     let quantity = 1;
@@ -1634,35 +1796,54 @@ Here's the complete `product-detail.html` matching your theme:
       const urlParams = new URLSearchParams(window.location.search);
       const productId = urlParams.get('id');
       
+      console.log('Product ID from URL:', productId);
+      
       if (productId) {
         loadProduct(productId);
       } else {
-        showError('Product not found');
+        hideSkeletonShowError('Product not found. No product ID provided.');
       }
       
       updateHeaderCounts();
       setupSearch();
     });
 
-    // ==================== LOAD PRODUCT ====================
+    // ==================== LOAD PRODUCT FROM MONGODB ====================
     async function loadProduct(productId) {
+      console.log('Loading product:', productId);
+      
       try {
+        // Fetch all products from MongoDB
         const response = await fetch('/api/products');
+        console.log('API Response status:', response.status);
         
         if (!response.ok) {
-          throw new Error('Failed to fetch product');
+          throw new Error('Failed to fetch products from database');
         }
         
-        const products = await response.json();
-        currentProduct = products.find(p => (p._id || p.id) === productId || String(p._id || p.id) === String(productId));
+        allProducts = await response.json();
+        console.log('All products:', allProducts);
+        console.log('Total products:', allProducts.length);
+        
+        // Find the specific product
+        currentProduct = allProducts.find(p => {
+          const pId = p._id || p.id;
+          return pId === productId || String(pId) === String(productId);
+        });
+        
+        console.log('Found product:', currentProduct);
         
         if (!currentProduct) {
-          showError('Product not found');
+          hideSkeletonShowError('Product not found in database.');
           return;
         }
         
-        // Check if in wishlist
+        // Check wishlist status
         await checkWishlistStatus(productId);
+        
+        // Hide skeleton and show product
+        document.getElementById('skeleton-loading').style.display = 'none';
+        document.getElementById('product-detail-page').style.display = 'block';
         
         // Render product
         renderProduct();
@@ -1672,8 +1853,22 @@ Here's the complete `product-detail.html` matching your theme:
         
       } catch (error) {
         console.error('Error loading product:', error);
-        showError('Unable to load product');
+        hideSkeletonShowError('Unable to load product. Please try again later.');
       }
+    }
+
+    // ==================== HIDE SKELETON SHOW ERROR ====================
+    function hideSkeletonShowError(message) {
+      document.getElementById('skeleton-loading').style.display = 'none';
+      document.getElementById('product-detail-page').style.display = 'block';
+      document.getElementById('product-detail-page').innerHTML = `
+        <div class="error-state">
+          <i class="fas fa-exclamation-triangle"></i>
+          <h2>Oops!</h2>
+          <p>${message}</p>
+          <a href="products.html"><i class="fas fa-arrow-left"></i> Back to Products</a>
+        </div>
+      `;
     }
 
     // ==================== RENDER PRODUCT ====================
@@ -1682,7 +1877,7 @@ Here's the complete `product-detail.html` matching your theme:
       const p = currentProduct;
       const productId = p._id || p.id;
       
-      // Update breadcrumb
+      // Update breadcrumb and title
       document.getElementById('breadcrumb-product').textContent = p.name;
       document.title = `${p.name} - KidoCart`;
       
@@ -1697,9 +1892,9 @@ Here's the complete `product-detail.html` matching your theme:
                          p.badge === 'hot' ? 'badge-hot' : '';
       
       // Stock status
-      const stock = p.stock || 10;
+      const stock = p.stock !== undefined ? p.stock : 10;
       let stockClass, stockText, stockIcon;
-      if (stock === 0 || !p.availability) {
+      if (stock === 0 || p.availability === false) {
         stockClass = 'stock-out';
         stockText = 'Out of Stock';
         stockIcon = 'fa-times-circle';
@@ -1733,8 +1928,10 @@ Here's the complete `product-detail.html` matching your theme:
             <div class="gallery-main" id="gallery-main">
               ${p.badge ? `<span class="gallery-badge ${badgeClass}">${p.badge.charAt(0).toUpperCase() + p.badge.slice(1)}</span>` : ''}
               <img src="${images[0]}" alt="${p.name}" id="main-image" onerror="this.src='https://via.placeholder.com/600x600?text=No+Image'">
-              <button class="gallery-nav prev" onclick="prevImage()"><i class="fas fa-chevron-left"></i></button>
-              <button class="gallery-nav next" onclick="nextImage()"><i class="fas fa-chevron-right"></i></button>
+              ${images.length > 1 ? `
+                <button class="gallery-nav prev" onclick="prevImage()"><i class="fas fa-chevron-left"></i></button>
+                <button class="gallery-nav next" onclick="nextImage()"><i class="fas fa-chevron-right"></i></button>
+              ` : ''}
               <button class="gallery-zoom" onclick="openZoom()"><i class="fas fa-search-plus"></i></button>
             </div>
           </div>
@@ -1749,7 +1946,7 @@ Here's the complete `product-detail.html` matching your theme:
                 ${generateStars(p.rating || 4)}
               </div>
               <span class="rating-count">
-                ${p.rating || 4} <a href="#reviews">(${p.reviewCount || 0} reviews)</a>
+                ${(p.rating || 4).toFixed(1)} <a href="#reviews">(${p.reviewCount || 0} reviews)</a>
               </span>
             </div>
             
@@ -1764,7 +1961,7 @@ Here's the complete `product-detail.html` matching your theme:
               <span>${stockText}</span>
             </div>
             
-            <p class="product-description">${p.description || 'No description available.'}</p>
+            <p class="product-description">${p.description || 'No description available for this product.'}</p>
             
             <!-- Options -->
             <div class="product-options">
@@ -1772,7 +1969,7 @@ Here's the complete `product-detail.html` matching your theme:
                 <div class="option-group">
                   <div class="option-label">Size: <span id="selected-size">Select a size</span></div>
                   <div class="size-options">
-                    ${p.sizes.map((size, i) => `
+                    ${p.sizes.map(size => `
                       <button class="size-option" onclick="selectSize('${size}', this)">${size}</button>
                     `).join('')}
                   </div>
@@ -1783,7 +1980,7 @@ Here's the complete `product-detail.html` matching your theme:
                 <div class="option-group">
                   <div class="option-label">Color: <span id="selected-color">Select a color</span></div>
                   <div class="color-options">
-                    ${p.colors.map((color, i) => `
+                    ${p.colors.map(color => `
                       <button class="color-option" style="background: ${getColorCode(color)}" 
                               onclick="selectColor('${color}', this)" 
                               title="${color}"></button>
@@ -1797,11 +1994,11 @@ Here's the complete `product-detail.html` matching your theme:
             <div class="quantity-container">
               <span class="quantity-label">Quantity:</span>
               <div class="quantity-selector">
-                <button class="quantity-btn" onclick="updateQuantity(-1)" id="qty-minus">
+                <button class="quantity-btn" onclick="updateQuantity(-1)" id="qty-minus" ${quantity <= 1 ? 'disabled' : ''}>
                   <i class="fas fa-minus"></i>
                 </button>
-                <input type="number" class="quantity-input" value="1" min="1" max="${stock}" id="quantity-input" onchange="handleQuantityChange()">
-                <button class="quantity-btn" onclick="updateQuantity(1)" id="qty-plus">
+                <input type="number" class="quantity-input" value="${quantity}" min="1" max="${stock}" id="quantity-input" onchange="handleQuantityChange()">
+                <button class="quantity-btn" onclick="updateQuantity(1)" id="qty-plus" ${quantity >= stock ? 'disabled' : ''}>
                   <i class="fas fa-plus"></i>
                 </button>
               </div>
@@ -1809,11 +2006,11 @@ Here's the complete `product-detail.html` matching your theme:
             
             <!-- Actions -->
             <div class="product-actions">
-              <button class="btn-add-cart" onclick="addToCart()" id="btn-add-cart" ${!p.availability || stock === 0 ? 'disabled' : ''}>
+              <button class="btn-add-cart" onclick="handleAddToCart()" id="btn-add-cart" ${p.availability === false || stock === 0 ? 'disabled' : ''}>
                 <i class="fas fa-shopping-cart"></i>
-                ${!p.availability || stock === 0 ? 'Out of Stock' : 'Add to Cart'}
+                ${p.availability === false || stock === 0 ? 'Out of Stock' : 'Add to Cart'}
               </button>
-              <button class="btn-buy-now" onclick="buyNow()" id="btn-buy-now" ${!p.availability || stock === 0 ? 'disabled' : ''}>
+              <button class="btn-buy-now" onclick="handleBuyNow()" id="btn-buy-now" ${p.availability === false || stock === 0 ? 'disabled' : ''}>
                 <i class="fas fa-bolt"></i>
                 Buy Now
               </button>
@@ -1826,7 +2023,7 @@ Here's the complete `product-detail.html` matching your theme:
             <div class="product-meta">
               <div class="meta-item">
                 <i class="fas fa-tag"></i>
-                <span>Category: <a href="products.html?category=${p.category}">${p.category || 'General'}</a></span>
+                <span>Category: <a href="products.html?category=${p.category}">${formatCategory(p.category)}</a></span>
               </div>
               ${p.brand ? `
                 <div class="meta-item">
@@ -1856,7 +2053,7 @@ Here's the complete `product-detail.html` matching your theme:
           
           <div class="tab-content active" id="tab-description">
             <h3>Product Description</h3>
-            <p>${p.description || 'No description available.'}</p>
+            <p>${p.description || 'No description available for this product.'}</p>
             <ul>
               <li>Premium quality materials</li>
               <li>Safe for children</li>
@@ -1870,7 +2067,7 @@ Here's the complete `product-detail.html` matching your theme:
             <table style="width: 100%; border-collapse: collapse;">
               <tr style="border-bottom: 1px solid var(--gray-200);">
                 <td style="padding: 0.75rem 0; font-weight: 600; width: 40%;">Category</td>
-                <td style="padding: 0.75rem 0; color: var(--gray-700);">${p.category || 'General'}</td>
+                <td style="padding: 0.75rem 0; color: var(--gray-700);">${formatCategory(p.category)}</td>
               </tr>
               ${p.brand ? `
                 <tr style="border-bottom: 1px solid var(--gray-200);">
@@ -1896,13 +2093,17 @@ Here's the complete `product-detail.html` matching your theme:
                   <td style="padding: 0.75rem 0; color: var(--gray-700);">${p.colors.join(', ')}</td>
                 </tr>
               ` : ''}
+              <tr style="border-bottom: 1px solid var(--gray-200);">
+                <td style="padding: 0.75rem 0; font-weight: 600;">Availability</td>
+                <td style="padding: 0.75rem 0; color: var(--gray-700);">${p.availability !== false ? 'In Stock' : 'Out of Stock'}</td>
+              </tr>
             </table>
           </div>
           
           <div class="tab-content" id="tab-reviews">
             <div class="reviews-summary">
               <div class="reviews-average">
-                <div class="big-rating">${p.rating || 4.0}</div>
+                <div class="big-rating">${(p.rating || 4.0).toFixed(1)}</div>
                 <div class="stars">
                   ${generateStars(p.rating || 4)}
                 </div>
@@ -1995,6 +2196,12 @@ Here's the complete `product-detail.html` matching your theme:
       `;
     }
 
+    // ==================== FORMAT CATEGORY ====================
+    function formatCategory(category) {
+      if (!category) return 'General';
+      return category.charAt(0).toUpperCase() + category.slice(1).replace(/-/g, ' ');
+    }
+
     // ==================== GALLERY FUNCTIONS ====================
     function changeImage(index) {
       const images = currentProduct.images || ['https://via.placeholder.com/600x600?text=No+Image'];
@@ -2002,7 +2209,6 @@ Here's the complete `product-detail.html` matching your theme:
       
       document.getElementById('main-image').src = images[index];
       
-      // Update thumbnails
       document.querySelectorAll('.thumbnail').forEach((thumb, i) => {
         thumb.classList.toggle('active', i === index);
       });
@@ -2010,7 +2216,7 @@ Here's the complete `product-detail.html` matching your theme:
 
     function prevImage() {
       const images = currentProduct.images || [];
-      if (images.length === 0) return;
+      if (images.length <= 1) return;
       
       currentImageIndex = (currentImageIndex - 1 + images.length) % images.length;
       changeImage(currentImageIndex);
@@ -2018,7 +2224,7 @@ Here's the complete `product-detail.html` matching your theme:
 
     function nextImage() {
       const images = currentProduct.images || [];
-      if (images.length === 0) return;
+      if (images.length <= 1) return;
       
       currentImageIndex = (currentImageIndex + 1) % images.length;
       changeImage(currentImageIndex);
@@ -2036,11 +2242,8 @@ Here's the complete `product-detail.html` matching your theme:
       document.body.style.overflow = '';
     }
 
-    // Close zoom on click outside
     document.getElementById('zoom-modal').addEventListener('click', function(e) {
-      if (e.target === this) {
-        closeZoom();
-      }
+      if (e.target === this) closeZoom();
     });
 
     // ==================== OPTIONS FUNCTIONS ====================
@@ -2062,20 +2265,11 @@ Here's the complete `product-detail.html` matching your theme:
 
     function getColorCode(colorName) {
       const colors = {
-        'Red': '#EF4444',
-        'Blue': '#3B82F6',
-        'Green': '#10B981',
-        'Yellow': '#F59E0B',
-        'Pink': '#EC4899',
-        'Purple': '#8B5CF6',
-        'Orange': '#F97316',
-        'Black': '#1F2937',
-        'White': '#F9FAFB',
-        'Gray': '#6B7280',
-        'Navy': '#1E3A5F',
-        'Brown': '#92400E',
-        'Beige': '#D4A574',
-        'Natural Wood': '#C4A484'
+        'Red': '#EF4444', 'Blue': '#3B82F6', 'Green': '#10B981',
+        'Yellow': '#F59E0B', 'Pink': '#EC4899', 'Purple': '#8B5CF6',
+        'Orange': '#F97316', 'Black': '#1F2937', 'White': '#F9FAFB',
+        'Gray': '#6B7280', 'Navy': '#1E3A5F', 'Brown': '#92400E',
+        'Beige': '#D4A574', 'Natural Wood': '#C4A484'
       };
       return colors[colorName] || colorName.toLowerCase();
     }
@@ -2083,51 +2277,49 @@ Here's the complete `product-detail.html` matching your theme:
     // ==================== QUANTITY FUNCTIONS ====================
     function updateQuantity(change) {
       const input = document.getElementById('quantity-input');
+      const stock = currentProduct.stock || 10;
       const newValue = parseInt(input.value) + change;
-      const max = currentProduct.stock || 10;
       
-      if (newValue >= 1 && newValue <= max) {
+      if (newValue >= 1 && newValue <= stock) {
         input.value = newValue;
         quantity = newValue;
       }
       
-      // Update button states
       document.getElementById('qty-minus').disabled = newValue <= 1;
-      document.getElementById('qty-plus').disabled = newValue >= max;
+      document.getElementById('qty-plus').disabled = newValue >= stock;
     }
 
     function handleQuantityChange() {
       const input = document.getElementById('quantity-input');
-      const max = currentProduct.stock || 10;
+      const stock = currentProduct.stock || 10;
       let value = parseInt(input.value);
       
       if (isNaN(value) || value < 1) value = 1;
-      if (value > max) value = max;
+      if (value > stock) value = stock;
       
       input.value = value;
       quantity = value;
+      
+      document.getElementById('qty-minus').disabled = value <= 1;
+      document.getElementById('qty-plus').disabled = value >= stock;
     }
 
     // ==================== TAB FUNCTIONS ====================
     function switchTab(tabId, element) {
-      // Update buttons
       document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
       element.classList.add('active');
       
-      // Update content
       document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
       document.getElementById(`tab-${tabId}`).classList.add('active');
     }
 
-    // ==================== CART FUNCTIONS ====================
-    async function addToCart() {
+    // ==================== ADD TO CART ====================
+    async function handleAddToCart() {
       const token = localStorage.getItem('kidocart_token');
       
       if (!token) {
         showToast('Please login to add items to cart', 'warning');
-        setTimeout(() => {
-          window.location.href = 'login.html';
-        }, 1500);
+        setTimeout(() => window.location.href = 'login.html', 1500);
         return;
       }
       
@@ -2163,7 +2355,7 @@ Here's the complete `product-detail.html` matching your theme:
           showToast('Added to cart!', 'success');
           updateHeaderCounts();
         } else {
-          const error = await response.json();
+             const error = await response.json();
           showToast(error.error || 'Failed to add to cart', 'error');
         }
       } catch (error) {
@@ -2173,12 +2365,53 @@ Here's the complete `product-detail.html` matching your theme:
     }
 
     // ==================== BUY NOW ====================
-    async function buyNow() {
-      await addToCart();
-      // Redirect to checkout after adding
-      setTimeout(() => {
-        window.location.href = 'checkout.html';
-      }, 500);
+    async function handleBuyNow() {
+      const token = localStorage.getItem('kidocart_token');
+      
+      if (!token) {
+        showToast('Please login to continue', 'warning');
+        setTimeout(() => window.location.href = 'login.html', 1500);
+        return;
+      }
+      
+      // Validate options
+      if (currentProduct.sizes && currentProduct.sizes.length > 0 && !selectedSize) {
+        showToast('Please select a size', 'warning');
+        return;
+      }
+      
+      if (currentProduct.colors && currentProduct.colors.length > 0 && !selectedColor) {
+        showToast('Please select a color', 'warning');
+        return;
+      }
+      
+      const productId = currentProduct._id || currentProduct.id;
+      
+      try {
+        const response = await fetch('/api/cart', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+          },
+          body: JSON.stringify({
+            productId: productId,
+            quantity: quantity,
+            size: selectedSize,
+            color: selectedColor
+          })
+        });
+        
+        if (response.ok) {
+          window.location.href = 'checkout.html';
+        } else {
+          const error = await response.json();
+          showToast(error.error || 'Failed to add to cart', 'error');
+        }
+      } catch (error) {
+        console.error('Buy now error:', error);
+        showToast('Something went wrong', 'error');
+      }
     }
 
     // ==================== WISHLIST FUNCTIONS ====================
@@ -2209,9 +2442,7 @@ Here's the complete `product-detail.html` matching your theme:
       
       if (!token) {
         showToast('Please login to use wishlist', 'warning');
-        setTimeout(() => {
-          window.location.href = 'login.html';
-        }, 1500);
+        setTimeout(() => window.location.href = 'login.html', 1500);
         return;
       }
       
@@ -2231,6 +2462,7 @@ Here's the complete `product-detail.html` matching your theme:
             btn.classList.remove('active');
             btn.innerHTML = '<i class="far fa-heart"></i>';
             showToast('Removed from wishlist', 'success');
+            updateHeaderCounts();
           }
         } else {
           // Add to wishlist
@@ -2248,10 +2480,12 @@ Here's the complete `product-detail.html` matching your theme:
             btn.classList.add('active');
             btn.innerHTML = '<i class="fas fa-heart"></i>';
             showToast('Added to wishlist!', 'success');
+            updateHeaderCounts();
+          } else {
+            const error = await response.json();
+            showToast(error.error || 'Failed to update wishlist', 'error');
           }
         }
-        
-        updateHeaderCounts();
       } catch (error) {
         console.error('Wishlist error:', error);
         showToast('Failed to update wishlist', 'error');
@@ -2260,30 +2494,46 @@ Here's the complete `product-detail.html` matching your theme:
 
     // ==================== RELATED PRODUCTS ====================
     async function loadRelatedProducts(category) {
-      try {
-        const response = await fetch('/api/products');
-        const products = await response.json();
-        
-        const currentId = currentProduct._id || currentProduct.id;
-        const related = products
-          .filter(p => (p._id || p.id) !== currentId && p.category === category)
+      if (!category || allProducts.length <= 1) return;
+      
+      const currentId = currentProduct._id || currentProduct.id;
+      const related = allProducts
+        .filter(p => {
+          const pId = p._id || p.id;
+          return pId !== currentId && String(pId) !== String(currentId) && p.category === category;
+        })
+        .slice(0, 4);
+      
+      // If no products in same category, show random products
+      if (related.length === 0) {
+        const otherProducts = allProducts
+          .filter(p => {
+            const pId = p._id || p.id;
+            return pId !== currentId && String(pId) !== String(currentId);
+          })
           .slice(0, 4);
         
-        if (related.length === 0) return;
-        
-        const container = document.getElementById('related-products');
-        container.innerHTML = `
-          <div class="section-header">
-            <h2 class="section-title">You May Also Like</h2>
-            <a href="products.html?category=${category}" class="view-all">View All <i class="fas fa-arrow-right"></i></a>
-          </div>
-          <div class="related-products-grid">
-            ${related.map(p => createProductCard(p)).join('')}
-          </div>
-        `;
-      } catch (error) {
-        console.error('Error loading related products:', error);
+        if (otherProducts.length === 0) return;
+        renderRelatedProducts(otherProducts, 'You May Also Like');
+      } else {
+        renderRelatedProducts(related, 'Related Products');
       }
+    }
+
+    function renderRelatedProducts(products, title) {
+      const container = document.getElementById('related-products');
+      
+      container.innerHTML = `
+        <div class="section-header">
+          <h2 class="section-title">${title}</h2>
+          <a href="products.html?category=${currentProduct.category || ''}" class="view-all">
+            View All <i class="fas fa-arrow-right"></i>
+          </a>
+        </div>
+        <div class="related-products-grid">
+          ${products.map(p => createProductCard(p)).join('')}
+        </div>
+      `;
     }
 
     function createProductCard(product) {
@@ -2303,7 +2553,7 @@ Here's the complete `product-detail.html` matching your theme:
             <img src="${imageUrl}" alt="${product.name}" onerror="this.src='https://via.placeholder.com/300x300?text=No+Image'">
             ${product.badge ? `<span class="product-badge ${badgeClass}">${product.badge.charAt(0).toUpperCase() + product.badge.slice(1)}</span>` : ''}
           </div>
-          <div class="product-info">
+          <div class="card-product-info">
             <h3 class="product-name">${product.name}</h3>
             <div class="product-price">
               <span class="price-current">₹${product.price.toLocaleString('en-IN')}</span>
@@ -2333,18 +2583,6 @@ Here's the complete `product-detail.html` matching your theme:
       return stars;
     }
 
-    function showError(message) {
-      const container = document.getElementById('product-detail-page');
-      container.innerHTML = `
-        <div class="error-state">
-          <i class="fas fa-exclamation-triangle"></i>
-          <h2>Oops!</h2>
-          <p>${message}</p>
-          <a href="products.html"><i class="fas fa-arrow-left"></i> Back to Products</a>
-        </div>
-      `;
-    }
-
     function showToast(message, type = 'success') {
       const toast = document.getElementById('toast');
       toast.textContent = message;
@@ -2357,13 +2595,20 @@ Here's the complete `product-detail.html` matching your theme:
 
     // ==================== SEARCH ====================
     function setupSearch() {
-      document.getElementById('search-input').addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-          performSearch();
-        }
-      });
+      const searchInput = document.getElementById('search-input');
+      const searchBtn = document.getElementById('search-btn');
       
-      document.getElementById('search-btn').addEventListener('click', performSearch);
+      if (searchInput) {
+        searchInput.addEventListener('keypress', function(e) {
+          if (e.key === 'Enter') {
+            performSearch();
+          }
+        });
+      }
+      
+      if (searchBtn) {
+        searchBtn.addEventListener('click', performSearch);
+      }
     }
 
     function performSearch() {
@@ -2392,8 +2637,10 @@ Here's the complete `product-detail.html` matching your theme:
             const cartCount = cart.items 
               ? cart.items.reduce((sum, item) => sum + item.quantity, 0) 
               : 0;
-            cartCountEl.textContent = cartCount;
-            cartCountEl.style.display = cartCount > 0 ? 'flex' : 'none';
+            if (cartCountEl) {
+              cartCountEl.textContent = cartCount;
+              cartCountEl.style.display = cartCount > 0 ? 'flex' : 'none';
+            }
           }
 
           // Get wishlist count
@@ -2404,15 +2651,17 @@ Here's the complete `product-detail.html` matching your theme:
           if (wishlistResponse.ok) {
             const wishlist = await wishlistResponse.json();
             const wishlistCount = wishlist.items ? wishlist.items.length : 0;
-            wishlistCountEl.textContent = wishlistCount;
-            wishlistCountEl.style.display = wishlistCount > 0 ? 'flex' : 'none';
+            if (wishlistCountEl) {
+              wishlistCountEl.textContent = wishlistCount;
+              wishlistCountEl.style.display = wishlistCount > 0 ? 'flex' : 'none';
+            }
           }
         } catch (error) {
           console.error('Error updating counts:', error);
         }
       } else {
-        cartCountEl.style.display = 'none';
-        wishlistCountEl.style.display = 'none';
+        if (cartCountEl) cartCountEl.style.display = 'none';
+        if (wishlistCountEl) wishlistCountEl.style.display = 'none';
       }
     }
 
@@ -2431,9 +2680,12 @@ Here's the complete `product-detail.html` matching your theme:
     });
 
     // ==================== MOBILE MENU ====================
-    document.getElementById('mobile-menu-btn').addEventListener('click', function() {
-      window.location.href = 'products.html';
-    });
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    if (mobileMenuBtn) {
+      mobileMenuBtn.addEventListener('click', function() {
+        window.location.href = 'products.html';
+      });
+    }
   </script>
 </body>
 </html>
