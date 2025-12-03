@@ -157,7 +157,7 @@ function renderStars(rating) {
 function renderProductCard(product) {
   const ageGroup = AGE_GROUPS.find(ag => ag.id === product.ageGroup);
   const discount = product.originalPrice ? Math.round((1 - product.price / product.originalPrice) * 100) : 0;
-  const inWishlist = isInWishlist(product.id);
+  const inWishlist = isInWishlist(product._id);
 
   return `
     <div class="product-card" data-id="${product._id}">
