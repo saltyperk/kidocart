@@ -2114,6 +2114,76 @@ You're right! Let me fix the product fetching and add a modern skeleton loading 
           </div>
           
           </div>
+
+          <div class="tab-content" id="tab-reviews">
+  <div class="reviews-summary">
+    <div class="reviews-average">
+      <div class="big-rating">${(p.rating || 4.0).toFixed(1)}</div>
+      <div class="stars">
+        ${generateStars(p.rating || 4)}
+      </div>
+      <div class="total-reviews">${p.reviewCount || 0} reviews</div>
+    </div>
+    <div class="reviews-breakdown">
+      <div class="rating-bar">
+        <span class="label">5 stars</span>
+        <div class="bar"><div class="bar-fill" style="width: 70%;"></div></div>
+        <span class="count">70%</span>
+      </div>
+      <div class="rating-bar">
+        <span class="label">4 stars</span>
+        <div class="bar"><div class="bar-fill" style="width: 20%;"></div></div>
+        <span class="count">20%</span>
+      </div>
+      <div class="rating-bar">
+        <span class="label">3 stars</span>
+        <div class="bar"><div class="bar-fill" style="width: 7%;"></div></div>
+        <span class="count">7%</span>
+      </div>
+      <div class="rating-bar">
+        <span class="label">2 stars</span>
+        <div class="bar"><div class="bar-fill" style="width: 2%;"></div></div>
+        <span class="count">2%</span>
+      </div>
+      <div class="rating-bar">
+        <span class="label">1 star</span>
+        <div class="bar"><div class="bar-fill" style="width: 1%;"></div></div>
+        <span class="count">1%</span>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Reviews from Database -->
+  <div class="reviews-list">
+    ${p.reviews && p.reviews.length > 0 ? p.reviews.map(review => `
+      <div class="review-card">
+        <div class="review-header">
+          <div class="reviewer-info">
+            <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(review.userName)}&background=random" alt="${review.userName}" class="reviewer-avatar">
+            <div>
+              <div class="reviewer-name">${review.userName}</div>
+              <div class="reviewer-meta">Verified Buyer • ${new Date(review.date).toLocaleDateString('en-IN', { year: 'numeric', month: 'short', day: 'numeric' })}</div>
+            </div>
+          </div>
+          <div class="review-rating">
+            ${generateStars(review.rating)}
+          </div>
+        </div>
+        <p class="review-text">${review.comment}</p>
+        <div class="review-helpful">
+          <span>Was this helpful?</span>
+          <button><i class="far fa-thumbs-up"></i> Yes</button>
+          <button><i class="far fa-thumbs-down"></i> No</button>
+        </div>
+      </div>
+    `).join('') : `
+      <div class="review-card" style="text-align: center; padding: 2rem;">
+        <i class="fas fa-comment-slash" style="font-size: 3rem; color: var(--gray-400); margin-bottom: 1rem;"></i>
+        <p style="color: var(--gray-600);">No reviews yet. Be the first to review this product!</p>
+      </div>
+    `}
+  </div>
+</div>
         
         <!-- Related Products -->
         <div class="related-products-section" id="related-products"></div>
