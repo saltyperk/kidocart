@@ -2185,6 +2185,11 @@ function calculateRatingBreakdown(reviews) {
           </div>
         </div>
       </div>
+      <div style="text-align: center; margin: 2rem 0; padding: 1rem 0; border-bottom: 1px solid var(--gray-200);">
+        <button class="btn btn-primary" onclick="openReviewModal()">
+          <i class="fas fa-pen"></i> Write a Review
+        </button>
+      </div>
       
       <!-- Reviews from Database -->
       <div class="reviews-list">
@@ -2707,6 +2712,20 @@ function calculateRatingBreakdown(reviews) {
         if (e.key === 'ArrowRight') nextImage();
       }
     });
+
+    // ==================== OPEN REVIEW MODAL ====================
+function openReviewModal() {
+  const token = localStorage.getItem('kidocart_token');
+  
+  if (!token) {
+    showToast('Please login to write a review', 'warning');
+    setTimeout(() => window.location.href = 'login.html', 1500);
+    return;
+  }
+  
+  // TODO: Open review modal/form
+  showToast('Review feature coming soon!', 'info');
+}
 
     // ==================== MOBILE MENU ====================
     const mobileMenuBtn = document.getElementById('mobile-menu-btn');
