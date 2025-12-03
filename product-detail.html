@@ -2093,6 +2093,18 @@ You're right! Let me fix the product fetching and add a modern skeleton loading 
                   <td style="padding: 0.75rem 0; color: var(--gray-700);">${p.colors.join(', ')}</td>
                 </tr>
               ` : ''}
+              ${p.dimensions ? `
+      <tr style="border-bottom: 1px solid var(--gray-200);">
+        <td style="padding: 0.75rem 0; font-weight: 600;">Dimensions (L×W×H)</td>
+        <td style="padding: 0.75rem 0; color: var(--gray-700);">${p.dimensions.length} × ${p.dimensions.width} × ${p.dimensions.height} ${p.dimensions.unit}</td>
+      </tr>
+      ${p.dimensions.weight ? `
+        <tr style="border-bottom: 1px solid var(--gray-200);">
+          <td style="padding: 0.75rem 0; font-weight: 600;">Weight</td>
+          <td style="padding: 0.75rem 0; color: var(--gray-700);">${p.dimensions.weight} kg</td>
+        </tr>
+      ` : ''}
+    ` : ''}
               <tr style="border-bottom: 1px solid var(--gray-200);">
                 <td style="padding: 0.75rem 0; font-weight: 600;">Availability</td>
                 <td style="padding: 0.75rem 0; color: var(--gray-700);">${p.availability !== false ? 'In Stock' : 'Out of Stock'}</td>
