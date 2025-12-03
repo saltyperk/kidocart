@@ -351,6 +351,22 @@ img {
   gap: 1.5rem;
 }
 
+.product-title {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.product-info-section {
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.product-description,
+.description-section p {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
 .product-card {
   background: white;
   border-radius: 20px;
