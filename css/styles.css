@@ -683,8 +683,8 @@ img {
 }
 
 .gallery-main img {
-  width: 100%;
-  height: 500px;
+  width: 700px;
+  height: 700px;
   object-fit: cover;
 }
 
