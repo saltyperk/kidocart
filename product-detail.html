@@ -1952,27 +1952,36 @@ function calculateRatingBreakdown(reviews) {
       container.innerHTML = `
   <!-- Product Detail Container -->
   <div class="product-detail-container">
-    <!-- Gallery -->
-    <div class="product-gallery">
-      <div class="gallery-thumbnails">
-        ${images.map((img, i) => `
-          <div class="thumbnail ${i === 0 ? 'active' : ''}" onclick="changeImage(${i})">
-            <img src="${img}" alt="Thumbnail ${i + 1}" onerror="this.src='https://via.placeholder.com/80x80?text=No+Image'">
-          </div>
-        `).join('')}
+    <!-- Left Column: Gallery + Description -->
+    <div class="product-left-column">
+      <!-- Gallery -->
+      <div class="product-gallery">
+        <div class="gallery-thumbnails">
+          ${images.map((img, i) => `
+            <div class="thumbnail ${i === 0 ? 'active' : ''}" onclick="changeImage(${i})">
+              <img src="${img}" alt="Thumbnail ${i + 1}" onerror="this.src='https://via.placeholder.com/80x80?text=No+Image'">
+            </div>
+          `).join('')}
+        </div>
+        <div class="gallery-main" id="gallery-main">
+          ${p.badge ? `<span class="gallery-badge ${badgeClass}">${p.badge.charAt(0).toUpperCase() + p.badge.slice(1)}</span>` : ''}
+          <img src="${images[0]}" alt="${p.name}" id="main-image" onerror="this.src='https://via.placeholder.com/600x600?text=No+Image'">
+          ${images.length > 1 ? `
+            <button class="gallery-nav prev" onclick="prevImage()"><i class="fas fa-chevron-left"></i></button>
+            <button class="gallery-nav next" onclick="nextImage()"><i class="fas fa-chevron-right"></i></button>
+          ` : ''}
+          <button class="gallery-zoom" onclick="openZoom()"><i class="fas fa-search-plus"></i></button>
+        </div>
       </div>
-      <div class="gallery-main" id="gallery-main">
-        ${p.badge ? `<span class="gallery-badge ${badgeClass}">${p.badge.charAt(0).toUpperCase() + p.badge.slice(1)}</span>` : ''}
-        <img src="${images[0]}" alt="${p.name}" id="main-image" onerror="this.src='https://via.placeholder.com/600x600?text=No+Image'">
-        ${images.length > 1 ? `
-          <button class="gallery-nav prev" onclick="prevImage()"><i class="fas fa-chevron-left"></i></button>
-          <button class="gallery-nav next" onclick="nextImage()"><i class="fas fa-chevron-right"></i></button>
-        ` : ''}
-        <button class="gallery-zoom" onclick="openZoom()"><i class="fas fa-search-plus"></i></button>
+      
+      <!-- Description Below Gallery -->
+      <div class="product-description-box">
+        <h3>Product Description</h3>
+        <p>${p.description || 'No description available for this product.'}</p>
       </div>
     </div>
     
-    <!-- Product Info -->
+    <!-- Right Column: Product Info -->
     <div class="product-info">
       <div class="product-category">${p.category || 'General'}</div>
       <h1 class="product-title">${p.name}</h1>
@@ -2076,7 +2085,7 @@ function calculateRatingBreakdown(reviews) {
       </div>
     </div>
   </div>
-  
+   
   <!-- Description Section (Below Images) -->
   <div class="product-description-section">
     <h3>Product Description</h3>
