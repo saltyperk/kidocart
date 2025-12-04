@@ -1,0 +1,593 @@
+/* ==================== RESET & VARIABLES ==================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --black: #0A0A0A;
+  --white: #FFFFFF;
+  --gray-100: #F7F7F7;
+  --gray-200: #E5E5E5;
+  --gray-300: #D4D4D4;
+  --gray-500: #737373;
+  --gray-700: #404040;
+  --accent: #FF6B35;
+  --accent-light: #FFF0EB;
+  --success: #10B981;
+  --warning: #F59E0B;
+  --error: #EF4444;
+}
+
+body {
+  font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: linear-gradient(135deg, var(--gray-100) 0%, #fff 100%);
+  color: var(--black);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* ==================== AUTH PAGE ==================== */
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.auth-container {
+  max-width: 1200px;
+  width: 100%;
+  background: var(--white);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 700px;
+}
+
+/* ==================== BRANDING SIDE ==================== */
+.auth-branding {
+  background: linear-gradient(135deg, var(--black) 0%, var(--gray-700) 100%);
+  color: var(--white);
+  padding: 3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.logo {
+  font-size: 2rem;
+  font-weight: 700;
+  text-decoration: none;
+  color: var(--white);
+  letter-spacing: -0.5px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 3rem;
+}
+
+.logo i {
+  color: var(--accent);
+  font-size: 2.2rem;
+}
+
+.logo span {
+  color: var(--accent);
+}
+
+.auth-branding h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  line-height: 1.2;
+  letter-spacing: -1px;
+}
+
+.auth-branding p {
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 3rem;
+  line-height: 1.7;
+}
+
+.branding-features {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.feature {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.feature i {
+  font-size: 1.5rem;
+  color: var(--accent);
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 107, 53, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.feature span {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* ==================== FORM SIDE ==================== */
+.auth-form-container {
+  padding: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow-y: auto;
+}
+
+.auth-form {
+  width: 100%;
+  max-width: 450px;
+}
+
+.auth-form h2 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  color: var(--black);
+  letter-spacing: -0.5px;
+}
+
+.auth-subtitle {
+  color: var(--gray-500);
+  margin-bottom: 2rem;
+  font-size: 0.95rem;
+}
+
+/* ==================== LOGIN TABS ==================== */
+.login-tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+  background: var(--gray-100);
+  padding: 0.3rem;
+  border-radius: 12px;
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  background: transparent;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  color: var(--gray-700);
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.tab-btn:hover {
+  background: rgba(255, 107, 53, 0.1);
+  color: var(--accent);
+}
+
+.tab-btn.active {
+  background: var(--accent);
+  color: white;
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+  animation: fadeIn 0.3s;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ==================== FORM ELEMENTS ==================== */
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--gray-700);
+  font-size: 0.9rem;
+}
+
+.input-group {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-group i {
+  position: absolute;
+  left: 1rem;
+  color: var(--gray-500);
+  font-size: 1rem;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 0.875rem 1rem 0.875rem 3rem;
+  border: 2px solid var(--gray-200);
+  border-radius: 10px;
+  font-size: 0.95rem;
+  transition: all 0.3s;
+  font-family: inherit;
+}
+
+.input-group input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px var(--accent-light);
+}
+
+.input-group input:disabled {
+  background: var(--gray-100);
+  cursor: not-allowed;
+}
+
+.form-group small {
+  display: block;
+  margin-top: 0.5rem;
+  color: var(--gray-500);
+  font-size: 0.8rem;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 1rem;
+  background: none;
+  border: none;
+  color: var(--gray-500);
+  cursor: pointer;
+  padding: 0.5rem;
+  transition: color 0.3s;
+}
+
+.toggle-password:hover {
+  color: var(--accent);
+}
+
+/* ==================== PASSWORD STRENGTH ==================== */
+.password-strength {
+  margin-top: 0.75rem;
+}
+
+.strength-bar {
+  height: 4px;
+  background: var(--gray-200);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+.strength-fill {
+  height: 100%;
+  width: 0%;
+  background: var(--gray-300);
+  transition: all 0.3s;
+}
+
+.strength-text {
+  font-size: 0.8rem;
+  color: var(--gray-500);
+  font-weight: 600;
+}
+
+/* ==================== CHECKBOX ==================== */
+.checkbox-group {
+  margin-bottom: 1rem;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: var(--gray-700);
+  line-height: 1.6;
+}
+
+.checkbox-label input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: var(--accent);
+  margin-top: 0.2rem;
+  flex-shrink: 0;
+}
+
+.checkbox-label a {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.checkbox-label a:hover {
+  text-decoration: underline;
+}
+
+/* ==================== BUTTONS ==================== */
+.btn {
+  width: 100%;
+  padding: 0.875rem 1.5rem;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border: none;
+  text-decoration: none;
+}
+
+.btn-primary {
+  background: var(--black);
+  color: var(--white);
+  border: 2px solid var(--black);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: var(--accent);
+  border-color: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(255, 107, 53, 0.3);
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-secondary {
+  background: var(--white);
+  color: var(--black);
+  border: 2px solid var(--gray-300);
+}
+
+.btn-secondary:hover {
+  border-color: var(--black);
+  background: var(--gray-100);
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--gray-700);
+  border: 2px solid var(--gray-300);
+}
+
+.btn-outline:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.btn-link {
+  background: none;
+  border: none;
+  color: var(--accent);
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0.5rem;
+  width: auto;
+}
+
+.btn-link:hover {
+  color: #e55a2b;
+}
+
+/* ==================== DIVIDER ==================== */
+.divider {
+  display: flex;
+  align-items: center;
+  margin: 1.5rem 0;
+  color: var(--gray-500);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--gray-200);
+}
+
+.divider span {
+  padding: 0 1rem;
+}
+
+/* ==================== OTP INPUTS ==================== */
+.otp-inputs {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+  margin: 1.5rem 0;
+}
+
+.otp-digit {
+  width: 50px;
+  height: 55px;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  border: 2px solid var(--gray-200);
+  border-radius: 10px;
+  transition: all 0.3s;
+}
+
+.otp-digit:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px var(--accent-light);
+}
+
+.otp-timer {
+  text-align: center;
+  color: var(--gray-500);
+  font-size: 0.9rem;
+  margin: 1rem 0;
+}
+
+.otp-timer span {
+  font-weight: 700;
+  color: var(--accent);
+}
+
+/* ==================== GOOGLE BUTTON ==================== */
+#google-signin-button,
+#google-signup-button {
+  margin-bottom: 1.5rem;
+}
+
+/* Override Google button styles */
+#google-signin-button > div,
+#google-signup-button > div {
+  width: 100% !important;
+}
+
+/* ==================== FOOTER ==================== */
+.auth-footer {
+  text-align: center;
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--gray-200);
+}
+
+.auth-footer p {
+  color: var(--gray-500);
+  font-size: 0.9rem;
+}
+
+.auth-footer a {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.auth-footer a:hover {
+  text-decoration: underline;
+}
+
+/* ==================== TOAST ==================== */
+.toast {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  background: var(--black);
+  color: white;
+  padding: 1rem 1.5rem;
+  border-radius: 10px;
+  display: none;
+  z-index: 9999;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  font-size: 0.9rem;
+  max-width: 400px;
+}
+
+.toast.show {
+  display: block;
+  animation: slideIn 0.3s ease;
+}
+
+.toast.success {
+  background: var(--success);
+}
+
+.toast.error {
+  background: var(--error);
+}
+
+.toast.warning {
+  background: var(--warning);
+  color: var(--black);
+}
+
+.toast.info {
+  background: #3b82f6;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* ==================== RESPONSIVE ==================== */
+@media (max-width: 968px) {
+  .auth-container {
+    grid-template-columns: 1fr;
+  }
+
+  .auth-branding {
+    display: none;
+  }
+
+  .auth-form-container {
+    padding: 2rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .auth-page {
+    padding: 1rem;
+  }
+
+  .auth-form-container {
+    padding: 1.5rem;
+  }
+
+  .auth-form h2 {
+    font-size: 1.5rem;
+  }
+
+  .otp-digit {
+    width: 45px;
+    height: 50px;
+    font-size: 1.25rem;
+  }
+
+  .otp-inputs {
+    gap: 0.5rem;
+  }
+
+  .toast {
+    bottom: 1rem;
+    right: 1rem;
+    left: 1rem;
+    max-width: none;
+  }
+}
