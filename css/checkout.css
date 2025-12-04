@@ -761,3 +761,192 @@ body {
     flex-direction: column;
   }
 }
+
+/* ==================== SAVED ADDRESSES ==================== */
+.saved-addresses-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+.address-card {
+  border: 2px solid var(--gray-200);
+  border-radius: 12px;
+  padding: 1.5rem;
+  cursor: pointer;
+  transition: all 0.3s;
+  position: relative;
+}
+
+.address-card:hover {
+  border-color: var(--accent);
+  background: var(--accent-light);
+}
+
+.address-card.selected,
+.address-card.default {
+  border-color: var(--accent);
+  background: var(--accent-light);
+}
+
+.default-badge {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  background: var(--accent);
+  color: white;
+  padding: 0.25rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+.address-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.address-header h4 {
+  font-size: 1rem;
+  color: var(--black);
+}
+
+.address-header input[type="radio"] {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  accent-color: var(--accent);
+}
+
+.address-text {
+  font-size: 0.9rem;
+  color: var(--gray-700);
+  line-height: 1.6;
+  margin-bottom: 0.75rem;
+}
+
+.address-phone {
+  font-size: 0.85rem;
+  color: var(--gray-500);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* ==================== PHONEPE PAYMENT ==================== */
+.phonepe-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+}
+
+.phonepe-badge span {
+  color: var(--gray-500);
+}
+
+.phonepe-badge strong {
+  color: #5F259F;
+  font-size: 1rem;
+}
+
+.payment-info {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  background: var(--gray-100);
+  padding: 1.25rem;
+  border-radius: 10px;
+  margin-bottom: 1.5rem;
+}
+
+.payment-info i {
+  font-size: 1.5rem;
+  color: var(--success);
+  margin-top: 0.25rem;
+}
+
+.payment-info strong {
+  display: block;
+  color: var(--black);
+  margin-bottom: 0.25rem;
+}
+
+.payment-info p {
+  font-size: 0.85rem;
+  color: var(--gray-500);
+  margin: 0;
+}
+
+.payment-methods-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.payment-method-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1.5rem 1rem;
+  border: 2px solid var(--gray-200);
+  border-radius: 12px;
+  background: var(--white);
+  transition: all 0.3s;
+}
+
+.payment-method-card:hover {
+  border-color: #5F259F;
+  background: #F5F0FF;
+}
+
+.payment-method-card i {
+  font-size: 2rem;
+  color: #5F259F;
+}
+
+.payment-method-card span {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--black);
+}
+
+.payment-note {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: #FFF7ED;
+  padding: 1rem;
+  border-radius: 8px;
+  border-left: 4px solid var(--gold);
+}
+
+.payment-note i {
+  color: var(--gold);
+  font-size: 1.2rem;
+}
+
+.payment-note span {
+  font-size: 0.85rem;
+  color: var(--gray-700);
+}
+
+@media (max-width: 968px) {
+  .saved-addresses-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .payment-methods-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .payment-methods-grid {
+    grid-template-columns: 1fr;
+  }
+}
