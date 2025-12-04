@@ -38,6 +38,10 @@ body {
   border-bottom: 1px solid var(--gray-200);
 }
 
+.header.hidden {
+  transform: translateY(-100%);
+}
+
 .header.scrolled {
   box-shadow: 0 4px 20px rgba(0,0,0,0.08);
 }
@@ -147,8 +151,7 @@ body {
   position: relative;
 }
 
-.header-action:hover,
-.header-action.active {
+.header-action:hover {
   color: var(--accent);
 }
 
