@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-  <!-- HEADER (Same as index.html) -->
+  <!-- HEADER -->
   <header class="header" id="header">
     <div class="header-container">
       <a href="index.html" class="logo">
@@ -50,7 +50,6 @@
         <section class="checkout-section">
           <div class="section-header">
             <h2>Contact Information</h2>
-            <p>Already have an account? <a href="login.html">Login</a></p>
           </div>
           
           <div class="form-group">
@@ -62,17 +61,29 @@
             <label for="phone">Phone Number *</label>
             <input type="tel" id="phone" class="form-input" placeholder="+91 98765 43210" required>
           </div>
-
-          <label class="checkbox-label">
-            <input type="checkbox" id="newsletter">
-            <span>Email me with news and offers</span>
-          </label>
         </section>
 
-        <!-- Shipping Address -->
-        <section class="checkout-section">
+        <!-- Saved Addresses -->
+        <section class="checkout-section" id="saved-addresses-section" style="display: none;">
+          <div class="section-header">
+            <h2>Select Delivery Address</h2>
+            <button class="btn btn-secondary btn-sm" onclick="showAddNewAddress()">
+              <i class="fas fa-plus"></i> Add New Address
+            </button>
+          </div>
+
+          <div id="saved-addresses-list" class="saved-addresses-grid">
+            <!-- Saved addresses will load here -->
+          </div>
+        </section>
+
+        <!-- New Address Form -->
+        <section class="checkout-section" id="new-address-section">
           <div class="section-header">
             <h2>Shipping Address</h2>
+            <button class="btn btn-secondary btn-sm" id="back-to-saved-btn" onclick="backToSavedAddresses()" style="display: none;">
+              <i class="fas fa-arrow-left"></i> Back to Saved Addresses
+            </button>
           </div>
 
           <div class="form-row">
@@ -152,127 +163,51 @@
           </div>
 
           <label class="checkbox-label">
-            <input type="checkbox" id="saveAddress">
-            <span>Save this address for next time</span>
+            <input type="checkbox" id="saveAddress" checked>
+            <span>Save this address for future orders</span>
           </label>
-        </section>
-
-        <!-- Shipping Method -->
-        <section class="checkout-section">
-          <div class="section-header">
-            <h2>Shipping Method</h2>
-          </div>
-
-          <div class="shipping-options">
-            <label class="shipping-option">
-              <input type="radio" name="shipping" value="standard" checked>
-              <div class="option-content">
-                <div class="option-info">
-                  <strong>Standard Shipping</strong>
-                  <span>5-7 business days</span>
-                </div>
-                <div class="option-price">FREE</div>
-              </div>
-            </label>
-
-            <label class="shipping-option">
-              <input type="radio" name="shipping" value="express">
-              <div class="option-content">
-                <div class="option-info">
-                  <strong>Express Shipping</strong>
-                  <span>2-3 business days</span>
-                </div>
-                <div class="option-price">₹150</div>
-              </div>
-            </label>
-
-            <label class="shipping-option">
-              <input type="radio" name="shipping" value="overnight">
-              <div class="option-content">
-                <div class="option-info">
-                  <strong>Overnight Shipping</strong>
-                  <span>Next business day</span>
-                </div>
-                <div class="option-price">₹300</div>
-              </div>
-            </label>
-          </div>
         </section>
 
         <!-- Payment Method -->
         <section class="checkout-section">
           <div class="section-header">
             <h2>Payment Method</h2>
+            <div class="phonepe-badge">
+              <span>Powered by</span>
+              <strong>PhonePe</strong>
+            </div>
           </div>
 
-          <div class="payment-options">
-            <label class="payment-option">
-              <input type="radio" name="payment" value="cod" checked>
-              <div class="option-content">
-                <i class="fas fa-money-bill-wave"></i>
-                <div class="option-info">
-                  <strong>Cash on Delivery</strong>
-                  <span>Pay when you receive</span>
-                </div>
-              </div>
-            </label>
-
-            <label class="payment-option">
-              <input type="radio" name="payment" value="card">
-              <div class="option-content">
-                <i class="fas fa-credit-card"></i>
-                <div class="option-info">
-                  <strong>Credit/Debit Card</strong>
-                  <span>Visa, Mastercard, RuPay</span>
-                </div>
-              </div>
-            </label>
-
-            <label class="payment-option">
-              <input type="radio" name="payment" value="upi">
-              <div class="option-content">
-                <i class="fas fa-mobile-alt"></i>
-                <div class="option-info">
-                  <strong>UPI Payment</strong>
-                  <span>Google Pay, PhonePe, Paytm</span>
-                </div>
-              </div>
-            </label>
-
-            <label class="payment-option">
-              <input type="radio" name="payment" value="netbanking">
-              <div class="option-content">
-                <i class="fas fa-university"></i>
-                <div class="option-info">
-                  <strong>Net Banking</strong>
-                  <span>All major banks</span>
-                </div>
-              </div>
-            </label>
+          <div class="payment-info">
+            <i class="fas fa-shield-alt"></i>
+            <div>
+              <strong>Secure Payment via PhonePe</strong>
+              <p>All payments are processed through PhonePe's secure gateway</p>
+            </div>
           </div>
 
-          <!-- Card Details (shown when card is selected) -->
-          <div id="card-details" class="card-details" style="display: none;">
-            <div class="form-group">
-              <label for="cardNumber">Card Number</label>
-              <input type="text" id="cardNumber" class="form-input" placeholder="1234 5678 9012 3456" maxlength="19">
+          <div class="payment-methods-grid">
+            <div class="payment-method-card">
+              <i class="fas fa-credit-card"></i>
+              <span>Cards</span>
             </div>
+            <div class="payment-method-card">
+              <i class="fas fa-mobile-alt"></i>
+              <span>UPI</span>
+            </div>
+            <div class="payment-method-card">
+              <i class="fas fa-university"></i>
+              <span>Net Banking</span>
+            </div>
+            <div class="payment-method-card">
+              <i class="fas fa-wallet"></i>
+              <span>Wallets</span>
+            </div>
+          </div>
 
-            <div class="form-row">
-              <div class="form-group">
-                <label for="cardExpiry">Expiry Date</label>
-                <input type="text" id="cardExpiry" class="form-input" placeholder="MM/YY" maxlength="5">
-              </div>
-              <div class="form-group">
-                <label for="cardCVV">CVV</label>
-                <input type="text" id="cardCVV" class="form-input" placeholder="123" maxlength="3">
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label for="cardName">Name on Card</label>
-              <input type="text" id="cardName" class="form-input" placeholder="John Doe">
-            </div>
+          <div class="payment-note">
+            <i class="fas fa-info-circle"></i>
+            <span>You will be redirected to PhonePe payment page after placing order</span>
           </div>
         </section>
 
@@ -283,8 +218,8 @@
             Return to Cart
           </a>
           <button class="btn btn-primary" onclick="placeOrder()" id="place-order-btn">
-            <i class="fas fa-check"></i>
-            Place Order
+            <i class="fas fa-lock"></i>
+            Proceed to Payment
           </button>
         </div>
       </div>
@@ -293,20 +228,16 @@
       <div class="order-summary">
         <h3>Order Summary</h3>
 
-        <!-- Cart Items -->
         <div class="summary-items" id="summary-items">
-          <!-- Items will be loaded here -->
           <div class="loading-skeleton" style="height: 100px;"></div>
           <div class="loading-skeleton" style="height: 100px;"></div>
         </div>
 
-        <!-- Coupon Code -->
         <div class="coupon-section">
           <input type="text" id="coupon-code" class="form-input" placeholder="Discount code">
           <button class="btn btn-secondary btn-sm" onclick="applyCoupon()">Apply</button>
         </div>
 
-        <!-- Summary Breakdown -->
         <div class="summary-breakdown">
           <div class="summary-row">
             <span>Subtotal</span>
@@ -327,7 +258,6 @@
           </div>
         </div>
 
-        <!-- Trust Badges -->
         <div class="trust-badges">
           <div class="trust-item">
             <i class="fas fa-shield-alt"></i>
@@ -349,59 +279,62 @@
   <!-- Toast Notification -->
   <div class="toast" id="toast"></div>
 
-  <!-- Success Modal -->
-  <div class="modal" id="success-modal">
-    <div class="modal-content success">
-      <i class="fas fa-check-circle"></i>
-      <h2>Order Placed Successfully!</h2>
-      <p>Your order has been received and is being processed.</p>
-      <p class="order-number">Order #<span id="order-number">000000</span></p>
-      <div class="modal-actions">
-        <a href="orders.html" class="btn btn-primary">View Orders</a>
-        <a href="index.html" class="btn btn-secondary">Continue Shopping</a>
-      </div>
-    </div>
-  </div>
+  <!-- PhonePe Script -->
+  <script src="https://mercury-t2.phonepe.com/web-static/sdk/v1/phonepe.js"></script>
 
   <script src="js/app.js"></script>
   <script>
     // Global variables
     let cartData = null;
-    let shippingCost = 0;
+    let savedAddresses = [];
+    let selectedAddress = null;
+    let currentUser = null;
 
     // Initialize
     document.addEventListener('DOMContentLoaded', async function() {
-      await loadCart();
-      setupPaymentMethodSwitch();
-      setupShippingMethodSwitch();
-      loadUserData();
+      await checkLoginAndInit();
     });
 
-    // Load user data if logged in
-    function loadUserData() {
+    // Check login and initialize
+    async function checkLoginAndInit() {
       const token = localStorage.getItem('kidocart_token');
       
-      if (token) {
-        try {
-          const payload = JSON.parse(atob(token.split('.')[1]));
-          document.getElementById('email').value = payload.email || '';
-          document.getElementById('firstName').value = payload.name?.split(' ')[0] || '';
-          document.getElementById('lastName').value = payload.name?.split(' ').slice(1).join(' ') || '';
-          document.getElementById('phone').value = payload.phone || '';
-        } catch (error) {
-          console.error('Error loading user data:', error);
-        }
+      if (!token) {
+        showToast('Please login to continue', 'warning');
+        setTimeout(() => {
+          window.location.href = 'login.html?redirect=checkout.html';
+        }, 1500);
+        return;
       }
+
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        currentUser = payload;
+        
+        await loadUserData();
+        await loadCart();
+        await loadSavedAddresses();
+      } catch (error) {
+        console.error('Auth error:', error);
+        localStorage.removeItem('kidocart_token');
+        window.location.href = 'login.html?redirect=checkout.html';
+      }
+    }
+
+    // Load user data
+    async function loadUserData() {
+      document.getElementById('email').value = currentUser.email || '';
+      
+      const nameParts = (currentUser.name || '').split(' ');
+      document.getElementById('firstName').value = nameParts[0] || '';
+      document.getElementById('lastName').value = nameParts.slice(1).join(' ') || '';
+      
+      document.getElementById('phone').value = currentUser.phone || '';
     }
 
     // Load cart
     async function loadCart() {
       const token = localStorage.getItem('kidocart_token');
-      
-      if (!token) {
-        window.location.href = 'login.html';
-        return;
-      }
 
       try {
         const response = await fetch('/api/cart', {
@@ -423,6 +356,98 @@
       } catch (error) {
         console.error('Error loading cart:', error);
         showToast('Failed to load cart', 'error');
+      }
+    }
+
+    // Load saved addresses
+    async function loadSavedAddresses() {
+      const token = localStorage.getItem('kidocart_token');
+
+      try {
+        const response = await fetch('/api/addresses', {
+          headers: { 'Authorization': 'Bearer ' + token }
+        });
+
+        if (response.ok) {
+          savedAddresses = await response.json();
+
+          if (savedAddresses && savedAddresses.length > 0) {
+            displaySavedAddresses();
+            document.getElementById('saved-addresses-section').style.display = 'block';
+            document.getElementById('new-address-section').style.display = 'none';
+            document.getElementById('back-to-saved-btn').style.display = 'inline-flex';
+          } else {
+            document.getElementById('saved-addresses-section').style.display = 'none';
+            document.getElementById('new-address-section').style.display = 'block';
+          }
+        }
+      } catch (error) {
+        console.error('Error loading addresses:', error);
+      }
+    }
+
+    // Display saved addresses
+    function displaySavedAddresses() {
+      const container = document.getElementById('saved-addresses-list');
+      
+      container.innerHTML = savedAddresses.map((addr, index) => `
+        <div class="address-card ${addr.isDefault ? 'default' : ''}" onclick="selectAddress(${index})">
+          ${addr.isDefault ? '<span class="default-badge">Default</span>' : ''}
+          <div class="address-header">
+            <h4>${addr.firstName} ${addr.lastName}</h4>
+            <input type="radio" name="address" value="${index}" ${addr.isDefault ? 'checked' : ''}>
+          </div>
+          <p class="address-text">
+            ${addr.address}${addr.apartment ? ', ' + addr.apartment : ''}<br>
+            ${addr.city}, ${addr.state} - ${addr.pincode}
+          </p>
+          <p class="address-phone">
+            <i class="fas fa-phone"></i> ${document.getElementById('phone').value}
+          </p>
+        </div>
+      `).join('');
+
+      // Auto-select default address
+      const defaultAddr = savedAddresses.find(addr => addr.isDefault);
+      if (defaultAddr) {
+        selectedAddress = defaultAddr;
+      } else {
+        selectedAddress = savedAddresses[0];
+      }
+    }
+
+    // Select address
+    function selectAddress(index) {
+      selectedAddress = savedAddresses[index];
+      document.querySelectorAll('.address-card').forEach((card, i) => {
+        card.classList.toggle('selected', i === index);
+      });
+      document.querySelector(`input[name="address"][value="${index}"]`).checked = true;
+    }
+
+    // Show add new address form
+    function showAddNewAddress() {
+      document.getElementById('saved-addresses-section').style.display = 'none';
+      document.getElementById('new-address-section').style.display = 'block';
+      selectedAddress = null;
+      
+      // Clear form
+      document.getElementById('address').value = '';
+      document.getElementById('apartment').value = '';
+      document.getElementById('city').value = '';
+      document.getElementById('state').value = '';
+      document.getElementById('pincode').value = '';
+    }
+
+    // Back to saved addresses
+    function backToSavedAddresses() {
+      if (savedAddresses.length > 0) {
+        document.getElementById('saved-addresses-section').style.display = 'block';
+        document.getElementById('new-address-section').style.display = 'none';
+        
+        // Reselect default or first address
+        const defaultAddr = savedAddresses.find(addr => addr.isDefault);
+        selectedAddress = defaultAddr || savedAddresses[0];
       }
     }
 
@@ -471,50 +496,13 @@
         }
       });
 
-      const total = subtotal + shippingCost - discount;
+      const shipping = subtotal >= 500 ? 0 : 50;
+      const total = subtotal + shipping - discount;
 
       document.getElementById('summary-subtotal').textContent = `₹${subtotal.toLocaleString('en-IN')}`;
-      document.getElementById('summary-shipping').textContent = shippingCost === 0 ? 'FREE' : `₹${shippingCost}`;
+      document.getElementById('summary-shipping').textContent = shipping === 0 ? 'FREE' : `₹${shipping}`;
       document.getElementById('summary-discount').textContent = discount > 0 ? `-₹${discount.toLocaleString('en-IN')}` : '₹0';
       document.getElementById('summary-total').textContent = `₹${total.toLocaleString('en-IN')}`;
-    }
-
-    // Setup payment method switch
-    function setupPaymentMethodSwitch() {
-      const paymentOptions = document.querySelectorAll('input[name="payment"]');
-      const cardDetails = document.getElementById('card-details');
-
-      paymentOptions.forEach(option => {
-        option.addEventListener('change', function() {
-          if (this.value === 'card') {
-            cardDetails.style.display = 'block';
-          } else {
-            cardDetails.style.display = 'none';
-          }
-        });
-      });
-    }
-
-    // Setup shipping method switch
-    function setupShippingMethodSwitch() {
-      const shippingOptions = document.querySelectorAll('input[name="shipping"]');
-
-      shippingOptions.forEach(option => {
-        option.addEventListener('change', function() {
-          switch(this.value) {
-            case 'standard':
-              shippingCost = 0;
-              break;
-            case 'express':
-              shippingCost = 150;
-              break;
-            case 'overnight':
-              shippingCost = 300;
-              break;
-          }
-          calculateSummary();
-        });
-      });
     }
 
     // Apply coupon
@@ -526,14 +514,52 @@
         return;
       }
 
-      // Placeholder - implement coupon logic
       showToast('Coupon feature coming soon!', 'info');
     }
 
-    // Place order
+    // Validate form
+    function validateCheckout() {
+      const email = document.getElementById('email').value;
+      const phone = document.getElementById('phone').value;
+
+      if (!email || !phone) {
+        showToast('Please fill contact information', 'warning');
+        return false;
+      }
+
+      // Email validation
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        showToast('Please enter a valid email address', 'warning');
+        return false;
+      }
+
+      // Check if address is selected or new address is filled
+      if (!selectedAddress) {
+        const address = document.getElementById('address').value;
+        const city = document.getElementById('city').value;
+        const state = document.getElementById('state').value;
+        const pincode = document.getElementById('pincode').value;
+
+        if (!address || !city || !state || !pincode) {
+          showToast('Please fill all address fields', 'warning');
+          return false;
+        }
+
+        // PIN code validation
+        const pincodeRegex = /^[0-9]{6}$/;
+        if (!pincodeRegex.test(pincode)) {
+          showToast('Please enter a valid 6-digit PIN code', 'warning');
+          return false;
+        }
+      }
+
+      return true;
+    }
+
+    // Place order and initiate PhonePe payment
     async function placeOrder() {
-      // Validate form
-      if (!validateForm()) {
+      if (!validateCheckout()) {
         return;
       }
 
@@ -544,10 +570,13 @@
       btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
 
       try {
-        const orderData = {
-          email: document.getElementById('email').value,
-          phone: document.getElementById('phone').value,
-          shippingAddress: {
+        // Prepare address
+        let shippingAddress;
+        
+        if (selectedAddress) {
+          shippingAddress = selectedAddress;
+        } else {
+          shippingAddress = {
             firstName: document.getElementById('firstName').value,
             lastName: document.getElementById('lastName').value,
             address: document.getElementById('address').value,
@@ -555,16 +584,36 @@
             city: document.getElementById('city').value,
             state: document.getElementById('state').value,
             pincode: document.getElementById('pincode').value
-          },
-          shippingMethod: document.querySelector('input[name="shipping"]:checked').value,
-          paymentMethod: document.querySelector('input[name="payment"]:checked').value,
+          };
+
+          // Save address if checkbox is checked
+          if (document.getElementById('saveAddress').checked) {
+            await saveAddress(shippingAddress);
+          }
+        }
+
+        // Calculate total
+        let subtotal = 0;
+        cartData.items.forEach(item => {
+          subtotal += item.price * item.quantity;
+        });
+        const shipping = subtotal >= 500 ? 0 : 50;
+        const total = subtotal + shipping;
+
+        // Create order
+        const orderData = {
+          email: document.getElementById('email').value,
+          phone: document.getElementById('phone').value,
+          shippingAddress: shippingAddress,
+          paymentMethod: 'phonepe',
           items: cartData.items.map(item => ({
             productId: item.productId._id || item.productId.id,
             quantity: item.quantity,
             price: item.price,
             size: item.size,
             color: item.color
-          }))
+          })),
+          total: total
         };
 
         const response = await fetch('/api/orders', {
@@ -579,92 +628,70 @@
         if (response.ok) {
           const order = await response.json();
           
-          // Clear cart
-          await clearCart();
-
-          // Show success modal
-          document.getElementById('order-number').textContent = order._id.slice(-8).toUpperCase();
-          document.getElementById('success-modal').classList.add('show');
+          // Initiate PhonePe payment
+          await initiatePhonePePayment(order);
         } else {
           const error = await response.json();
-          throw new Error(error.error || 'Failed to place order');
+          throw new Error(error.error || 'Failed to create order');
         }
       } catch (error) {
         console.error('Error placing order:', error);
         showToast(error.message || 'Failed to place order', 'error');
         btn.disabled = false;
-        btn.innerHTML = '<i class="fas fa-check"></i> Place Order';
+        btn.innerHTML = '<i class="fas fa-lock"></i> Proceed to Payment';
       }
     }
 
-    // Validate form
-    function validateForm() {
-      const email = document.getElementById('email').value;
-      const phone = document.getElementById('phone').value;
-      const firstName = document.getElementById('firstName').value;
-      const lastName = document.getElementById('lastName').value;
-      const address = document.getElementById('address').value;
-      const city = document.getElementById('city').value;
-      const state = document.getElementById('state').value;
-      const pincode = document.getElementById('pincode').value;
-
-      if (!email || !phone || !firstName || !lastName || !address || !city || !state || !pincode) {
-        showToast('Please fill all required fields', 'warning');
-        return false;
-      }
-
-      // Email validation
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(email)) {
-        showToast('Please enter a valid email address', 'warning');
-        return false;
-      }
-
-      // Phone validation
-      const phoneRegex = /^[0-9]{10}$/;
-      if (!phoneRegex.test(phone.replace(/\s/g, '').replace('+91', ''))) {
-        showToast('Please enter a valid 10-digit phone number', 'warning');
-        return false;
-      }
-
-      // PIN code validation
-      const pincodeRegex = /^[0-9]{6}$/;
-      if (!pincodeRegex.test(pincode)) {
-        showToast('Please enter a valid 6-digit PIN code', 'warning');
-        return false;
-      }
-
-      // Payment method validation
-      const paymentMethod = document.querySelector('input[name="payment"]:checked').value;
-      if (paymentMethod === 'card') {
-        const cardNumber = document.getElementById('cardNumber').value;
-        const cardExpiry = document.getElementById('cardExpiry').value;
-        const cardCVV = document.getElementById('cardCVV').value;
-        const cardName = document.getElementById('cardName').value;
-
-        if (!cardNumber || !cardExpiry || !cardCVV || !cardName) {
-          showToast('Please fill all card details', 'warning');
-          return false;
-        }
-      }
-
-      return true;
-    }
-
-    // Clear cart
-    async function clearCart() {
+    // Initiate PhonePe payment
+    async function initiatePhonePePayment(order) {
       const token = localStorage.getItem('kidocart_token');
 
       try {
-        for (const item of cartData.items) {
-          const productId = item.productId._id || item.productId.id;
-          await fetch(`/api/cart?productId=${productId}`, {
-            method: 'DELETE',
-            headers: { 'Authorization': 'Bearer ' + token }
-          });
+        const response = await fetch('/api/payment/phonepe/initiate', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+          },
+          body: JSON.stringify({
+            orderId: order._id,
+            amount: order.total,
+            customerPhone: document.getElementById('phone').value,
+            customerEmail: document.getElementById('email').value
+          })
+        });
+
+        if (response.ok) {
+          const paymentData = await response.json();
+          
+          // Redirect to PhonePe payment page
+          window.location.href = paymentData.redirectUrl;
+        } else {
+          throw new Error('Failed to initiate payment');
         }
       } catch (error) {
-        console.error('Error clearing cart:', error);
+        console.error('Payment error:', error);
+        showToast('Failed to initiate payment', 'error');
+        document.getElementById('place-order-btn').disabled = false;
+        document.getElementById('place-order-btn').innerHTML = '<i class="fas fa-lock"></i> Proceed to Payment';
+      }
+    }
+
+    // Save address
+    async function saveAddress(addressData) {
+      const token = localStorage.getItem('kidocart_token');
+
+      try {
+        await fetch('/api/addresses', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+          },
+          body: JSON.stringify(addressData)
+        });
+      } catch (error) {
+        console.error('Error saving address:', error);
       }
     }
 
@@ -678,22 +705,6 @@
         toast.classList.remove('show');
       }, 3000);
     }
-
-    // Auto-format card number
-    document.getElementById('cardNumber')?.addEventListener('input', function(e) {
-      let value = e.target.value.replace(/\s/g, '');
-      let formattedValue = value.match(/.{1,4}/g)?.join(' ') || value;
-      e.target.value = formattedValue;
-    });
-
-    // Auto-format expiry date
-    document.getElementById('cardExpiry')?.addEventListener('input', function(e) {
-      let value = e.target.value.replace(/\D/g, '');
-      if (value.length >= 2) {
-        value = value.slice(0, 2) + '/' + value.slice(2, 4);
-      }
-      e.target.value = value;
-    });
 
     // PIN code validation
     document.getElementById('pincode')?.addEventListener('input', function(e) {
