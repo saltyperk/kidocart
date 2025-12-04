@@ -2255,6 +2255,78 @@ function calculateRatingBreakdown(reviews) {
       return category.charAt(0).toUpperCase() + category.slice(1).replace(/-/g, ' ');
     }
 
+    // ==================== REVIEW FUNCTIONS ====================
+let selectedRating = 0;
+
+function setRating(rating) {
+  selectedRating = rating;
+  document.getElementById('review-rating').value = rating;
+  
+  const stars = document.querySelectorAll('#rating-input i');
+  stars.forEach((star, index) => {
+    if (index < rating) {
+      star.className = 'fas fa-star';
+      star.style.color = '#fbbf24';
+    } else {
+      star.className = 'far fa-star';
+      star.style.color = '#d1d5db';
+    }
+  });
+}
+
+async function submitReview(event) {
+  event.preventDefault();
+  
+  const token = localStorage.getItem('kidocart_token');
+  if (!token) {
+    showToast('Please login to submit review', 'warning');
+    setTimeout(() => window.location.href = 'login.html', 1500);
+    return;
+  }
+  
+  if (selectedRating === 0) {
+    showToast('Please select a rating', 'warning');
+    shakeElement('#rating-input');
+    return;
+  }
+  
+  // Get user info from token
+  const user = JSON.parse(atob(token.split('.')[1]));
+  
+  const reviewData = {
+    productId: currentProduct._id || currentProduct.id,
+    userName: user.name || user.email.split('@')[0],
+    rating: selectedRating,
+    comment: document.getElementById('review-comment').value
+  };
+  
+  try {
+    const response = await fetch('/api/reviews', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token
+      },
+      body: JSON.stringify(reviewData)
+    });
+    
+    if (response.ok) {
+      showToast('Review submitted successfully!', 'success');
+      
+      // Reload product to show new review
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
+    } else {
+      const error = await response.json();
+      showToast(error.error || 'Failed to submit review', 'error');
+    }
+  } catch (error) {
+    console.error('Review submission error:', error);
+    showToast('Failed to submit review', 'error');
+  }
+}
+    
     // ==================== GALLERY FUNCTIONS ====================
     function changeImage(index) {
       const images = currentProduct.images || ['https://via.placeholder.com/600x600?text=No+Image'];
