@@ -3,349 +3,548 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="google-client-id" content="163244508840-kcersqu6gr3mg2kas71enpr07o3s4vbv.apps.googleusercontent.com">
-  <meta name="razorpay-key-id" content="YOUR_RAZORPAY_KEY_ID_HERE"> 
   <title>Login - KidoCart</title>
-  <link rel="stylesheet" href="css/styles.css">
+  <link rel="icon" type="image/png" href="/logo.png">
+  <link rel="stylesheet" href="css/auth.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <!-- Google Sign-In -->
   <script src="https://accounts.google.com/gsi/client" async defer></script>
-  <style>
-    .google-btn-container {
-      display: flex;
-      justify-content: center;
-      margin: 1rem 0;
-    }
-    .social-login-divider {
-      display: flex;
-      align-items: center;
-      margin: 1.5rem 0;
-    }
-    .social-login-divider::before,
-    .social-login-divider::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: var(--light);
-    }
-    .social-login-divider span {
-      padding: 0 1rem;
-      color: var(--gray);
-      font-size: 0.875rem;
-    }
-    .auth-card {
-      max-width: 420px;
-    }
-    .password-input-wrapper {
-      position: relative;
-    }
-    .password-toggle {
-      position: absolute;
-      right: 12px;
-      top: 50%;
-      transform: translateY(-50%);
-      background: none;
-      border: none;
-      cursor: pointer;
-      color: var(--gray);
-    }
-    .password-toggle:hover {
-      color: var(--primary);
-    }
-    .login-benefits {
-      background: var(--pastel-green);
-      padding: 1rem;
-      border-radius: 10px;
-      margin-bottom: 1.5rem;
-    }
-    .login-benefits ul {
-      list-style: none;
-      margin: 0;
-      padding: 0;
-    }
-    .login-benefits li {
-      font-size: 0.875rem;
-      color: var(--dark);
-      padding: 0.25rem 0;
-    }
-    .login-benefits li i {
-      color: var(--success);
-      margin-right: 0.5rem;
-    }
-  </style>
 </head>
 <body>
   <div class="auth-page">
-    <div class="auth-card">
-      <a href="index.html" class="logo" style="justify-content: center; margin-bottom: 1.5rem;">
-        <i class="fas fa-baby" style="color: var(--primary);"></i>
-        Kido<span>Cart</span>
-      </a>
-      
-      <h1>Welcome Back!</h1>
-      <p class="subtitle">Sign in to continue shopping for your little ones</p>
-      
-      <!-- Login Benefits -->
-      <div class="login-benefits">
-        <ul>
-          <li><i class="fas fa-check-circle"></i> Track your orders easily</li>
-          <li><i class="fas fa-check-circle"></i> Save items to wishlist</li>
-          <li><i class="fas fa-check-circle"></i> Faster checkout experience</li>
-        </ul>
-      </div>
-      
-      <!-- Google Sign-In Button -->
-      <div class="google-btn-container">
-        <div id="google-signin-btn"></div>
-      </div>
-      
-      <div class="social-login-divider">
-        <span>or sign in with email</span>
-      </div>
-      
-      <!-- Email/Password Form -->
-      <form id="login-form">
-        <div class="form-group">
-          <label class="form-label">Email Address</label>
-          <input type="email" class="form-input" id="email" placeholder="Enter your email" required>
-        </div>
-        
-        <div class="form-group">
-          <label class="form-label">Password</label>
-          <div class="password-input-wrapper">
-            <input type="password" class="form-input" id="password" placeholder="Enter your password" required>
-            <button type="button" class="password-toggle" onclick="togglePassword()">
-              <i class="fas fa-eye" id="password-icon"></i>
-            </button>
+    <div class="auth-container">
+      <!-- Left Side - Branding -->
+      <div class="auth-branding">
+        <a href="index.html" class="logo">
+          <i class="fas fa-baby"></i>
+          Kido<span>Cart</span>
+        </a>
+        <h1>Welcome Back!</h1>
+        <p>Login to access your account and continue shopping for your little ones.</p>
+        <div class="branding-features">
+          <div class="feature">
+            <i class="fas fa-check-circle"></i>
+            <span>Premium Quality Products</span>
+          </div>
+          <div class="feature">
+            <i class="fas fa-check-circle"></i>
+            <span>Secure Payments</span>
+          </div>
+          <div class="feature">
+            <i class="fas fa-check-circle"></i>
+            <span>Fast Delivery</span>
           </div>
         </div>
-        
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-          <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
-            <input type="checkbox" id="remember">
-            <span>Remember me</span>
-          </label>
-          <a href="#" style="color: var(--primary);" onclick="showForgotPassword()">Forgot Password?</a>
-        </div>
-        
-        <button type="submit" class="btn btn-primary w-full btn-lg">
-          <i class="fas fa-sign-in-alt"></i> Sign In
-        </button>
-      </form>
-      
-      <p style="text-align: center; margin-top: 1.5rem;">
-        Don't have an account? <a href="register.html" style="color: var(--primary); font-weight: 600;">Sign Up</a>
-      </p>
-      
-      <p style="text-align: center; margin-top: 1rem;">
-        <a href="index.html" style="color: var(--gray); font-size: 0.875rem;">
-          <i class="fas fa-arrow-left"></i> Back to Store
-        </a>
-      </p>
-    </div>
-  </div>
-
-  <!-- Forgot Password Modal -->
-  <div class="modal-overlay" id="forgot-password-modal">
-    <div class="modal" style="max-width: 400px;">
-      <div class="modal-header">
-        <h2>Reset Password</h2>
-        <button class="modal-close" onclick="closeForgotPassword()">&times;</button>
       </div>
-      <p style="color: var(--gray); margin-bottom: 1.5rem;">
-        Enter your email address and we'll send you a link to reset your password.
-      </p>
-      <form id="forgot-password-form">
-        <div class="form-group">
-          <label class="form-label">Email Address</label>
-          <input type="email" class="form-input" id="reset-email" placeholder="Enter your email" required>
+
+      <!-- Right Side - Login Form -->
+      <div class="auth-form-container">
+        <div class="auth-form">
+          <h2>Login to Your Account</h2>
+          <p class="auth-subtitle">Choose your preferred login method</p>
+
+          <!-- Login Method Tabs -->
+          <div class="login-tabs">
+            <button class="tab-btn active" data-tab="email" onclick="switchTab('email')">
+              <i class="fas fa-envelope"></i> Email
+            </button>
+            <button class="tab-btn" data-tab="phone" onclick="switchTab('phone')">
+              <i class="fas fa-mobile-alt"></i> Phone
+            </button>
+          </div>
+
+          <!-- Email Login Tab -->
+          <div id="email-tab" class="tab-content active">
+            <!-- Email/Password Login -->
+            <div id="email-password-form">
+              <form onsubmit="handleEmailLogin(event)">
+                <div class="form-group">
+                  <label for="email">Email Address</label>
+                  <div class="input-group">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" id="email" placeholder="your@email.com" required>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="password">Password</label>
+                  <div class="input-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="password" placeholder="Enter your password" required>
+                    <button type="button" class="toggle-password" onclick="togglePassword('password')">
+                      <i class="fas fa-eye"></i>
+                    </button>
+                  </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary" id="login-btn">
+                  <i class="fas fa-sign-in-alt"></i> Login
+                </button>
+              </form>
+
+              <div class="divider">
+                <span>OR</span>
+              </div>
+
+              <button class="btn btn-secondary" onclick="switchToOTPLogin()">
+                <i class="fas fa-key"></i> Login with OTP
+              </button>
+            </div>
+
+            <!-- Email OTP Login -->
+            <div id="email-otp-form" style="display: none;">
+              <form onsubmit="handleSendEmailOTP(event)">
+                <div class="form-group">
+                  <label for="email-otp">Email Address</label>
+                  <div class="input-group">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" id="email-otp" placeholder="your@email.com" required>
+                  </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary" id="send-otp-btn">
+                  <i class="fas fa-paper-plane"></i> Send OTP
+                </button>
+              </form>
+
+              <!-- OTP Input (hidden initially) -->
+              <div id="otp-input-section" style="display: none;">
+                <div class="form-group">
+                  <label>Enter OTP</label>
+                  <div class="otp-inputs">
+                    <input type="text" maxlength="1" class="otp-digit" id="otp1" oninput="moveToNext(this, 'otp2')" onkeydown="moveToPrev(event, this, null)">
+                    <input type="text" maxlength="1" class="otp-digit" id="otp2" oninput="moveToNext(this, 'otp3')" onkeydown="moveToPrev(event, this, 'otp1')">
+                    <input type="text" maxlength="1" class="otp-digit" id="otp3" oninput="moveToNext(this, 'otp4')" onkeydown="moveToPrev(event, this, 'otp2')">
+                    <input type="text" maxlength="1" class="otp-digit" id="otp4" oninput="moveToNext(this, 'otp5')" onkeydown="moveToPrev(event, this, 'otp3')">
+                    <input type="text" maxlength="1" class="otp-digit" id="otp5" oninput="moveToNext(this, 'otp6')" onkeydown="moveToPrev(event, this, 'otp4')">
+                    <input type="text" maxlength="1" class="otp-digit" id="otp6" oninput="verifyEmailOTP()" onkeydown="moveToPrev(event, this, 'otp5')">
+                  </div>
+                </div>
+
+                <div class="otp-timer" id="otp-timer">
+                  Resend OTP in <span id="timer">60</span>s
+                </div>
+
+                <button type="button" class="btn btn-link" id="resend-otp-btn" onclick="resendOTP()" style="display: none;">
+                  Resend OTP
+                </button>
+              </div>
+
+              <button type="button" class="btn btn-outline" onclick="switchToPasswordLogin()">
+                <i class="fas fa-arrow-left"></i> Back to Password Login
+              </button>
+            </div>
+          </div>
+
+          <!-- Phone Login Tab -->
+          <div id="phone-tab" class="tab-content">
+            <form onsubmit="handlePhoneLogin(event)">
+              <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <div class="input-group">
+                  <i class="fas fa-mobile-alt"></i>
+                  <input type="tel" id="phone-number" placeholder="Enter 10-digit mobile number" maxlength="10" pattern="[6-9][0-9]{9}" required>
+                </div>
+                <small>We'll send you an OTP to verify your number</small>
+              </div>
+
+              <button type="submit" class="btn btn-primary" id="phone-otp-btn">
+                <i class="fas fa-paper-plane"></i> Send OTP
+              </button>
+            </form>
+
+            <!-- Phone OTP Input -->
+            <div id="phone-otp-section" style="display: none;">
+              <div class="form-group">
+                <label>Enter OTP</label>
+                <div class="otp-inputs">
+                  <input type="text" maxlength="1" class="otp-digit" id="phone-otp1" oninput="moveToNext(this, 'phone-otp2')" onkeydown="moveToPrev(event, this, null)">
+                  <input type="text" maxlength="1" class="otp-digit" id="phone-otp2" oninput="moveToNext(this, 'phone-otp3')" onkeydown="moveToPrev(event, this, 'phone-otp1')">
+                  <input type="text" maxlength="1" class="otp-digit" id="phone-otp3" oninput="moveToNext(this, 'phone-otp4')" onkeydown="moveToPrev(event, this, 'phone-otp2')">
+                  <input type="text" maxlength="1" class="otp-digit" id="phone-otp4" oninput="moveToNext(this, 'phone-otp5')" onkeydown="moveToPrev(event, this, 'phone-otp3')">
+                  <input type="text" maxlength="1" class="otp-digit" id="phone-otp5" oninput="moveToNext(this, 'phone-otp6')" onkeydown="moveToPrev(event, this, 'phone-otp4')">
+                  <input type="text" maxlength="1" class="otp-digit" id="phone-otp6" oninput="verifyPhoneOTP()" onkeydown="moveToPrev(event, this, 'phone-otp5')">
+                </div>
+              </div>
+
+              <div class="otp-timer" id="phone-otp-timer">
+                Resend OTP in <span id="phone-timer">60</span>s
+              </div>
+
+              <button type="button" class="btn btn-link" id="phone-resend-btn" onclick="resendPhoneOTP()" style="display: none;">
+                Resend OTP
+              </button>
+            </div>
+          </div>
+
+          <!-- Google Login -->
+          <div class="divider">
+            <span>OR CONTINUE WITH</span>
+          </div>
+
+          <div id="google-signin-button"></div>
+
+          <!-- Signup Link -->
+          <div class="auth-footer">
+            <p>Don't have an account? <a href="signup.html">Sign up</a></p>
+          </div>
         </div>
-        <button type="submit" class="btn btn-primary w-full">
-          <i class="fas fa-paper-plane"></i> Send Reset Link
-        </button>
-      </form>
+      </div>
     </div>
   </div>
 
-  <script src="js/data.js"></script>
-  <script src="js/app.js"></script>
-  <script>
-    // Configuration - these can be loaded from meta tags or env
-    const GOOGLE_CLIENT_ID =
-      document.querySelector('meta[name="google-client-id"]')?.content ||
-      'YOUR_GOOGLE_CLIENT_ID';
-    
-    // ✅ FIXED: Redirect logic now checks BOTH user and token
-    (function handleAutoRedirect() {
-      const user  = getCurrentUser();
-      const token = localStorage.getItem('kidsstore_token');
-      
-      if (user && token) {
-        // Valid logged-in session
-        window.location.href = 'account.html';
-      } else if (user && !token) {
-        // Stale session: clear the old user so we don't get stuck in a loop
-        console.warn('Stale session detected: user without token. Clearing current user.');
-        localStorage.removeItem('kidsstore_currentUser');
-      }
-      // If no user, do nothing → show login form
-    })();
+  <!-- Toast Notification -->
+  <div class="toast" id="toast"></div>
 
+  <script>
     // Initialize Google Sign-In
-    window.onload = function() {
-      if (GOOGLE_CLIENT_ID && GOOGLE_CLIENT_ID !== 'YOUR_GOOGLE_CLIENT_ID') {
+    function initGoogleSignIn() {
+      if (typeof google !== 'undefined') {
         google.accounts.id.initialize({
-          client_id: GOOGLE_CLIENT_ID,
-          callback: handleGoogleSignIn,
-          auto_select: false,
-          cancel_on_tap_outside: true
+          client_id: '869326202943-0oaqo9smhgmamgti78hdoqlm0cqlm9ki.apps.googleusercontent.com', // Replace with your Google Client ID
+          callback: handleGoogleLogin,
+          auto_select: false
         });
-        
+
         google.accounts.id.renderButton(
-          document.getElementById('google-signin-btn'),
+          document.getElementById('google-signin-button'),
           { 
-            theme: 'outline',
+            theme: 'outline', 
             size: 'large',
             width: '100%',
-            text: 'signin_with',
-            shape: 'rectangular',
-            logo_alignment: 'center'
+            text: 'continue_with',
+            shape: 'rectangular'
           }
         );
-      } else {
-        // Show placeholder if Google Client ID not configured
-        document.getElementById('google-signin-btn').innerHTML = `
-          <button class="btn btn-outline w-full" disabled style="opacity: 0.6;">
-            <i class="fab fa-google"></i> Google Sign-In (Configure in env)
-          </button>
-        `;
       }
+    }
+
+    // Load Google Sign-In when page loads
+    window.onload = function() {
+      initGoogleSignIn();
     };
 
-   // Handle Google Sign-In Response
-async function handleGoogleSignIn(response) {
-  try {
-    // Decode the JWT token from Google
-    const payload = JSON.parse(atob(response.credential.split('.')[1]));
-    
-    // Call your backend API to login/register with Google
-    const apiResponse = await fetch('/api/users?action=google', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        googleId: payload.sub,
-        email: payload.email,
-        name: payload.name,
-        picture: payload.picture
-      })
-    });
-    
-    const data = await apiResponse.json();
-    
-    if (apiResponse.ok && data.token) {
-      // ✅ Save BOTH token and user
-      localStorage.setItem('kidocart_token', data.token);
-      localStorage.setItem('kidocart_currentUser', JSON.stringify(data.user));
+    // Switch tabs
+    function switchTab(tab) {
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
       
-      showToast(`Welcome, ${data.user.name}!`, 'success');
-      
-      setTimeout(() => {
-        const redirectUrl = sessionStorage.getItem('redirectAfterLogin') || 'index.html';
-        sessionStorage.removeItem('redirectAfterLogin');
-        window.location.href = redirectUrl;
-      }, 1000);
-    } else {
-      throw new Error(data.error || 'Google login failed');
+      document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
+      document.getElementById(`${tab}-tab`).classList.add('active');
     }
-    
-  } catch (error) {
-    console.error('Google Sign-In Error:', error);
-    showToast('Google sign-in failed. Please try again.', 'error');
-  }
-}
 
-    // Email/Password Login
-    document.getElementById('login-form').addEventListener('submit', async function(e) {
-      e.preventDefault();
-      
-      const email = document.getElementById('email').value.trim();
-      const password = document.getElementById('password').value;
-      const remember = document.getElementById('remember').checked;
-      
-      if (!email || !password) {
-        showToast('Please fill in all fields', 'error');
-        return;
-      }
-      
-      // Using local auth (data.js + app.js)
-      const result = await loginUser(email, password);
-      
-      if (result.success) {
-        if (remember) {
-          localStorage.setItem('kidocart_remembered_email', email);
-        } else {
-          localStorage.removeItem('kidocart_remembered_email');
-        }
-        
-        showToast('Welcome back!', 'success');
-        
-        setTimeout(() => {
-          const redirectUrl = sessionStorage.getItem('redirectAfterLogin') || 'index.html';
-          sessionStorage.removeItem('redirectAfterLogin');
-          window.location.href = redirectUrl;
-        }, 1000);
-      } else {
-        showToast(result.message || 'Invalid email or password', 'error');
-      }
-    });
+    // Switch to OTP login
+    function switchToOTPLogin() {
+      document.getElementById('email-password-form').style.display = 'none';
+      document.getElementById('email-otp-form').style.display = 'block';
+    }
 
-    // Toggle Password Visibility
-    function togglePassword() {
-      const passwordInput = document.getElementById('password');
-      const icon = document.getElementById('password-icon');
+    // Switch to password login
+    function switchToPasswordLogin() {
+      document.getElementById('email-password-form').style.display = 'block';
+      document.getElementById('email-otp-form').style.display = 'none';
+      document.getElementById('otp-input-section').style.display = 'none';
+    }
+
+    // Toggle password visibility
+    function togglePassword(inputId) {
+      const input = document.getElementById(inputId);
+      const icon = event.currentTarget.querySelector('i');
       
-      if (passwordInput.type === 'password') {
-        passwordInput.type = 'text';
+      if (input.type === 'password') {
+        input.type = 'text';
         icon.classList.remove('fa-eye');
         icon.classList.add('fa-eye-slash');
       } else {
-        passwordInput.type = 'password';
+        input.type = 'password';
         icon.classList.remove('fa-eye-slash');
         icon.classList.add('fa-eye');
       }
     }
 
-    // Forgot Password Modal
-    function showForgotPassword() {
-      document.getElementById('forgot-password-modal').classList.add('active');
-    }
-
-    function closeForgotPassword() {
-      document.getElementById('forgot-password-modal').classList.remove('active');
-    }
-
-    document.getElementById('forgot-password-form').addEventListener('submit', function(e) {
+    // Email/Password Login
+    async function handleEmailLogin(e) {
       e.preventDefault();
-      const email = document.getElementById('reset-email').value;
-      showToast('If an account exists with this email, you will receive a reset link.', 'success');
-      closeForgotPassword();
-    });
-
-    // Pre-fill remembered email
-    document.addEventListener('DOMContentLoaded', function() {
-      const rememberedEmail = localStorage.getItem('kidocart_remembered_email');
-      if (rememberedEmail) {
-        document.getElementById('email').value = rememberedEmail;
-        document.getElementById('remember').checked = true;
+      
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const btn = document.getElementById('login-btn');
+      
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Logging in...';
+      
+      try {
+        const response = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+          localStorage.setItem('kidocart_token', data.token);
+          localStorage.setItem('kidocart_currentUser', JSON.stringify(data.user));
+          
+          showToast('Login successful!', 'success');
+          
+          const redirect = new URLSearchParams(window.location.search).get('redirect');
+          setTimeout(() => {
+            window.location.href = redirect || 'index.html';
+          }, 1000);
+        } else {
+          throw new Error(data.error || 'Login failed');
+        }
+      } catch (error) {
+        showToast(error.message, 'error');
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Login';
       }
-    });
+    }
 
-    // Close modal on outside click
-    document.getElementById('forgot-password-modal').addEventListener('click', function(e) {
-      if (e.target === this) {
-        closeForgotPassword();
+    // Send Email OTP
+    let otpTimer;
+    async function handleSendEmailOTP(e) {
+      e.preventDefault();
+      
+      const email = document.getElementById('email-otp').value;
+      const btn = document.getElementById('send-otp-btn');
+      
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+      
+      try {
+        const response = await fetch('/api/auth/send-otp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email })
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+          showToast('OTP sent to your email!', 'success');
+          document.getElementById('otp-input-section').style.display = 'block';
+          btn.style.display = 'none';
+          
+          // Start timer
+          startOTPTimer('timer', 'resend-otp-btn');
+          
+          // Focus first OTP input
+          document.getElementById('otp1').focus();
+        } else {
+          throw new Error(data.error || 'Failed to send OTP');
+        }
+      } catch (error) {
+        showToast(error.message, 'error');
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-paper-plane"></i> Send OTP';
       }
-    });
+    }
+
+    // OTP Timer
+    function startOTPTimer(timerElementId, resendButtonId) {
+      let timeLeft = 60;
+      const timerEl = document.getElementById(timerElementId);
+      const resendBtn = document.getElementById(resendButtonId);
+      
+      document.getElementById('otp-timer').style.display = 'block';
+      resendBtn.style.display = 'none';
+      
+      otpTimer = setInterval(() => {
+        timeLeft--;
+        timerEl.textContent = timeLeft;
+        
+        if (timeLeft <= 0) {
+          clearInterval(otpTimer);
+          document.getElementById('otp-timer').style.display = 'none';
+          resendBtn.style.display = 'block';
+        }
+      }, 1000);
+    }
+
+    // Move to next OTP input
+    function moveToNext(current, nextId) {
+      if (current.value.length === 1 && nextId) {
+        document.getElementById(nextId).focus();
+      }
+    }
+
+    // Move to previous OTP input
+    function moveToPrev(event, current, prevId) {
+      if (event.key === 'Backspace' && current.value === '' && prevId) {
+        document.getElementById(prevId).focus();
+      }
+    }
+
+    // Verify Email OTP
+    async function verifyEmailOTP() {
+      const otp = ['otp1', 'otp2', 'otp3', 'otp4', 'otp5', 'otp6']
+        .map(id => document.getElementById(id).value)
+        .join('');
+      
+      if (otp.length !== 6) return;
+      
+      const email = document.getElementById('email-otp').value;
+      
+      try {
+        const response = await fetch('/api/auth/verify-otp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, otp })
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+          localStorage.setItem('kidocart_token', data.token);
+          localStorage.setItem('kidocart_currentUser', JSON.stringify(data.user));
+          
+          showToast('Login successful!', 'success');
+          
+          const redirect = new URLSearchParams(window.location.search).get('redirect');
+          setTimeout(() => {
+            window.location.href = redirect || 'index.html';
+          }, 1000);
+        } else {
+          throw new Error(data.error || 'Invalid OTP');
+        }
+      } catch (error) {
+        showToast(error.message, 'error');
+        // Clear OTP inputs
+        ['otp1', 'otp2', 'otp3', 'otp4', 'otp5', 'otp6'].forEach(id => {
+          document.getElementById(id).value = '';
+        });
+        document.getElementById('otp1').focus();
+      }
+    }
+
+    // Resend OTP
+    function resendOTP() {
+      handleSendEmailOTP({ preventDefault: () => {} });
+    }
+
+    // Phone Login
+    async function handlePhoneLogin(e) {
+      e.preventDefault();
+      
+      const phone = document.getElementById('phone-number').value;
+      const btn = document.getElementById('phone-otp-btn');
+      
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+      
+      try {
+        const response = await fetch('/api/auth/send-phone-otp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ phone })
+        });
+        
+        const data = await response.json();
+        
+        if (response.ok) {
+          showToast('OTP sent to your phone!', 'success');
+          document.getElementById('phone-otp-section').style.display = 'block';
+          btn.style.display = 'none';
+          
+          // Start timer
+          startPhoneOTPTimer();
+          
+          // Focus first input
+          document.getElementById('phone-otp1').focus();
+        } else {
+          throw new Error(data.error || 'Failed to send OTP');
+        }
+      } catch (error) {
+        showToast(error.message, 'error');
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-paper-plane"></i> Send OTP';
+      }
+    }
+
+    function startPhoneOTPTimer() {
+      let timeLeft = 60;
+      const timerEl = document.getElementById('phone-timer');
+      const resendBtn = document.getElementById('phone-resend-btn');
+      
+      document.getElementById('phone-otp-timer').style.display = 'block';
+      resendBtn.style.display = 'none';
+      
+      const timer = setInterval(() => {
+        timeLeft--;
+        timerEl.textContent = timeLeft;
+        
+        if (timeLeft <= 0) {
+          clearInterval(timer);
+          document.getElementById('phone-otp-timer').style.display = 'none';
+          resendBtn.style.display = 'block';
+        }
+      }, 1000);
+    }
+
+    // Verify Phone OTP
+    async function verifyPhoneOTP() {
+      const otp = ['phone-otp1', 'phone-otp2', 'phone-otp3', 'phone-otp4', 'phone-otp5', 'phone-otp6']
+        .map(id => document.getElementById(id).value)
+        .join('');
+      
+      if (otp.length !== 6) return;
+      
+      const phone = document.getElementById('phone-number').value;
+      
+      showToast('Phone OTP verification - Coming Soon!', 'info');
+      // TODO: Implement phone OTP verification API
+    }
+
+    function resendPhoneOTP() {
+      handlePhoneLogin({ preventDefault: () => {} });
+    }
+
+    // Google Login
+    async function handleGoogleLogin(response) {
+      try {
+        const res = await fetch('/api/auth/google', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ credential: response.credential })
+        });
+        
+        const data = await res.json();
+        
+        if (res.ok) {
+          localStorage.setItem('kidocart_token', data.token);
+          localStorage.setItem('kidocart_currentUser', JSON.stringify(data.user));
+          
+          showToast('Google login successful!', 'success');
+          
+          const redirect = new URLSearchParams(window.location.search).get('redirect');
+          setTimeout(() => {
+            window.location.href = redirect || 'index.html';
+          }, 1000);
+        } else {
+          throw new Error(data.error || 'Google login failed');
+        }
+      } catch (error) {
+        showToast(error.message, 'error');
+      }
+    }
+
+    // Toast
+    function showToast(message, type = 'success') {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.className = `toast show ${type}`;
+      
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
+
+    // Check if already logged in
+    if (localStorage.getItem('kidocart_token')) {
+      const redirect = new URLSearchParams(window.location.search).get('redirect');
+      window.location.href = redirect || 'index.html';
+    }
   </script>
 </body>
 </html>
