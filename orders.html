@@ -4,264 +4,715 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>My Orders - KidoCart</title>
-  <link rel="stylesheet" href="css/styles.css">
+  <link rel="icon" type="image/png" href="/logo.png">
+  <link rel="stylesheet" href="css/orders.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    .orders-page { padding: 2rem 1rem; }
-    .orders-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
-    .order-card { background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 1.5rem; }
-    .order-header { display: flex; justify-content: space-between; align-items: center; padding: 1.5rem; background: var(--light); flex-wrap: wrap; gap: 1rem; }
-    .order-id { font-size: 1.25rem; font-weight: 700; color: var(--primary); }
-    .order-date { color: var(--gray); font-size: 0.875rem; }
-    .order-status { padding: 0.5rem 1rem; border-radius: 25px; font-weight: 600; font-size: 0.875rem; }
-    .status-confirmed { background: #fef3c7; color: #d97706; }
-    .status-processing { background: #dbeafe; color: #2563eb; }
-    .status-shipped { background: #e0e7ff; color: #4f46e5; }
-    .status-delivered { background: #d1fae5; color: #059669; }
-    .status-cancelled { background: #fee2e2; color: #dc2626; }
-    .order-body { padding: 1.5rem; }
-    .order-items { border-bottom: 1px solid var(--light); padding-bottom: 1.5rem; margin-bottom: 1.5rem; }
-    .order-item { display: flex; gap: 1rem; padding: 1rem 0; border-bottom: 1px solid var(--light); }
-    .order-item:last-child { border-bottom: none; }
-    .order-item img { width: 80px; height: 80px; border-radius: 10px; object-fit: cover; }
-    .order-item-details { flex: 1; }
-    .order-item-name { font-weight: 600; margin-bottom: 0.25rem; }
-    .order-item-meta { color: var(--gray); font-size: 0.875rem; }
-    .order-item-price { font-weight: 700; color: var(--primary); }
-    .order-summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
-    .order-address, .order-payment { background: var(--light); padding: 1rem; border-radius: 10px; }
-    .order-address h4, .order-payment h4 { margin-bottom: 0.5rem; color: var(--dark); }
-    .order-totals { margin-top: 1.5rem; max-width: 300px; margin-left: auto; }
-    .order-totals .row { display: flex; justify-content: space-between; padding: 0.5rem 0; }
-    .order-totals .total-row { font-size: 1.25rem; font-weight: 700; color: var(--primary); border-top: 2px solid var(--primary); padding-top: 1rem; margin-top: 0.5rem; }
-    .order-actions { display: flex; gap: 1rem; margin-top: 1.5rem; flex-wrap: wrap; }
-    .tracking-timeline { display: flex; justify-content: space-between; padding: 2rem 0; position: relative; }
-    .tracking-timeline::before { content: ''; position: absolute; top: 50%; left: 0; right: 0; height: 3px; background: var(--light); transform: translateY(-50%); z-index: 0; }
-    .timeline-step { display: flex; flex-direction: column; align-items: center; position: relative; z-index: 1; }
-    .timeline-dot { width: 40px; height: 40px; border-radius: 50%; background: var(--light); display: flex; align-items: center; justify-content: center; margin-bottom: 0.5rem; }
-    .timeline-step.completed .timeline-dot { background: var(--success); color: white; }
-    .timeline-step.current .timeline-dot { background: var(--primary); color: white; animation: pulse 2s infinite; }
-    .timeline-label { font-size: 0.75rem; color: var(--gray); text-align: center; }
-    @keyframes pulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.4); } 50% { box-shadow: 0 0 0 10px rgba(99, 102, 241, 0); } }
-    .empty-orders { text-align: center; padding: 4rem 2rem; background: white; border-radius: 20px; }
-    .empty-orders i { font-size: 5rem; color: var(--light); margin-bottom: 1rem; }
-    .loading-container { text-align: center; padding: 4rem 2rem; }
-    .loading-spinner { width: 60px; height: 60px; border: 5px solid #f3f3f3; border-top: 5px solid #6366f1; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 1rem; }
-    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-    @media (max-width: 768px) {
-      .order-summary-grid { grid-template-columns: 1fr; }
-      .tracking-timeline { flex-direction: column; align-items: flex-start; gap: 1rem; }
-      .tracking-timeline::before { display: none; }
-    }
-  </style>
 </head>
 <body>
-  <!-- Header -->
-  <header class="header">
-    <div class="header-top container">
-      <a href="index.html" class="logo"><i class="fas fa-baby"></i> Kido<span>Cart</span></a>
-      <div class="search-bar">
-        <input type="text" id="search-input" placeholder="Search for products...">
-        <button id="search-btn"><i class="fas fa-search"></i> Search</button>
+  <!-- HEADER (Same as index.html) -->
+  <header class="header" id="header">
+    <div class="header-container">
+      <a href="index.html" class="logo">
+        <i class="fas fa-baby"></i>
+        Kido<span>Cart</span>
+      </a>
+      
+      <div class="search-container">
+        <div class="search-bar">
+          <input type="text" id="search-input" placeholder="Search for products, brands, categories...">
+          <button class="search-btn" id="search-btn">
+            <i class="fas fa-search"></i>
+            <span>Search</span>
+          </button>
+        </div>
       </div>
+      
       <div class="header-actions">
-        <a href="wishlist.html" class="header-action"><i class="fas fa-heart"></i><span class="wishlist-count" style="display: none;">0</span><span>Wishlist</span></a>
-        <a href="cart.html" class="header-action"><i class="fas fa-shopping-cart"></i><span class="cart-count" style="display: none;">0</span><span>Cart</span></a>
-        <div id="user-action"><a href="login.html" class="header-action"><i class="fas fa-user"></i><span>Login</span></a></div>
+        <a href="account.html" class="header-action">
+          <i class="fas fa-user"></i>
+          <span>Account</span>
+        </a>
+        <a href="wishlist.html" class="header-action">
+          <i class="fas fa-heart"></i>
+          <span>Wishlist</span>
+          <span class="badge" id="wishlist-count">0</span>
+        </a>
+        <a href="cart.html" class="header-action">
+          <i class="fas fa-shopping-bag"></i>
+          <span>Cart</span>
+          <span class="badge" id="cart-count">0</span>
+        </a>
       </div>
     </div>
   </header>
-  <main class="container orders-page">
-    <div class="orders-header">
-      <h1><i class="fas fa-box"></i> My Orders</h1>
-      <a href="account.html" class="btn btn-outline"><i class="fas fa-arrow-left"></i> Back to Account</a>
+
+  <!-- ORDERS PAGE -->
+  <div class="orders-page">
+    <div class="orders-container">
+      <!-- Page Header -->
+      <div class="page-header">
+        <div>
+          <h1>My Orders</h1>
+          <p id="orders-subtitle">Track and manage your orders</p>
+        </div>
+        <div class="header-actions-buttons">
+          <a href="products.html" class="btn btn-primary">
+            <i class="fas fa-shopping-bag"></i>
+            Continue Shopping
+          </a>
+        </div>
+      </div>
+
+      <!-- Order Filters -->
+      <div class="order-filters">
+        <button class="filter-btn active" data-filter="all" onclick="filterOrders('all')">
+          All Orders
+        </button>
+        <button class="filter-btn" data-filter="pending" onclick="filterOrders('pending')">
+          Pending
+        </button>
+        <button class="filter-btn" data-filter="processing" onclick="filterOrders('processing')">
+          Processing
+        </button>
+        <button class="filter-btn" data-filter="shipped" onclick="filterOrders('shipped')">
+          Shipped
+        </button>
+        <button class="filter-btn" data-filter="delivered" onclick="filterOrders('delivered')">
+          Delivered
+        </button>
+        <button class="filter-btn" data-filter="cancelled" onclick="filterOrders('cancelled')">
+          Cancelled
+        </button>
+      </div>
+
+      <!-- Orders Content -->
+      <div id="orders-content">
+        <!-- Loading State -->
+        <div class="loading-state" id="loading-state">
+          <div class="loading-skeleton"></div>
+          <div class="loading-skeleton"></div>
+          <div class="loading-skeleton"></div>
+        </div>
+
+        <!-- Empty State -->
+        <div class="empty-state" id="empty-state" style="display: none;">
+          <i class="fas fa-shopping-bag"></i>
+          <h2>No orders yet</h2>
+          <p>Start shopping to see your orders here</p>
+          <a href="products.html" class="btn btn-primary">
+            <i class="fas fa-shopping-cart"></i>
+            Start Shopping
+          </a>
+        </div>
+
+        <!-- Orders List -->
+        <div class="orders-list" id="orders-list" style="display: none;">
+          <!-- Orders will be loaded here -->
+        </div>
+      </div>
     </div>
-    <div id="orders-container">
-      <!-- Orders will be rendered here -->
+  </div>
+
+  <!-- Order Details Modal -->
+  <div class="modal" id="order-modal">
+    <div class="modal-content large">
+      <div class="modal-header">
+        <h2>Order Details</h2>
+        <button class="modal-close" onclick="closeOrderModal()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-body" id="order-details-content">
+        <!-- Order details will load here -->
+      </div>
     </div>
-    <div class="empty-orders" id="empty-orders" style="display: none;">
-      <i class="fas fa-box-open"></i>
-      <h2>No Orders Yet</h2>
-      <p style="color: var(--gray); margin-bottom: 1.5rem;">You haven't placed any orders yet. Start shopping!</p>
-      <a href="products.html" class="btn btn-primary btn-lg"><i class="fas fa-shopping-bag"></i> Shop Now</a>
+  </div>
+
+  <!-- Cancel Order Confirmation Modal -->
+  <div class="modal" id="cancel-modal">
+    <div class="modal-content">
+      <h3>Cancel Order?</h3>
+      <p>Are you sure you want to cancel this order? This action cannot be undone.</p>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" onclick="closeCancelModal()">No, Keep It</button>
+        <button class="btn btn-primary" onclick="confirmCancelOrder()">Yes, Cancel Order</button>
+      </div>
     </div>
-    <div class="loading-container" id="loading-orders" style="display: none;">
-      <div class="loading-spinner"></div>
-      <h2>Loading your orders...</h2>
-      <p style="color: var(--gray);">Please wait while we fetch your order history</p>
-    </div>
-  </main>
-  <footer class="footer">
-    <div class="container">
-      <div class="footer-bottom"><p>&copy; 2024 KidoCart. All rights reserved.</p></div>
-    </div>
-  </footer>
-  <script src="js/data.js"></script>
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="toast" id="toast"></div>
+
   <script src="js/app.js"></script>
   <script>
-    document.addEventListener('DOMContentLoaded', async () => {
-      const user = getCurrentUser();
-      if (!user) {
-        window.location.href = 'login.html';
+    // Global variables
+    let allOrders = [];
+    let currentFilter = 'all';
+    let orderToCancel = null;
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', async function() {
+      await checkLoginAndLoadOrders();
+      updateHeaderCounts();
+    });
+
+    // Check login and load orders
+    async function checkLoginAndLoadOrders() {
+      const token = localStorage.getItem('kidocart_token');
+      
+      if (!token) {
+        showLoginRequired();
         return;
       }
-      await loadUserOrdersPage();
-    });
-    function getStepIcon(step) {
-      const icons = {
-        confirmed: 'fa-clipboard-check',
-        processing: 'fa-cog',
-        shipped: 'fa-truck',
-        delivered: 'fa-home'
-      };
-      return icons[step] || 'fa-circle';
+
+      await loadOrders();
     }
-    function getPaymentLabel(method) {
-      const labels = {
-        card: 'Credit/Debit Card',
-        paypal: 'PayPal',
-        applepay: 'Apple Pay',
-        cod: 'Cash on Delivery'
-      };
-      return labels[method] || method;
-    }
-    async function loadUserOrdersPage() {
-      const loadingEl = document.getElementById('loading-orders');
-      const container = document.getElementById('orders-container');
-      const emptyState = document.getElementById('empty-orders');
-      loadingEl.style.display = 'block';
-      container.style.display = 'none';
-      emptyState.style.display = 'none';
+
+    // Load orders from API
+    async function loadOrders() {
+      const token = localStorage.getItem('kidocart_token');
+
       try {
-        const orders = await getUserOrders();
-        loadingEl.style.display = 'none';
-        if (!orders || orders.length === 0) {
-          emptyState.style.display = 'block';
+        document.getElementById('loading-state').style.display = 'grid';
+        document.getElementById('empty-state').style.display = 'none';
+        document.getElementById('orders-list').style.display = 'none';
+
+        const response = await fetch('/api/orders', {
+          headers: { 'Authorization': 'Bearer ' + token }
+        });
+
+        if (response.status === 401) {
+          localStorage.removeItem('kidocart_token');
+          showLoginRequired();
           return;
         }
-        container.style.display = 'block';
-        renderOrders(orders);
+
+        if (response.ok) {
+          allOrders = await response.json();
+
+          if (allOrders.length > 0) {
+            displayOrders();
+          } else {
+            showEmptyState();
+          }
+        } else {
+          throw new Error('Failed to load orders');
+        }
       } catch (error) {
         console.error('Error loading orders:', error);
-        loadingEl.innerHTML = '<h2 style="color: var(--danger);">Failed to load orders</h2><p style="color: var(--gray);">Please refresh the page and try again.</p>';
+        showToast('Failed to load orders', 'error');
+        showEmptyState();
+      } finally {
+        document.getElementById('loading-state').style.display = 'none';
       }
     }
-    function renderOrders(orders) {
-      const container = document.getElementById('orders-container');
-      // Show most recent first
-      const sortedOrders = [...orders].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-      container.innerHTML = sortedOrders.map(order => renderOrderCard(order)).join('');
-    }
-    function renderOrderCard(order) {
-      const statusSteps = ['confirmed', 'processing', 'shipped', 'delivered'];
-      const currentStepIndex = statusSteps.indexOf(order.status || 'confirmed');
-      return `
-        <div class="order-card">
-          <div class="order-header">
-            <div>
-              <p class="order-id">${order.orderId || order.id || 'ORDER'}</p>
-              <p class="order-date">Placed on ${new Date(order.createdAt).toLocaleDateString('en-IN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
-            </div>
-            <span class="order-status status-${order.status || 'confirmed'}">${(order.status || 'confirmed').toUpperCase()}</span>
+
+    // Display orders
+    function displayOrders() {
+      const container = document.getElementById('orders-list');
+      const subtitle = document.getElementById('orders-subtitle');
+      
+      // Filter orders
+      let filteredOrders = currentFilter === 'all' 
+        ? allOrders 
+        : allOrders.filter(order => order.status === currentFilter);
+
+      subtitle.textContent = `${filteredOrders.length} ${filteredOrders.length === 1 ? 'order' : 'orders'}`;
+
+      if (filteredOrders.length === 0) {
+        container.innerHTML = `
+          <div class="no-orders-filtered">
+            <i class="fas fa-filter"></i>
+            <h3>No ${currentFilter} orders</h3>
+            <p>You don't have any ${currentFilter} orders at the moment</p>
           </div>
-          <div class="order-body">
-            <div class="tracking-timeline">
-              ${statusSteps.map((step, index) => `
-                <div class="timeline-step ${index < currentStepIndex ? 'completed' : ''} ${index === currentStepIndex ? 'current' : ''}">
-                  <div class="timeline-dot">
-                    <i class="fas ${index <= currentStepIndex ? 'fa-check' : getStepIcon(step)}"></i>
-                  </div>
-                  <span class="timeline-label">${step.charAt(0).toUpperCase() + step.slice(1)}</span>
-                </div>
-              `).join('')}
-            </div>
-            <div class="order-items">
-              ${order.items.map(item => `
-                <div class="order-item">
-                  <img src="${item.image}" alt="${item.name}" onerror="this.src='https://via.placeholder.com/80x80?text=No+Image'">
-                  <div class="order-item-details">
-                    <h4 class="order-item-name">${item.name}</h4>
-                    <p class="order-item-meta">
-                      Qty: ${item.quantity}
-                      ${item.size ? ' | Size: ' + item.size : ''}
-                      ${item.color ? ' | Color: ' + item.color : ''}
-                    </p>
-                    <p class="order-item-price">₹${item.price.toFixed(0)} each</p>
-                  </div>
-                  <div style="text-align: right;">
-                    <p style="font-weight: 700; color: var(--primary);">₹${(item.price * item.quantity).toFixed(0)}</p>
-                  </div>
-                </div>
-              `).join('')}
-            </div>
-            <div class="order-summary-grid">
-              <div class="order-address">
-                <h4><i class="fas fa-map-marker-alt"></i> Shipping Address</h4>
-                <p>
-                  ${order.shippingAddress ? `
-                    ${order.shippingAddress.firstName} ${order.shippingAddress.lastName}<br>
-                    ${order.shippingAddress.address}<br>
-                    ${order.shippingAddress.city}, ${order.shippingAddress.state} ${order.shippingAddress.zip}<br>
-                    Phone: ${order.shippingAddress.phone}
-                  ` : 'No address available'}
-                </p>
+        `;
+        container.style.display = 'block';
+        return;
+      }
+
+      container.innerHTML = filteredOrders.map(order => {
+        const orderDate = new Date(order.createdAt).toLocaleDateString('en-IN', {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric'
+        });
+
+        const deliveryDate = order.deliveryDate 
+          ? new Date(order.deliveryDate).toLocaleDateString('en-IN', {
+              year: 'numeric',
+              month: 'short',
+              day: 'numeric'
+            })
+          : 'Not specified';
+
+        const statusClass = getStatusClass(order.status);
+        const statusIcon = getStatusIcon(order.status);
+
+        return `
+          <div class="order-card" data-status="${order.status}">
+            <div class="order-header">
+              <div class="order-id-section">
+                <h3>Order #${order._id.slice(-8).toUpperCase()}</h3>
+                <span class="order-date">
+                  <i class="fas fa-calendar"></i>
+                  Placed on ${orderDate}
+                </span>
               </div>
-              <div class="order-payment">
-                <h4><i class="fas fa-credit-card"></i> Payment Method</h4>
-                <p>${getPaymentLabel(order.paymentMethod)}</p>
-              </div>
+              <span class="order-status ${statusClass}">
+                <i class="${statusIcon}"></i>
+                ${formatStatus(order.status)}
+              </span>
             </div>
-            <div class="order-totals">
-              <div class="row"><span>Subtotal</span><span>₹${order.subtotal.toFixed(0)}</span></div>
-              <div class="row"><span>Shipping</span><span>${order.shipping === 0 ? 'FREE' : '₹' + order.shipping.toFixed(0)}</span></div>
-              <div class="row"><span>Tax (18% GST)</span><span>₹${order.tax.toFixed(0)}</span></div>
-              <div class="row total-row"><span>Total</span><span>₹${order.total.toFixed(0)}</span></div>
-            </div>
-            <div class="order-actions">
-              <button class="btn btn-outline" onclick="window.print()">
-                <i class="fas fa-print"></i> Print Invoice
-              </button>
-              ${order.status === 'confirmed' ? `
-                <button class="btn btn-danger" onclick="cancelOrder('${order.orderId || order.id}')">
-                  <i class="fas fa-times"></i> Cancel Order
-                </button>
+
+            <div class="order-items-preview">
+              ${order.items.slice(0, 3).map(item => {
+                const product = item.productId || item.product;
+                const imageUrl = product?.images?.[0] || 'https://via.placeholder.com/80x80?text=No+Image';
+                
+                return `
+                  <div class="order-item-preview">
+                    <img src="${imageUrl}" alt="${product?.name || 'Product'}" onerror="this.src='https://via.placeholder.com/80x80?text=No+Image'">
+                    <div class="item-preview-info">
+                      <h4>${product?.name || 'Product'}</h4>
+                      <p>Qty: ${item.quantity} × ₹${item.price.toLocaleString('en-IN')}</p>
+                    </div>
+                  </div>
+                `;
+              }).join('')}
+              ${order.items.length > 3 ? `
+                <div class="more-items">
+                  +${order.items.length - 3} more ${order.items.length - 3 === 1 ? 'item' : 'items'}
+                </div>
               ` : ''}
-              <a href="products.html" class="btn btn-primary">
-                <i class="fas fa-redo"></i> Buy Again
-              </a>
+            </div>
+
+            <div class="order-footer">
+              <div class="order-total-section">
+                <span class="total-label">Total Amount</span>
+                <span class="total-amount">₹${order.total.toLocaleString('en-IN')}</span>
+              </div>
+
+              <div class="order-actions">
+                <button class="btn btn-secondary btn-sm" onclick="viewOrderDetails('${order._id}')">
+                  <i class="fas fa-eye"></i>
+                  View Details
+                </button>
+                
+                ${order.status === 'pending' || order.status === 'processing' ? `
+                  <button class="btn btn-outline btn-sm" onclick="cancelOrder('${order._id}')">
+                    <i class="fas fa-times"></i>
+                    Cancel
+                  </button>
+                ` : ''}
+                
+                ${order.status === 'delivered' ? `
+                  <button class="btn btn-primary btn-sm" onclick="reorder('${order._id}')">
+                    <i class="fas fa-redo"></i>
+                    Reorder
+                  </button>
+                ` : ''}
+              </div>
+            </div>
+
+            ${order.trackingNumber ? `
+              <div class="tracking-info">
+                <i class="fas fa-shipping-fast"></i>
+                <span>Tracking: <strong>${order.trackingNumber}</strong></span>
+                <button class="btn-link" onclick="trackOrder('${order.trackingNumber}')">Track Package</button>
+              </div>
+            ` : ''}
+          </div>
+        `;
+      }).join('');
+
+      container.style.display = 'block';
+    }
+
+    // Filter orders
+    function filterOrders(status) {
+      currentFilter = status;
+      
+      // Update active filter button
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      document.querySelector(`[data-filter="${status}"]`).classList.add('active');
+
+      displayOrders();
+    }
+
+    // View order details
+    async function viewOrderDetails(orderId) {
+      const order = allOrders.find(o => o._id === orderId);
+      
+      if (!order) {
+        showToast('Order not found', 'error');
+        return;
+      }
+
+      const orderDate = new Date(order.createdAt).toLocaleDateString('en-IN', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+
+      const deliveryDate = order.deliveryDate 
+        ? new Date(order.deliveryDate).toLocaleDateString('en-IN', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+          })
+        : 'Not specified';
+
+      const statusClass = getStatusClass(order.status);
+
+      const content = document.getElementById('order-details-content');
+      content.innerHTML = `
+        <div class="order-details-header">
+          <div>
+            <h3>Order #${order._id.slice(-8).toUpperCase()}</h3>
+            <p class="order-detail-date">${orderDate}</p>
+          </div>
+          <span class="order-status ${statusClass}">
+            ${formatStatus(order.status)}
+          </span>
+        </div>
+
+        <div class="order-details-grid">
+          <!-- Shipping Address -->
+          <div class="detail-section">
+            <h4><i class="fas fa-map-marker-alt"></i> Shipping Address</h4>
+            <div class="address-box">
+              <p><strong>${order.shippingAddress.firstName} ${order.shippingAddress.lastName}</strong></p>
+              <p>${order.shippingAddress.address}</p>
+              ${order.shippingAddress.apartment ? `<p>${order.shippingAddress.apartment}</p>` : ''}
+              <p>${order.shippingAddress.city}, ${order.shippingAddress.state} - ${order.shippingAddress.pincode}</p>
+              <p><i class="fas fa-phone"></i> ${order.phone}</p>
+            </div>
+          </div>
+
+          <!-- Payment Info -->
+          <div class="detail-section">
+            <h4><i class="fas fa-credit-card"></i> Payment Information</h4>
+            <div class="info-box">
+              <div class="info-row">
+                <span>Payment Method</span>
+                <strong>${formatPaymentMethod(order.paymentMethod)}</strong>
+              </div>
+              <div class="info-row">
+                <span>Payment Status</span>
+                <strong class="${order.paymentStatus === 'paid' ? 'text-success' : 'text-warning'}">
+                  ${order.paymentStatus === 'paid' ? 'Paid' : 'Pending'}
+                </strong>
+              </div>
+              ${order.transactionId ? `
+                <div class="info-row">
+                  <span>Transaction ID</span>
+                  <strong>${order.transactionId}</strong>
+                </div>
+              ` : ''}
             </div>
           </div>
         </div>
+
+        <!-- Order Items -->
+        <div class="detail-section">
+          <h4><i class="fas fa-box"></i> Order Items</h4>
+          <div class="order-items-detailed">
+            ${order.items.map(item => {
+              const product = item.productId || item.product;
+              const imageUrl = product?.images?.[0] || 'https://via.placeholder.com/80x80?text=No+Image';
+              const itemTotal = item.price * item.quantity;
+
+              return `
+                <div class="order-item-detailed">
+                  <img src="${imageUrl}" alt="${product?.name || 'Product'}" onerror="this.src='https://via.placeholder.com/80x80?text=No+Image'">
+                  <div class="item-detailed-info">
+                    <h5>${product?.name || 'Product'}</h5>
+                    ${item.size || item.color ? `
+                      <div class="item-variants">
+                        ${item.size ? `<span><i class="fas fa-ruler"></i> ${item.size}</span>` : ''}
+                        ${item.color ? `<span><i class="fas fa-palette"></i> ${item.color}</span>` : ''}
+                      </div>
+                    ` : ''}
+                    <p class="item-price-detail">₹${item.price.toLocaleString('en-IN')} × ${item.quantity}</p>
+                  </div>
+                  <div class="item-total-price">₹${itemTotal.toLocaleString('en-IN')}</div>
+                </div>
+              `;
+            }).join('')}
+          </div>
+        </div>
+
+        <!-- Order Summary -->
+        <div class="detail-section">
+          <h4><i class="fas fa-receipt"></i> Order Summary</h4>
+          <div class="order-summary-box">
+            <div class="summary-row">
+              <span>Subtotal</span>
+              <span>₹${(order.total - 50).toLocaleString('en-IN')}</span>
+            </div>
+            <div class="summary-row">
+              <span>Shipping</span>
+              <span>${order.total >= 500 ? 'FREE' : '₹50'}</span>
+            </div>
+            <div class="summary-divider"></div>
+            <div class="summary-row total">
+              <strong>Total</strong>
+              <strong>₹${order.total.toLocaleString('en-IN')}</strong>
+            </div>
+          </div>
+        </div>
+
+        ${order.trackingNumber ? `
+          <div class="tracking-section">
+            <button class="btn btn-primary" onclick="trackOrder('${order.trackingNumber}')">
+              <i class="fas fa-shipping-fast"></i>
+              Track Your Order
+            </button>
+          </div>
+        ` : ''}
       `;
+
+      document.getElementById('order-modal').classList.add('show');
+      document.body.style.overflow = 'hidden';
     }
-    async function cancelOrder(orderId) {
-      if (!confirm('Are you sure you want to cancel this order?')) return;
+
+    // Cancel order
+    function cancelOrder(orderId) {
+      orderToCancel = orderId;
+      document.getElementById('cancel-modal').classList.add('show');
+    }
+
+    // Confirm cancel order
+    async function confirmCancelOrder() {
+      if (!orderToCancel) return;
+
+      const token = localStorage.getItem('kidocart_token');
+
       try {
-        const token = localStorage.getItem('kidsstore_token');
-        if (!token) {
-          showToast('Please login again', 'warning');
-          window.location.href = 'login.html';
-          return;
-        }
-        const response = await fetch(`/api/orders?id=${orderId}`, {
+        const response = await fetch(`/api/orders/${orderToCancel}/cancel`, {
           method: 'PUT',
-          headers: {
+          headers: { 
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          },
-          body: JSON.stringify({ status: 'cancelled' })
+            'Authorization': 'Bearer ' + token 
+          }
         });
-        if (!response.ok) {
-          const data = await response.json();
-          throw new Error(data.error || 'Failed to cancel order');
+
+        if (response.ok) {
+          showToast('Order cancelled successfully', 'success');
+          await loadOrders();
+        } else {
+          const error = await response.json();
+          throw new Error(error.error || 'Failed to cancel order');
         }
-        showToast('Order cancelled successfully', 'success');
-        await loadUserOrdersPage();
       } catch (error) {
-        console.error('Cancel order error:', error);
+        console.error('Error cancelling order:', error);
         showToast(error.message || 'Failed to cancel order', 'error');
+      } finally {
+        closeCancelModal();
       }
     }
+
+    // Reorder
+    async function reorder(orderId) {
+      const order = allOrders.find(o => o._id === orderId);
+      
+      if (!order) {
+        showToast('Order not found', 'error');
+        return;
+      }
+
+      const token = localStorage.getItem('kidocart_token');
+
+      try {
+        // Add all items to cart
+        for (const item of order.items) {
+          const productId = item.productId?._id || item.productId;
+          
+          await fetch('/api/cart', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer ' + token
+            },
+            body: JSON.stringify({
+              productId: productId,
+              quantity: item.quantity,
+              size: item.size,
+              color: item.color
+            })
+          });
+        }
+
+        showToast('Items added to cart!', 'success');
+        setTimeout(() => {
+          window.location.href = 'cart.html';
+        }, 1500);
+      } catch (error) {
+        console.error('Error reordering:', error);
+        showToast('Failed to reorder', 'error');
+      }
+    }
+
+    // Track order
+    function trackOrder(trackingNumber) {
+      // Open tracking in new window - replace with your courier's tracking URL
+      const trackingUrl = `https://www.delhivery.com/track/package/${trackingNumber}`;
+      window.open(trackingUrl, '_blank');
+    }
+
+    // Helper functions
+    function getStatusClass(status) {
+      const classes = {
+        'pending': 'status-pending',
+        'processing': 'status-processing',
+        'shipped': 'status-shipped',
+        'delivered': 'status-delivered',
+        'cancelled': 'status-cancelled',
+        'failed': 'status-failed'
+      };
+      return classes[status] || 'status-pending';
+    }
+
+    function getStatusIcon(status) {
+      const icons = {
+        'pending': 'fas fa-clock',
+        'processing': 'fas fa-cog fa-spin',
+        'shipped': 'fas fa-shipping-fast',
+        'delivered': 'fas fa-check-circle',
+        'cancelled': 'fas fa-times-circle',
+        'failed': 'fas fa-exclamation-circle'
+      };
+      return icons[status] || 'fas fa-clock';
+    }
+
+    function formatStatus(status) {
+      return status.charAt(0).toUpperCase() + status.slice(1);
+    }
+
+    function formatPaymentMethod(method) {
+      const methods = {
+        'phonepe': 'PhonePe',
+        'cod': 'Cash on Delivery',
+        'card': 'Card',
+        'upi': 'UPI',
+        'netbanking': 'Net Banking'
+      };
+      return methods[method] || method;
+    }
+
+    // Show empty state
+    function showEmptyState() {
+      document.getElementById('empty-state').style.display = 'flex';
+      document.getElementById('orders-list').style.display = 'none';
+      document.getElementById('orders-subtitle').textContent = 'No orders yet';
+    }
+
+    // Show login required
+    function showLoginRequired() {
+      document.getElementById('loading-state').style.display = 'none';
+      const emptyState = document.getElementById('empty-state');
+      emptyState.innerHTML = `
+        <i class="fas fa-user-lock"></i>
+        <h2>Login Required</h2>
+        <p>Please login to view your orders</p>
+        <a href="login.html" class="btn btn-primary">
+          <i class="fas fa-sign-in-alt"></i> Login Now
+        </a>
+      `;
+      emptyState.style.display = 'flex';
+    }
+
+    // Close modals
+    function closeOrderModal() {
+      document.getElementById('order-modal').classList.remove('show');
+      document.body.style.overflow = '';
+    }
+
+    function closeCancelModal() {
+      document.getElementById('cancel-modal').classList.remove('show');
+      orderToCancel = null;
+    }
+
+    // Toast
+    function showToast(message, type = 'success') {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.className = `toast show ${type}`;
+      
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
+
+    // Search
+    function performSearch() {
+      const query = document.getElementById('search-input').value.trim();
+      if (query) {
+        window.location.href = `products.html?search=${encodeURIComponent(query)}`;
+      }
+    }
+
+    document.getElementById('search-input').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') performSearch();
+    });
+
+    document.getElementById('search-btn').addEventListener('click', performSearch);
+
+    // Update header counts
+    async function updateHeaderCounts() {
+      const token = localStorage.getItem('kidocart_token');
+      const cartCountEl = document.getElementById('cart-count');
+      const wishlistCountEl = document.getElementById('wishlist-count');
+      
+      if (token) {
+        try {
+          const cartResponse = await fetch('/api/cart', {
+            headers: { 'Authorization': 'Bearer ' + token }
+          });
+          
+          if (cartResponse.ok) {
+            const cart = await cartResponse.json();
+            const cartCount = cart.items ? cart.items.reduce((sum, item) => sum + item.quantity, 0) : 0;
+            cartCountEl.textContent = cartCount;
+            cartCountEl.style.display = cartCount > 0 ? 'flex' : 'none';
+          }
+
+          const wishlistResponse = await fetch('/api/wishlist', {
+            headers: { 'Authorization': 'Bearer ' + token }
+          });
+          
+          if (wishlistResponse.ok) {
+            const wishlist = await wishlistResponse.json();
+            const wishlistCount = wishlist.items ? wishlist.items.length : 0;
+            wishlistCountEl.textContent = wishlistCount;
+            wishlistCountEl.style.display = wishlistCount > 0 ? 'flex' : 'none';
+          }
+        } catch (error) {
+          console.error('Error updating counts:', error);
+        }
+      }
+    }
+
+    // Header scroll behavior
+    let lastScroll = 0;
+    const header = document.getElementById('header');
+
+    window.addEventListener('scroll', () => {
+      const currentScroll = window.pageYOffset;
+      
+      if (currentScroll > 10) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+      
+      lastScroll = currentScroll;
+    });
   </script>
 </body>
 </html>
