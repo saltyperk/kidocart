@@ -4,388 +4,422 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>My Account - KidoCart</title>
-  <link rel="stylesheet" href="css/styles.css">
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    .account-page { padding: 2rem 1rem; }
-    .account-layout { display: grid; grid-template-columns: 280px 1fr; gap: 2rem; }
-    .account-sidebar { background: white; border-radius: 20px; padding: 1.5rem; box-shadow: 0 4px 15px rgba(0,0,0,0.05); height: fit-content; }
-    .user-info { text-align: center; padding-bottom: 1.5rem; border-bottom: 1px solid var(--light); margin-bottom: 1.5rem; }
-    .user-avatar { width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--secondary)); display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; color: white; font-size: 2rem; font-weight: 700; overflow: hidden; }
-    .user-avatar img { width: 100%; height: 100%; object-fit: cover; }
-    .user-name { font-size: 1.25rem; font-weight: 600; }
-    .user-email { color: var(--gray); font-size: 0.875rem; }
-    .account-nav { list-style: none; margin-top: 1rem; }
-    .account-nav li { margin-bottom: 0.5rem; }
-    .account-nav a { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1rem; border-radius: 10px; transition: all 0.3s; color: var(--dark); font-size: 0.95rem; }
-    .account-nav a:hover, .account-nav a.active { background: var(--pastel-purple); color: var(--primary); }
-    .account-nav a i { width: 20px; }
-    .account-content { background: white; border-radius: 20px; padding: 2rem; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
-    .account-content h2 { margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.75rem; }
-    .tab-content { display: none; }
-    .tab-content.active { display: block; }
-    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-    .address-card { background: var(--light); padding: 1.25rem; border-radius: 15px; margin-bottom: 1rem; }
-    .address-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
-    .address-type { background: var(--primary); color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.75rem; }
-    .address-actions { display: flex; gap: 0.5rem; }
-    .address-actions button { background: none; border: none; cursor: pointer; color: var(--gray); }
-    .address-actions button:hover { color: var(--primary); }
-    .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 2rem; }
-    .stat-box { background: linear-gradient(135deg, var(--pastel-purple), var(--pastel-pink)); padding: 1.5rem; border-radius: 15px; text-align: center; }
-    .stat-box .value { font-size: 2rem; font-weight: 700; color: var(--primary); }
-    .stat-box .label { color: var(--gray); font-size: 0.875rem; }
-    .recent-orders { margin-top: 1.5rem; }
-    .order-mini { display: flex; align-items: center; justify-content: space-between; padding: 1rem; background: var(--light); border-radius: 10px; margin-bottom: 0.75rem; cursor: pointer; transition: background 0.2s, transform 0.1s; }
-    .order-mini:hover { background: var(--pastel-purple); transform: translateY(-1px); }
-    @media (max-width: 900px) {
-      .account-layout { grid-template-columns: 1fr; }
-      .form-row { grid-template-columns: 1fr; }
-      .stats-row { grid-template-columns: 1fr; }
-    }
-  </style>
+  
+  <!-- Account CSS -->
+  <link rel="stylesheet" href="css/account.css">
 </head>
 <body>
-  <!-- Header -->
-  <header class="header">
-    <div class="header-top container">
-      <a href="index.html" class="logo"><i class="fas fa-baby"></i> Kido<span>Cart</span></a>
-      <div class="search-bar">
-        <input type="text" id="search-input" placeholder="Search for products...">
-        <button id="search-btn"><i class="fas fa-search"></i> Search</button>
-      </div>
-      <div class="header-actions">
-        <a href="wishlist.html" class="header-action"><i class="fas fa-heart"></i><span class="wishlist-count" style="display: none;">0</span><span>Wishlist</span></a>
-        <a href="cart.html" class="header-action"><i class="fas fa-shopping-cart"></i><span class="cart-count" style="display: none;">0</span><span>Cart</span></a>
-        <div id="user-action"><a href="login.html" class="header-action"><i class="fas fa-user"></i><span>Login</span></a></div>
-      </div>
+  <div class="container">
+    <!-- Page Header -->
+    <div class="page-header">
+      <h1>My Account</h1>
+      <p>Manage your profile, orders, and addresses</p>
     </div>
-  </header>
 
-  <main class="container account-page">
+    <!-- Account Layout -->
     <div class="account-layout">
       <!-- Sidebar -->
       <aside class="account-sidebar">
         <div class="user-info">
           <div class="user-avatar" id="user-avatar">U</div>
-          <h3 class="user-name" id="user-name">User Name</h3>
-          <p class="user-email" id="user-email">user@example.com</p>
+          <div class="user-name" id="user-name">User Name</div>
+          <div class="user-email" id="user-email">user@example.com</div>
         </div>
-        <ul class="account-nav">
-          <li><a href="#dashboard" class="active" onclick="showTab('dashboard')"><i class="fas fa-home"></i> Dashboard</a></li>
-          <li><a href="#profile" onclick="showTab('profile')"><i class="fas fa-user"></i> Profile</a></li>
-          <li><a href="#orders" onclick="showTab('orders')"><i class="fas fa-box"></i> Orders</a></li>
-          <li><a href="#addresses" onclick="showTab('addresses')"><i class="fas fa-map-marker-alt"></i> Addresses</a></li>
-          <li><a href="wishlist.html"><i class="fas fa-heart"></i> Wishlist</a></li>
-          <li><a href="#" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
-        </ul>
+
+        <nav>
+          <ul class="account-nav">
+            <li>
+              <a href="#" class="active" data-section="profile">
+                <i class="fas fa-user"></i>
+                <span>Profile</span>
+              </a>
+            </li>
+            <li>
+              <a href="#" data-section="orders">
+                <i class="fas fa-shopping-bag"></i>
+                <span>My Orders</span>
+              </a>
+            </li>
+            <li>
+              <a href="#" data-section="addresses">
+                <i class="fas fa-map-marker-alt"></i>
+                <span>Addresses</span>
+              </a>
+            </li>
+            <li>
+              <a href="#" data-section="wishlist">
+                <i class="fas fa-heart"></i>
+                <span>Wishlist</span>
+              </a>
+            </li>
+            <li>
+              <a href="#" data-section="settings">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+
+        <button class="logout-btn" onclick="logout()">
+          <i class="fas fa-sign-out-alt"></i>
+          Logout
+        </button>
       </aside>
 
-      <!-- Content -->
-      <div class="account-content">
-        <!-- Dashboard Tab -->
-        <div class="tab-content active" id="tab-dashboard">
-          <h2><i class="fas fa-home"></i> Dashboard</h2>
+      <!-- Main Content -->
+      <main class="account-content">
+        <!-- Profile Section -->
+        <section id="profile" class="section active">
+          <h2 class="section-title">
+            <i class="fas fa-user-circle"></i>
+            Profile Information
+          </h2>
           
-          <div class="stats-row">
-            <div class="stat-box">
-              <p class="value" id="stat-orders">0</p>
-              <p class="label">Total Orders</p>
+          <form class="profile-form" id="profile-form" onsubmit="updateProfile(event)">
+            <div class="form-group">
+              <label for="profile-name">Full Name</label>
+              <input type="text" id="profile-name" class="form-input" required>
             </div>
-            <div class="stat-box">
-              <p class="value" id="stat-wishlist">0</p>
-              <p class="label">Wishlist Items</p>
-            </div>
-            <div class="stat-box">
-              <p class="value" id="stat-cart">0</p>
-              <p class="label">Cart Items</p>
-            </div>
-          </div>
 
-          <h3>Recent Orders</h3>
-          <div class="recent-orders" id="recent-orders">
-            <p style="color: var(--gray); text-align: center; padding: 2rem;">
-              No orders yet. <a href="products.html" style="color: var(--primary);">Start shopping</a>
-            </p>
-          </div>
-        </div>
+            <div class="form-group">
+              <label for="profile-email">Email Address</label>
+              <input type="email" id="profile-email" class="form-input" disabled>
+            </div>
 
-        <!-- Profile Tab -->
-        <div class="tab-content" id="tab-profile">
-          <h2><i class="fas fa-user"></i> Profile Settings</h2>
-          
-          <form id="profile-form">
-            <div class="form-row">
-              <div class="form-group">
-                <label class="form-label">Full Name</label>
-                <input type="text" class="form-input" id="profile-name" required>
-              </div>
-              <div class="form-group">
-                <label class="form-label">Email Address</label>
-                <input type="email" class="form-input" id="profile-email" required>
-              </div>
+            <div class="form-group">
+              <label for="profile-phone">Phone Number</label>
+              <input type="tel" id="profile-phone" class="form-input">
             </div>
-            <div class="form-row">
-              <div class="form-group">
-                <label class="form-label">Phone Number</label>
-                <input type="tel" class="form-input" id="profile-phone">
-              </div>
-              <div class="form-group">
-                <label class="form-label">Date of Birth</label>
-                <input type="date" class="form-input" id="profile-dob">
-              </div>
+
+            <div style="display: flex; gap: 1rem;">
+              <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i>
+                Save Changes
+              </button>
+              <button type="button" class="btn btn-secondary" onclick="cancelEdit()">
+                Cancel
+              </button>
             </div>
-            <button type="submit" class="btn btn-primary">
-              <i class="fas fa-save"></i> Save Changes
-            </button>
           </form>
+        </section>
 
-          <hr style="margin: 2rem 0; border: none; border-top: 1px solid var(--light);">
-
-          <h3 style="margin-bottom: 1rem;">Change Password</h3>
-          <form id="password-form">
-            <div class="form-group" style="max-width: 400px;">
-              <label class="form-label">Current Password</label>
-              <input type="password" class="form-input" id="current-password" required>
-            </div>
-            <div class="form-group" style="max-width: 400px;">
-              <label class="form-label">New Password</label>
-              <input type="password" class="form-input" id="new-password" required minlength="6">
-            </div>
-            <div class="form-group" style="max-width: 400px;">
-              <label class="form-label">Confirm New Password</label>
-              <input type="password" class="form-input" id="confirm-new-password" required>
-            </div>
-            <button type="submit" class="btn btn-outline">
-              <i class="fas fa-lock"></i> Update Password
-            </button>
-          </form>
-        </div>
-
-        <!-- Orders Tab -->
-        <div class="tab-content" id="tab-orders">
-          <h2><i class="fas fa-box"></i> Order History</h2>
-          <div id="orders-list">
-            <p style="color: var(--gray); text-align: center; padding: 2rem;">No orders found.</p>
-          </div>
-        </div>
-
-        <!-- Addresses Tab -->
-        <div class="tab-content" id="tab-addresses">
-          <h2><i class="fas fa-map-marker-alt"></i> Saved Addresses</h2>
+        <!-- Orders Section -->
+        <section id="orders" class="section">
+          <h2 class="section-title">
+            <i class="fas fa-shopping-bag"></i>
+            My Orders
+          </h2>
           
-          <div id="addresses-list">
-            <p style="color: var(--gray); text-align: center; padding: 2rem;">No saved addresses.</p>
+          <div class="orders-list" id="orders-list">
+            <!-- Orders will be loaded here -->
+            <div class="empty-state">
+              <i class="fas fa-shopping-bag"></i>
+              <h3>No orders yet</h3>
+              <p>Start shopping to see your orders here</p>
+              <a href="products.html" class="btn btn-primary" style="margin-top: 1rem;">
+                Browse Products
+              </a>
+            </div>
           </div>
+        </section>
 
-          <button class="btn btn-primary mt-4" onclick="showAddAddressForm()">
-            <i class="fas fa-plus"></i> Add New Address
-          </button>
-        </div>
-      </div>
+        <!-- Addresses Section -->
+        <section id="addresses" class="section">
+          <h2 class="section-title">
+            <i class="fas fa-map-marker-alt"></i>
+            Saved Addresses
+          </h2>
+          
+          <div class="address-grid" id="addresses-list">
+            <!-- Addresses will be loaded here -->
+            <div class="empty-state">
+              <i class="fas fa-map-marker-alt"></i>
+              <h3>No addresses saved</h3>
+              <p>Add an address for faster checkout</p>
+              <button class="btn btn-primary" style="margin-top: 1rem;" onclick="addAddress()">
+                <i class="fas fa-plus"></i>
+                Add Address
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Wishlist Section -->
+        <section id="wishlist" class="section">
+          <h2 class="section-title">
+            <i class="fas fa-heart"></i>
+            My Wishlist
+          </h2>
+          
+          <div id="wishlist-grid">
+            <!-- Wishlist items will be loaded here -->
+            <div class="empty-state">
+              <i class="fas fa-heart"></i>
+              <h3>Your wishlist is empty</h3>
+              <p>Save items you love for later</p>
+              <a href="products.html" class="btn btn-primary" style="margin-top: 1rem;">
+                Browse Products
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <!-- Settings Section -->
+        <section id="settings" class="section">
+          <h2 class="section-title">
+            <i class="fas fa-cog"></i>
+            Account Settings
+          </h2>
+          
+          <div class="profile-form">
+            <h3 style="margin-bottom: 1rem;">Change Password</h3>
+            
+            <form id="password-form" onsubmit="changePassword(event)">
+              <div class="form-group">
+                <label for="current-password">Current Password</label>
+                <input type="password" id="current-password" class="form-input" required>
+              </div>
+
+              <div class="form-group">
+                <label for="new-password">New Password</label>
+                <input type="password" id="new-password" class="form-input" required>
+              </div>
+
+              <div class="form-group">
+                <label for="confirm-password">Confirm New Password</label>
+                <input type="password" id="confirm-password" class="form-input" required>
+              </div>
+
+              <button type="submit" class="btn btn-primary">
+                <i class="fas fa-key"></i>
+                Update Password
+              </button>
+            </form>
+          </div>
+        </section>
+      </main>
     </div>
-  </main>
+  </div>
 
-  <footer class="footer">
-    <div class="container">
-      <div class="footer-bottom"><p>&copy; 2024 KidoCart. All rights reserved.</p></div>
-    </div>
-  </footer>
-
-  <script src="js/data.js"></script>
-  <script src="js/app.js"></script>
   <script>
+    // Global variables
     let currentUser = null;
 
-    document.addEventListener('DOMContentLoaded', async () => {
-      currentUser = getCurrentUser();
-      if (!currentUser) {
+    // Initialize
+    document.addEventListener('DOMContentLoaded', async function() {
+      await loadUserData();
+      setupNavigation();
+    });
+
+    // Load user data
+    async function loadUserData() {
+      const token = localStorage.getItem('kidocart_token');
+      
+      if (!token) {
         window.location.href = 'login.html';
         return;
       }
-      
-      loadUserData();
-      await loadDashboard();
-      await loadOrders();
-      
-      const hash = window.location.hash.replace('#', '');
-      if (hash) showTab(hash);
-    });
 
-    function loadUserData() {
-      const avatarEl = document.getElementById('user-avatar');
-      const nameEl = document.getElementById('user-name');
-      const emailEl = document.getElementById('user-email');
-      
-      const name = currentUser.name || 'User';
-      const email = currentUser.email || '';
-      
-      // Avatar: use picture if from Google, else initial
-      if (currentUser.picture) {
-        avatarEl.innerHTML = `<img src="${currentUser.picture}" alt="${name}">`;
-      } else {
-        avatarEl.textContent = name.charAt(0).toUpperCase();
-      }
-      
-      nameEl.textContent = name;
-      emailEl.textContent = email;
-      
-      document.getElementById('profile-name').value = name;
-      document.getElementById('profile-email').value = email;
-      document.getElementById('profile-phone').value = currentUser.phone || '';
-      document.getElementById('profile-dob').value = currentUser.dob || '';
-    }
-
-    async function loadDashboard() {
       try {
-        const orders   = await getUserOrders();   // from app.js, async
-        const wishlist = await getWishlist();     // from app.js, async → array of productIds
-        const cart     = await getCart();         // from app.js, async → array of cart items
+        // Decode token to get user info
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        currentUser = payload;
 
-        document.getElementById('stat-orders').textContent   = orders.length;
-        document.getElementById('stat-wishlist').textContent = wishlist.length;
-        document.getElementById('stat-cart').textContent     =
-          cart.reduce((sum, item) => sum + (item.quantity || 0), 0);
+        // Update UI
+        document.getElementById('user-name').textContent = currentUser.name || 'User';
+        document.getElementById('user-email').textContent = currentUser.email || '';
+        document.getElementById('user-avatar').textContent = (currentUser.name || 'U').charAt(0).toUpperCase();
 
-        // Recent orders
-        if (orders.length > 0) {
-          const recent = [...orders].slice(-3).reverse();
-          document.getElementById('recent-orders').innerHTML = recent.map(order => `
-            <div class="order-mini" onclick="window.location.href='orders.html?id=${order.id || order.orderId || ''}'">
-              <div>
-                <strong>${order.id || order.orderId || ''}</strong>
-                <p style="font-size: 0.875rem; color: var(--gray);">
-                  ${new Date(order.createdAt).toLocaleDateString()}
-                </p>
-              </div>
-              <div style="text-align: right;">
-                <p style="font-weight: 600; color: var(--primary);">
-                  ₹${(order.total || 0).toFixed(0)}
-                </p>
-                <span class="status-badge status-${order.status === 'delivered' ? 'active' : order.status === 'confirmed' ? 'pending' : 'pending'}">
-                  ${(order.status || 'pending').toUpperCase()}
-                </span>
-              </div>
-            </div>
-          `).join('');
-        }
+        // Fill profile form
+        document.getElementById('profile-name').value = currentUser.name || '';
+        document.getElementById('profile-email').value = currentUser.email || '';
+        document.getElementById('profile-phone').value = currentUser.phone || '';
+
+        // Load orders
+        await loadOrders();
       } catch (error) {
-        console.error('Error loading dashboard:', error);
+        console.error('Error loading user data:', error);
+        localStorage.removeItem('kidocart_token');
+        window.location.href = 'login.html';
       }
     }
 
+    // Setup navigation
+    function setupNavigation() {
+      const navLinks = document.querySelectorAll('.account-nav a');
+      
+      navLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          
+          // Remove active class from all links
+          navLinks.forEach(l => l.classList.remove('active'));
+          
+          // Add active class to clicked link
+          this.classList.add('active');
+          
+          // Hide all sections
+          document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+          
+          // Show selected section
+          const sectionId = this.getAttribute('data-section');
+          document.getElementById(sectionId).classList.add('active');
+        });
+      });
+    }
+
+    // Load orders
     async function loadOrders() {
+      const token = localStorage.getItem('kidocart_token');
+      
       try {
-        const orders = await getUserOrders();
-        const container = document.getElementById('orders-list');
-
-        if (!orders || orders.length === 0) {
-          container.innerHTML = '<p style="color: var(--gray); text-align: center; padding: 2rem;">No orders found. <a href="products.html" style="color: var(--primary);">Start shopping</a></p>';
-          return;
+        const response = await fetch('/api/orders', {
+          headers: { 'Authorization': 'Bearer ' + token }
+        });
+        
+        if (response.ok) {
+          const orders = await response.json();
+          displayOrders(orders);
         }
-
-        container.innerHTML = [...orders].reverse().map(order => `
-          <div style="background: var(--light); padding: 1.5rem; border-radius: 15px; margin-bottom: 1rem;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 1rem;">
-              <div>
-                <strong style="font-size: 1.125rem;">${order.id || order.orderId || ''}</strong>
-                <p style="color: var(--gray); font-size: 0.875rem;">
-                  Placed on ${new Date(order.createdAt).toLocaleDateString()}
-                </p>
-              </div>
-              <div style="text-align: right;">
-                <span class="status-badge status-${order.status === 'delivered' ? 'active' : order.status === 'confirmed' ? 'pending' : order.status === 'cancelled' ? 'inactive' : 'pending'}">
-                  ${(order.status || 'pending').toUpperCase()}
-                </span>
-              </div>
-            </div>
-            <div style="display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
-              ${order.items.slice(0, 3).map(item => `
-                <img src="${item.image}" alt="${item.name}" style="width: 60px; height: 60px; border-radius: 8px; object-fit: cover;">
-              `).join('')}
-              ${order.items.length > 3 ? `<span style="display: flex; align-items: center; color: var(--gray);">+${order.items.length - 3} more</span>` : ''}
-            </div>
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-              <p><strong>Total:</strong> ₹${(order.total || 0).toFixed(0)} (${order.items.length} items)</p>
-              <a href="orders.html?id=${order.id || order.orderId || ''}" class="btn btn-sm btn-outline">View Details</a>
-            </div>
-          </div>
-        `).join('');
       } catch (error) {
         console.error('Error loading orders:', error);
       }
     }
 
-    function showTab(tabName) {
-      document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-      document.querySelectorAll('.account-nav a').forEach(link => link.classList.remove('active'));
+    // Display orders
+    function displayOrders(orders) {
+      const container = document.getElementById('orders-list');
       
-      const tabEl = document.getElementById(`tab-${tabName}`);
-      const linkEl = document.querySelector(`.account-nav a[href="#${tabName}"]`);
-      
-      if (tabEl) tabEl.classList.add('active');
-      if (linkEl) linkEl.classList.add('active');
-      
-      window.location.hash = tabName;
+      if (!orders || orders.length === 0) {
+        return; // Keep empty state
+      }
+
+      container.innerHTML = orders.map(order => `
+        <div class="order-card">
+          <div class="order-header">
+            <div>
+              <div class="order-id">Order #${order._id.slice(-8).toUpperCase()}</div>
+              <div class="order-date">${new Date(order.createdAt).toLocaleDateString()}</div>
+            </div>
+            <span class="order-status status-${order.status}">${order.status}</span>
+          </div>
+          
+          <div class="order-items">
+            ${order.items.map(item => `
+              <div class="order-item">
+                <img src="${item.product?.images?.[0] || 'placeholder.jpg'}" alt="${item.product?.name}" class="order-item-image">
+                <div class="order-item-info">
+                  <div class="order-item-name">${item.product?.name}</div>
+                  <div class="order-item-details">Qty: ${item.quantity} × ₹${item.price}</div>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+          
+          <div class="order-footer">
+            <div class="order-total">Total: ₹${order.total.toLocaleString('en-IN')}</div>
+            <button class="btn btn-sm btn-primary" onclick="viewOrder('${order._id}')">
+              View Details
+            </button>
+          </div>
+        </div>
+      `).join('');
     }
 
-    // Profile form
-    document.getElementById('profile-form').addEventListener('submit', async (e) => {
+    // Update profile
+    async function updateProfile(e) {
       e.preventDefault();
-      const updates = {
-        name: document.getElementById('profile-name').value,
-        email: document.getElementById('profile-email').value,
-        phone: document.getElementById('profile-phone').value,
-        dob: document.getElementById('profile-dob').value
-      };
       
-      const ok = await updateUserProfile(updates);
-      if (ok) {
-        currentUser = getCurrentUser();
-        loadUserData();
-        showToast('Profile updated successfully!', 'success');
-      } else {
-        showToast('Failed to update profile', 'error');
-      }
-    });
+      const token = localStorage.getItem('kidocart_token');
+      const name = document.getElementById('profile-name').value;
+      const phone = document.getElementById('profile-phone').value;
 
-    // Password form (client-side only; real apps must verify server-side)
-    document.getElementById('password-form').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const currentPass = document.getElementById('current-password').value;
-      const newPass = document.getElementById('new-password').value;
-      const confirmPass = document.getElementById('confirm-new-password').value;
+      try {
+        const response = await fetch('/api/users/profile', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+          },
+          body: JSON.stringify({ name, phone })
+        });
 
-      if (newPass !== confirmPass) {
-        showToast('New passwords do not match', 'error');
-        return;
+        if (response.ok) {
+          alert('Profile updated successfully!');
+          await loadUserData();
+        } else {
+          alert('Failed to update profile');
+        }
+      } catch (error) {
+        console.error('Error updating profile:', error);
+        alert('Error updating profile');
       }
-      
-      if (!currentUser || !currentUser.password) {
-        showToast('Password change is not available for this account type', 'error');
-        return;
-      }
-      
-      if (currentPass !== currentUser.password) {
-        showToast('Current password is incorrect', 'error');
-        return;
-      }
-      
-      const ok = await updateUserProfile({ password: newPass });
-      if (ok) {
-        showToast('Password updated successfully!', 'success');
-        document.getElementById('password-form').reset();
-      } else {
-        showToast('Failed to update password', 'error');
-      }
-    });
-
-    function handleLogout() {
-      logoutUser();
     }
 
-    function showAddAddressForm() {
-      showToast('Address management not yet implemented with MongoDB.', 'warning');
+    // Change password
+    async function changePassword(e) {
+      e.preventDefault();
+      
+      const currentPassword = document.getElementById('current-password').value;
+      const newPassword = document.getElementById('new-password').value;
+      const confirmPassword = document.getElementById('confirm-password').value;
+
+      if (newPassword !== confirmPassword) {
+        alert('New passwords do not match!');
+        return;
+      }
+
+      const token = localStorage.getItem('kidocart_token');
+
+      try {
+        const response = await fetch('/api/users/change-password', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+          },
+          body: JSON.stringify({ currentPassword, newPassword })
+        });
+
+        if (response.ok) {
+          alert('Password changed successfully!');
+          document.getElementById('password-form').reset();
+        } else {
+          const error = await response.json();
+          alert(error.error || 'Failed to change password');
+        }
+      } catch (error) {
+        console.error('Error changing password:', error);
+        alert('Error changing password');
+      }
+    }
+
+    // Logout
+    function logout() {
+      if (confirm('Are you sure you want to logout?')) {
+        localStorage.removeItem('kidocart_token');
+        window.location.href = 'login.html';
+      }
+    }
+
+    // Placeholder functions
+    function cancelEdit() {
+      loadUserData();
+    }
+
+    function addAddress() {
+      alert('Add address feature coming soon!');
+    }
+
+    function viewOrder(orderId) {
+      alert('Order details: ' + orderId);
     }
   </script>
 </body>
