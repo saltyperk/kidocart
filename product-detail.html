@@ -2441,106 +2441,61 @@ async function submitReview(event) {
       document.getElementById(`tab-${tabId}`).classList.add('active');
     }
 
-    // ==================== ADD TO CART ====================
-    async function handleAddToCart() {
-      const token = localStorage.getItem('kidocart_token');
-      
-      if (!token) {
-        showToast('Please login to add items to cart', 'warning');
-        setTimeout(() => window.location.href = 'login.html', 1500);
-        return;
-      }
-      
-      // Validate options
-      if (currentProduct.sizes && currentProduct.sizes.length > 0 && !selectedSize) {
-        showToast('Please select a size', 'warning');
-        return;
-      }
-      
-      if (currentProduct.colors && currentProduct.colors.length > 0 && !selectedColor) {
-        showToast('Please select a color', 'warning');
-        return;
-      }
-      
-      const productId = currentProduct._id || currentProduct.id;
-      
-      try {
-        const response = await fetch('/api/cart', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + token
-          },
-          body: JSON.stringify({
-            productId: productId,
-            quantity: quantity,
-            size: selectedSize,
-            color: selectedColor
-          })
-        });
-        
-        if (response.ok) {
-          showToast('Added to cart!', 'success');
-          updateHeaderCounts();
-        } else {
-             const error = await response.json();
-          showToast(error.error || 'Failed to add to cart', 'error');
-        }
-      } catch (error) {
-        console.error('Add to cart error:', error);
-        showToast('Failed to add to cart', 'error');
-      }
-    }
+    // ==================== SHAKE ELEMENT ====================
+function shakeElement(selector) {
+  const element = document.querySelector(selector);
+  if (!element) return;
+  
+  element.classList.add('shake-error');
+  setTimeout(() => {
+    element.classList.remove('shake-error');
+  }, 500);
+}
 
-    // ==================== BUY NOW ====================
-    async function handleBuyNow() {
-      const token = localStorage.getItem('kidocart_token');
-      
-      if (!token) {
-        showToast('Please login to continue', 'warning');
-        setTimeout(() => window.location.href = 'login.html', 1500);
-        return;
-      }
-      
-      // Validate options
-      if (currentProduct.sizes && currentProduct.sizes.length > 0 && !selectedSize) {
-        showToast('Please select a size', 'warning');
-        return;
-      }
-      
-      if (currentProduct.colors && currentProduct.colors.length > 0 && !selectedColor) {
-        showToast('Please select a color', 'warning');
-        return;
-      }
-      
-      const productId = currentProduct._id || currentProduct.id;
-      
-      try {
-        const response = await fetch('/api/cart', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + token
-          },
-          body: JSON.stringify({
-            productId: productId,
-            quantity: quantity,
-            size: selectedSize,
-            color: selectedColor
-          })
-        });
-        
-        if (response.ok) {
-          window.location.href = 'checkout.html';
-        } else {
-          const error = await response.json();
-          showToast(error.error || 'Failed to add to cart', 'error');
-        }
-      } catch (error) {
-        console.error('Buy now error:', error);
-        showToast('Something went wrong', 'error');
-      }
-    }
+   // ==================== ADD TO CART ====================
+function handleAddToCart() {
+  const p = currentProduct;
+  
+  // Check if size is required but not selected
+  if (p.sizes && p.sizes.length > 0 && !selectedSize) {
+    shakeElement('.size-options');
+    showToast('Please select a size', 'warning');
+    return;
+  }
+  
+  // Check if color is required but not selected
+  if (p.colors && p.colors.length > 0 && !selectedColor) {
+    shakeElement('.color-options');
+    showToast('Please select a color', 'warning');
+    return;
+  }
+  
+  const productId = p._id || p.id;
+  addToCart(productId, quantity, selectedSize, selectedColor);
+}
+
+// ==================== BUY NOW ====================
+function handleBuyNow() {
+  const p = currentProduct;
+  
+  // Check if size is required but not selected
+  if (p.sizes && p.sizes.length > 0 && !selectedSize) {
+    shakeElement('.size-options');
+    showToast('Please select a size', 'warning');
+    return;
+  }
+  
+  // Check if color is required but not selected
+  if (p.colors && p.colors.length > 0 && !selectedColor) {
+    shakeElement('.color-options');
+    showToast('Please select a color', 'warning');
+    return;
+  }
+  
+  const productId = p._id || p.id;
+  addToCart(productId, quantity, selectedSize, selectedColor);
+  window.location.href = 'checkout.html';
+}
 
     // ==================== WISHLIST FUNCTIONS ====================
     async function checkWishlistStatus(productId) {
