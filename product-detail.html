@@ -1879,17 +1879,17 @@ function calculateRatingBreakdown(reviews) {
   if (!reviews || reviews.length === 0) {
     return {
       average: 0,
-      breakdown: { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 },
-      percentages: { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 }
+      breakdown: { 7: 0, 6: 0, 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 },
+      percentages: { 7: 0, 6: 0, 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 }
     };
   }
   
-  const breakdown = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
+  const breakdown = { 7: 0, 6: 0, 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
   let total = 0;
   
   reviews.forEach(review => {
     const rating = Math.round(review.rating);
-    if (rating >= 1 && rating <= 5) {
+    if (rating >= 1 && rating <= 7) {
       breakdown[rating]++;
       total += review.rating;
     }
@@ -1898,7 +1898,7 @@ function calculateRatingBreakdown(reviews) {
   const average = total / reviews.length;
   const percentages = {};
   
-  for (let i = 1; i <= 5; i++) {
+  for (let i = 1; i <= 7; i++) {
     percentages[i] = reviews.length > 0 
       ? Math.round((breakdown[i] / reviews.length) * 100) 
       : 0;
@@ -1906,7 +1906,6 @@ function calculateRatingBreakdown(reviews) {
   
   return { average, breakdown, percentages };
 }
-
     // ==================== RENDER PRODUCT ====================
     function renderProduct() {
       const container = document.getElementById('product-detail-page');
@@ -2162,6 +2161,8 @@ function calculateRatingBreakdown(reviews) {
                       <i class="far fa-star" data-rating="3" onclick="setRating(3)"></i>
                       <i class="far fa-star" data-rating="4" onclick="setRating(4)"></i>
                       <i class="far fa-star" data-rating="5" onclick="setRating(5)"></i>
+                      <i class="far fa-star" data-rating="6" onclick="setRating(6)"></i>
+                      <i class="far fa-star" data-rating="7" onclick="setRating(7)"></i>
                     </div>
                     <input type="hidden" id="review-rating" required>
                     
@@ -2183,32 +2184,42 @@ function calculateRatingBreakdown(reviews) {
                 
                 <!-- Rating Breakdown -->
                 <div class="reviews-breakdown">
-                  <div class="rating-bar">
-                    <span class="label">5 stars</span>
-                    <div class="bar"><div class="bar-fill" style="width: ${ratingData.percentages[5]}%;"></div></div>
-                    <span class="count">${ratingData.percentages[5]}%</span>
-                  </div>
-                  <div class="rating-bar">
-                    <span class="label">4 stars</span>
-                    <div class="bar"><div class="bar-fill" style="width: ${ratingData.percentages[4]}%;"></div></div>
-                    <span class="count">${ratingData.percentages[4]}%</span>
-                  </div>
-                  <div class="rating-bar">
-                    <span class="label">3 stars</span>
-                    <div class="bar"><div class="bar-fill" style="width: ${ratingData.percentages[3]}%;"></div></div>
-                    <span class="count">${ratingData.percentages[3]}%</span>
-                  </div>
-                  <div class="rating-bar">
-                    <span class="label">2 stars</span>
-                    <div class="bar"><div class="bar-fill" style="width: ${ratingData.percentages[2]}%;"></div></div>
-                    <span class="count">${ratingData.percentages[2]}%</span>
-                  </div>
-                  <div class="rating-bar">
-                    <span class="label">1 star</span>
-                    <div class="bar"><div class="bar-fill" style="width: ${ratingData.percentages[1]}%;"></div></div>
-                    <span class="count">${ratingData.percentages[1]}%</span>
-                  </div>
-                </div>
+  <div class="rating-bar">
+    <span class="label">7 stars</span>
+    <div class="bar"><div class="bar-fill" style="width: ${ratingData.percentages[7] || 0}%;"></div></div>
+    <span class="count">${ratingData.percentages[7] || 0}%</span>
+  </div>
+  <div class="rating-bar">
+    <span class="label">6 stars</span>
+    <div class="bar"><div class="bar-fill" style="width: ${ratingData.percentages[6] || 0}%;"></div></div>
+    <span class="count">${ratingData.percentages[6] || 0}%</span>
+  </div>
+  <div class="rating-bar">
+    <span class="label">5 stars</span>
+    <div class="bar"><div class="bar-fill" style="width: ${ratingData.percentages[5] || 0}%;"></div></div>
+    <span class="count">${ratingData.percentages[5] || 0}%</span>
+  </div>
+  <div class="rating-bar">
+    <span class="label">4 stars</span>
+    <div class="bar"><div class="bar-fill" style="width: ${ratingData.percentages[4] || 0}%;"></div></div>
+    <span class="count">${ratingData.percentages[4] || 0}%</span>
+  </div>
+  <div class="rating-bar">
+    <span class="label">3 stars</span>
+    <div class="bar"><div class="bar-fill" style="width: ${ratingData.percentages[3] || 0}%;"></div></div>
+    <span class="count">${ratingData.percentages[3] || 0}%</span>
+  </div>
+  <div class="rating-bar">
+    <span class="label">2 stars</span>
+    <div class="bar"><div class="bar-fill" style="width: ${ratingData.percentages[2] || 0}%;"></div></div>
+    <span class="count">${ratingData.percentages[2] || 0}%</span>
+  </div>
+  <div class="rating-bar">
+    <span class="label">1 star</span>
+    <div class="bar"><div class="bar-fill" style="width: ${ratingData.percentages[1] || 0}%;"></div></div>
+    <span class="count">${ratingData.percentages[1] || 0}%</span>
+  </div>
+</div>
               </div>
               
               <!-- Right: Customer Reviews -->
@@ -2226,7 +2237,7 @@ function calculateRatingBreakdown(reviews) {
                           </div>
                         </div>
                         <div class="review-rating">
-                          ${generateStars(review.rating)}
+                          ${eStars(review.rating)}
                         </div>
                       </div>
                       <p class="review-text">${review.comment}</p>
@@ -2440,6 +2451,23 @@ async function submitReview(event) {
       document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
       document.getElementById(`tab-${tabId}`).classList.add('active');
     }
+
+    // ==================== GENERATE STARS ====================
+function generateStars(rating) {
+  let stars = '';
+  const maxStars = 7;
+  
+  for (let i = 1; i <= maxStars; i++) {
+    if (i <= rating) {
+      stars += '<i class="fas fa-star"></i>';
+    } else if (i - 0.5 <= rating) {
+      stars += '<i class="fas fa-star-half-alt"></i>';
+    } else {
+      stars += '<i class="far fa-star"></i>';
+    }
+  }
+  return stars;
+}
 
     // ==================== SHAKE ELEMENT ====================
 function shakeElement(selector) {
@@ -2665,7 +2693,7 @@ async function toggleWishlist() {
       if (hasHalf) {
         stars += '<i class="fas fa-star-half-alt"></i>';
       }
-      const emptyStars = 5 - fullStars - (hasHalf ? 1 : 0);
+      const emptyStars = 7 - fullStars - (hasHalf ? 1 : 0);
       for (let i = 0; i < emptyStars; i++) {
         stars += '<i class="fas fa-star empty"></i>';
       }
