@@ -2497,83 +2497,89 @@ function handleBuyNow() {
   window.location.href = 'checkout.html';
 }
 
-    // ==================== WISHLIST FUNCTIONS ====================
-    async function checkWishlistStatus(productId) {
-      const token = localStorage.getItem('kidocart_token');
-      if (!token) return;
-      
-      try {
-        const response = await fetch('/api/wishlist', {
-          headers: { 'Authorization': 'Bearer ' + token }
-        });
-        
-        if (response.ok) {
-          const wishlist = await response.json();
-          const items = wishlist.items || [];
-          productIsInWishlist = items.some(item => {
-            const itemId = item.productId?._id || item.productId;
-            return itemId === productId || String(itemId) === String(productId);
-          });
-        }
-      } catch (error) {
-        console.error('Error checking wishlist:', error);
-      }
+// ==================== WISHLIST FUNCTIONS ====================
+async function checkWishlistStatus(productId) {
+  const token = localStorage.getItem('kidocart_token');
+  if (!token) {
+    productInWishlist = false;
+    return;
+  }
+  
+  try {
+    const response = await fetch('/api/wishlist', {
+      headers: { 'Authorization': 'Bearer ' + token }
+    });
+    
+    if (response.ok) {
+      const wishlist = await response.json();
+      const items = wishlist.items || [];
+      productInWishlist = items.some(item => {
+        const itemId = item.productId?._id || item.productId;
+        return itemId === productId || String(itemId) === String(productId);
+      });
+    } else {
+      productInWishlist = false;
     }
+  } catch (error) {
+    console.error('Error checking wishlist:', error);
+    productInWishlist = false;
+  }
+}
 
-    async function toggleWishlist() {
-      const token = localStorage.getItem('kidocart_token');
+async function toggleWishlist() {
+  const token = localStorage.getItem('kidocart_token');
+  
+  if (!token) {
+    showToast('Please login to use wishlist', 'warning');
+    setTimeout(() => window.location.href = 'login.html', 1500);
+    return;
+  }
+  
+  const productId = currentProduct._id || currentProduct.id;
+  const btn = document.getElementById('btn-wishlist');
+  
+  try {
+    if (productInWishlist) {
+      // Remove from wishlist
+      const response = await fetch(`/api/wishlist?productId=${productId}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': 'Bearer ' + token }
+      });
       
-      if (!token) {
-        showToast('Please login to use wishlist', 'warning');
-        setTimeout(() => window.location.href = 'login.html', 1500);
-        return;
+      if (response.ok) {
+        productInWishlist = false;
+        btn.classList.remove('active');
+        btn.innerHTML = '<i class="far fa-heart"></i>';
+        showToast('Removed from wishlist', 'success');
+        updateHeaderCounts();
       }
+    } else {
+      // Add to wishlist
+      const response = await fetch('/api/wishlist', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + token
+        },
+        body: JSON.stringify({ productId: productId })
+      });
       
-      const productId = currentProduct._id || currentProduct.id;
-      const btn = document.getElementById('btn-wishlist');
-      
-      try {
-        if (productIsInWishlist) {
-          // Remove from wishlist
-          const response = await fetch(`/api/wishlist?productId=${productId}`, {
-            method: 'DELETE',
-            headers: { 'Authorization': 'Bearer ' + token }
-          });
-          
-          if (response.ok) {
-            productIsInWishlist = false;
-            btn.classList.remove('active');
-            btn.innerHTML = '<i class="far fa-heart"></i>';
-            showToast('Removed from wishlist', 'success');
-            updateHeaderCounts();
-          }
-        } else {
-          // Add to wishlist
-          const response = await fetch('/api/wishlist', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': 'Bearer ' + token
-            },
-            body: JSON.stringify({ productId: productId })
-          });
-          
-          if (response.ok) {
-            productIsInWishlist = true;
-            btn.classList.add('active');
-            btn.innerHTML = '<i class="fas fa-heart"></i>';
-            showToast('Added to wishlist!', 'success');
-            updateHeaderCounts();
-          } else {
-            const error = await response.json();
-            showToast(error.error || 'Failed to update wishlist', 'error');
-          }
-        }
-      } catch (error) {
-        console.error('Wishlist error:', error);
-        showToast('Failed to update wishlist', 'error');
+      if (response.ok) {
+        productInWishlist = true;
+        btn.classList.add('active');
+        btn.innerHTML = '<i class="fas fa-heart"></i>';
+        showToast('Added to wishlist!', 'success');
+        updateHeaderCounts();
+      } else {
+        const error = await response.json();
+        showToast(error.error || 'Failed to update wishlist', 'error');
       }
     }
+  } catch (error) {
+    console.error('Wishlist error:', error);
+    showToast('Failed to update wishlist', 'error');
+  }
+}
 
     // ==================== RELATED PRODUCTS ====================
     async function loadRelatedProducts(category) {
