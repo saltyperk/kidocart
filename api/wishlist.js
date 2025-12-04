@@ -15,6 +15,22 @@ async function connectToDatabase() {
   return cachedDb;
 }
 
+// Product Schema (needed for populate to work)
+const productSchema = new mongoose.Schema({
+  name: String,
+  price: Number,
+  originalPrice: Number,
+  images: [String],
+  category: String,
+  brand: String,
+  rating: Number,
+  reviewCount: Number,
+  availability: Boolean,
+  stock: Number
+}, { strict: false });
+
+const Product = mongoose.models.Product || mongoose.model('Product', productSchema);
+
 // Wishlist Schema
 const wishlistSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
