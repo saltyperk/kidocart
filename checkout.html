@@ -557,125 +557,161 @@
       return true;
     }
 
-    // Place order and initiate PhonePe payment
-    async function placeOrder() {
-      if (!validateCheckout()) {
-        return;
-      }
+    // At the top of your script section, add input sanitization
+function sanitizeInput(input) {
+  if (typeof input !== 'string') return input;
+  const div = document.createElement('div');
+  div.textContent = input;
+  return div.innerHTML;
+}
 
-      const token = localStorage.getItem('kidocart_token');
-      const btn = document.getElementById('place-order-btn');
+// Update the placeOrder function with better error handling
+async function placeOrder() {
+  if (!validateCheckout()) {
+    return;
+  }
+
+  const token = localStorage.getItem('kidocart_token');
+  
+  if (!token) {
+    showToast('Session expired. Please login again', 'error');
+    setTimeout(() => window.location.href = 'login.html?redirect=checkout.html', 1500);
+    return;
+  }
+
+  const btn = document.getElementById('place-order-btn');
+  
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+
+  try {
+    // Prepare address with sanitization
+    let shippingAddress;
+    
+    if (selectedAddress) {
+      shippingAddress = selectedAddress;
+    } else {
+      shippingAddress = {
+        firstName: sanitizeInput(document.getElementById('firstName').value),
+        lastName: sanitizeInput(document.getElementById('lastName').value),
+        address: sanitizeInput(document.getElementById('address').value),
+        apartment: sanitizeInput(document.getElementById('apartment').value),
+        city: sanitizeInput(document.getElementById('city').value),
+        state: document.getElementById('state').value,
+        pincode: document.getElementById('pincode').value.replace(/\D/g, '')
+      };
+
+      // Save address if checkbox is checked
+      if (document.getElementById('saveAddress').checked) {
+        await saveAddress(shippingAddress);
+      }
+    }
+
+    // Calculate total
+    let subtotal = 0;
+    cartData.items.forEach(item => {
+      subtotal += item.price * item.quantity;
+    });
+    const shipping = subtotal >= 500 ? 0 : 50;
+    const total = subtotal + shipping;
+
+    // Create order
+    const orderData = {
+      email: sanitizeInput(document.getElementById('email').value),
+      phone: document.getElementById('phone').value.replace(/\D/g, ''),
+      shippingAddress: shippingAddress,
+      paymentMethod: 'phonepe',
+      items: cartData.items.map(item => ({
+        productId: item.productId._id || item.productId.id,
+        quantity: parseInt(item.quantity),
+        price: parseFloat(item.price),
+        size: item.size,
+        color: item.color
+      })),
+      total: parseFloat(total.toFixed(2))
+    };
+
+    const response = await fetch('/api/orders', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token
+      },
+      body: JSON.stringify(orderData)
+    });
+
+    if (response.status === 401) {
+      localStorage.removeItem('kidocart_token');
+      showToast('Session expired. Please login again', 'error');
+      setTimeout(() => window.location.href = 'login.html?redirect=checkout.html', 1500);
+      return;
+    }
+
+    if (response.ok) {
+      const order = await response.json();
       
-      btn.disabled = true;
-      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+      // Initiate PhonePe payment
+      await initiatePhonePePayment(order);
+    } else {
+      const error = await response.json();
+      throw new Error(error.error || 'Failed to create order');
+    }
+  } catch (error) {
+    console.error('Error placing order:', error);
+    showToast(error.message || 'Failed to place order. Please try again.', 'error');
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-lock"></i> Proceed to Payment';
+  }
+}
 
-      try {
-        // Prepare address
-        let shippingAddress;
-        
-        if (selectedAddress) {
-          shippingAddress = selectedAddress;
-        } else {
-          shippingAddress = {
-            firstName: document.getElementById('firstName').value,
-            lastName: document.getElementById('lastName').value,
-            address: document.getElementById('address').value,
-            apartment: document.getElementById('apartment').value,
-            city: document.getElementById('city').value,
-            state: document.getElementById('state').value,
-            pincode: document.getElementById('pincode').value
-          };
+// Update initiatePhonePePayment with better security
+async function initiatePhonePePayment(order) {
+  const token = localStorage.getItem('kidocart_token');
 
-          // Save address if checkbox is checked
-          if (document.getElementById('saveAddress').checked) {
-            await saveAddress(shippingAddress);
-          }
-        }
+  try {
+    const response = await fetch('/api/payment/phonepe/initiate', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token
+      },
+      body: JSON.stringify({
+        orderId: order._id,
+        amount: order.total,
+        customerPhone: document.getElementById('phone').value.replace(/\D/g, ''),
+        customerEmail: document.getElementById('email').value
+      })
+    });
 
-        // Calculate total
-        let subtotal = 0;
-        cartData.items.forEach(item => {
-          subtotal += item.price * item.quantity;
-        });
-        const shipping = subtotal >= 500 ? 0 : 50;
-        const total = subtotal + shipping;
-
-        // Create order
-        const orderData = {
-          email: document.getElementById('email').value,
-          phone: document.getElementById('phone').value,
-          shippingAddress: shippingAddress,
-          paymentMethod: 'phonepe',
-          items: cartData.items.map(item => ({
-            productId: item.productId._id || item.productId.id,
-            quantity: item.quantity,
-            price: item.price,
-            size: item.size,
-            color: item.color
-          })),
-          total: total
-        };
-
-        const response = await fetch('/api/orders', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + token
-          },
-          body: JSON.stringify(orderData)
-        });
-
-        if (response.ok) {
-          const order = await response.json();
-          
-          // Initiate PhonePe payment
-          await initiatePhonePePayment(order);
-        } else {
-          const error = await response.json();
-          throw new Error(error.error || 'Failed to create order');
-        }
-      } catch (error) {
-        console.error('Error placing order:', error);
-        showToast(error.message || 'Failed to place order', 'error');
-        btn.disabled = false;
-        btn.innerHTML = '<i class="fas fa-lock"></i> Proceed to Payment';
-      }
+    if (response.status === 401) {
+      localStorage.removeItem('kidocart_token');
+      showToast('Session expired', 'error');
+      setTimeout(() => window.location.href = 'login.html', 1500);
+      return;
     }
 
-    // Initiate PhonePe payment
-    async function initiatePhonePePayment(order) {
-      const token = localStorage.getItem('kidocart_token');
-
-      try {
-        const response = await fetch('/api/payment/phonepe/initiate', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + token
-          },
-          body: JSON.stringify({
-            orderId: order._id,
-            amount: order.total,
-            customerPhone: document.getElementById('phone').value,
-            customerEmail: document.getElementById('email').value
-          })
-        });
-
-        if (response.ok) {
-          const paymentData = await response.json();
-          
-          // Redirect to PhonePe payment page
-          window.location.href = paymentData.redirectUrl;
-        } else {
-          throw new Error('Failed to initiate payment');
-        }
-      } catch (error) {
-        console.error('Payment error:', error);
-        showToast('Failed to initiate payment', 'error');
-        document.getElementById('place-order-btn').disabled = false;
-        document.getElementById('place-order-btn').innerHTML = '<i class="fas fa-lock"></i> Proceed to Payment';
+    if (response.ok) {
+      const paymentData = await response.json();
+      
+      if (paymentData.success && paymentData.redirectUrl) {
+        // Redirect to PhonePe payment page
+        window.location.href = paymentData.redirectUrl;
+      } else {
+        throw new Error('Invalid payment response');
       }
+    } else {
+      const error = await response.json();
+      throw new Error(error.error || 'Payment initiation failed');
     }
+  } catch (error) {
+    console.error('Payment error:', error);
+    showToast('Failed to initiate payment. Please try again.', 'error');
+    
+    const btn = document.getElementById('place-order-btn');
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-lock"></i> Proceed to Payment';
+  }
+}
 
     // Save address
     async function saveAddress(addressData) {
