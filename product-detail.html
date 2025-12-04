@@ -2149,6 +2149,34 @@ function calculateRatingBreakdown(reviews) {
   ${(() => {
     const ratingData = calculateRatingBreakdown(p.reviews);
     return `
+      <!-- Write Review Section -->
+      <div class="write-review-section">
+        <h3>Write a Review</h3>
+        <form id="review-form" onsubmit="submitReview(event)">
+          <div class="form-group">
+            <label>Your Rating *</label>
+            <div class="rating-input" id="rating-input">
+              <i class="far fa-star" data-rating="1" onclick="setRating(1)"></i>
+              <i class="far fa-star" data-rating="2" onclick="setRating(2)"></i>
+              <i class="far fa-star" data-rating="3" onclick="setRating(3)"></i>
+              <i class="far fa-star" data-rating="4" onclick="setRating(4)"></i>
+              <i class="far fa-star" data-rating="5" onclick="setRating(5)"></i>
+            </div>
+            <input type="hidden" id="review-rating" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="review-comment">Your Review *</label>
+            <textarea id="review-comment" class="form-input" rows="4" required placeholder="Share your experience with this product..."></textarea>
+          </div>
+          
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-paper-plane"></i> Submit Review
+          </button>
+        </form>
+      </div>
+
+      <!-- Reviews Summary -->
       <div class="reviews-summary">
         <div class="reviews-average">
           <div class="big-rating">${ratingData.average.toFixed(1)}</div>
@@ -2185,14 +2213,10 @@ function calculateRatingBreakdown(reviews) {
           </div>
         </div>
       </div>
-      <div style="text-align: center; margin: 2rem 0; padding: 1rem 0; border-bottom: 1px solid var(--gray-200);">
-        <button class="btn btn-primary" onclick="openReviewModal()">
-          <i class="fas fa-pen"></i> Write a Review
-        </button>
-      </div>
       
-      <!-- Reviews from Database -->
+      <!-- Customer Reviews -->
       <div class="reviews-list">
+        <h3 style="margin-bottom: 1.5rem;">Customer Reviews</h3>
         ${p.reviews && p.reviews.length > 0 ? p.reviews.map(review => `
           <div class="review-card">
             <div class="review-header">
@@ -2208,11 +2232,6 @@ function calculateRatingBreakdown(reviews) {
               </div>
             </div>
             <p class="review-text">${review.comment}</p>
-            <div class="review-helpful">
-              <span>Was this helpful?</span>
-              <button><i class="far fa-thumbs-up"></i> Yes</button>
-              <button><i class="far fa-thumbs-down"></i> No</button>
-            </div>
           </div>
         `).join('') : `
           <div class="review-card" style="text-align: center; padding: 2rem;">
