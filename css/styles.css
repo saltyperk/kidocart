@@ -79,6 +79,21 @@ img {
   padding: 2rem;
 }
 
+/* Shake Animation For Boxes*/
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
+  20%, 40%, 60%, 80% { transform: translateX(10px); }
+}
+
+.shake-error {
+  animation: shake 0.5s;
+  border: 2px solid #ef4444 !important;
+  border-radius: 8px;
+  padding: 0.5rem;
+  background: #fef2f2;
+}
+
 /* Reviews Tab Grid */
 .reviews-tab-grid {
   display: grid;
