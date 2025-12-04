@@ -76,47 +76,28 @@ img {
   color: #374151;
 
 .write-review-section {
-  background: #f9fafb;
+  background: white;
   padding: 2rem;
   border-radius: 12px;
   margin-bottom: 2rem;
+  border: 1px solid #e5e7eb;
 }
 
 .write-review-section h3 {
   margin-bottom: 1.5rem;
+  color: #111827;
 }
 
-.form-group {
-  margin-bottom: 1.5rem;
-}
-
-.form-group label {
-  display: block;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
-  color: #374151;
-}
-
-.form-input {
-  width: 100%;
-  padding: 0.75rem;
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-family: inherit;
-}
-
-.form-input:focus {
-  outline: none;
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
+.review-form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .rating-input {
   display: flex;
   gap: 0.5rem;
   font-size: 2rem;
-  margin: 0.5rem 0;
 }
 
 .rating-input i {
@@ -127,6 +108,58 @@ img {
 
 .rating-input i:hover {
   transform: scale(1.2);
+  color: #fbbf24;
+}
+
+.review-input-group {
+  display: flex;
+  align-items: center;
+  background: white;
+  border: 2px solid #e5e7eb;
+  border-radius: 50px;
+  padding: 0.5rem 0.5rem 0.5rem 1.5rem;
+  transition: all 0.3s;
+}
+
+.review-input-group:focus-within {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
+}
+
+.review-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 1rem;
+  font-family: inherit;
+  resize: none;
+  background: transparent;
+  padding: 0.5rem 0;
+}
+
+.review-submit-btn {
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  border: none;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  color: white;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.review-submit-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(249, 115, 22, 0.4);
+}
+
+.review-submit-btn:active {
+  transform: scale(0.95);
 }
 
 /* Product Detail - Image & Text Fixes */
