@@ -10,7 +10,7 @@ You're right! Let me fix the product fetching and add a modern skeleton loading 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Product Details - KidoCart</title>
   <link rel="icon" type="image/png" href="/logo.png">
-  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/product-page.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     /* ==================== RESET & VARIABLES ==================== */
@@ -1950,300 +1950,303 @@ function calculateRatingBreakdown(reviews) {
         : ['https://via.placeholder.com/600x600?text=No+Image'];
       
       container.innerHTML = `
-        <!-- Product Detail Container -->
-        <div class="product-detail-container">
-          <!-- Gallery -->
-          <div class="product-gallery">
-            <div class="gallery-thumbnails">
-              ${images.map((img, i) => `
-                <div class="thumbnail ${i === 0 ? 'active' : ''}" onclick="changeImage(${i})">
-                  <img src="${img}" alt="Thumbnail ${i + 1}" onerror="this.src='https://via.placeholder.com/80x80?text=No+Image'">
-                </div>
-              `).join('')}
-            </div>
-            <div class="gallery-main" id="gallery-main">
-              ${p.badge ? `<span class="gallery-badge ${badgeClass}">${p.badge.charAt(0).toUpperCase() + p.badge.slice(1)}</span>` : ''}
-              <img src="${images[0]}" alt="${p.name}" id="main-image" onerror="this.src='https://via.placeholder.com/600x600?text=No+Image'">
-              ${images.length > 1 ? `
-                <button class="gallery-nav prev" onclick="prevImage()"><i class="fas fa-chevron-left"></i></button>
-                <button class="gallery-nav next" onclick="nextImage()"><i class="fas fa-chevron-right"></i></button>
-              ` : ''}
-              <button class="gallery-zoom" onclick="openZoom()"><i class="fas fa-search-plus"></i></button>
-            </div>
+  <!-- Product Detail Container -->
+  <div class="product-detail-container">
+    <!-- Gallery -->
+    <div class="product-gallery">
+      <div class="gallery-thumbnails">
+        ${images.map((img, i) => `
+          <div class="thumbnail ${i === 0 ? 'active' : ''}" onclick="changeImage(${i})">
+            <img src="${img}" alt="Thumbnail ${i + 1}" onerror="this.src='https://via.placeholder.com/80x80?text=No+Image'">
           </div>
-          
-          <!-- Product Info -->
-          <div class="product-info">
-            <div class="product-category">${p.category || 'General'}</div>
-            <h1 class="product-title">${p.name}</h1>
-            
-            <div class="product-rating">
-              <div class="rating-stars">
-                ${generateStars(p.rating || 4)}
-              </div>
-              <span class="rating-count">
-                ${(p.rating || 4).toFixed(1)} <a href="#reviews">(${p.reviewCount || 0} reviews)</a>
-              </span>
-            </div>
-            
-            <div class="product-price-container">
-              <span class="product-price">₹${p.price.toLocaleString('en-IN')}</span>
-              ${p.originalPrice ? `<span class="product-original-price">₹${p.originalPrice.toLocaleString('en-IN')}</span>` : ''}
-              ${discount > 0 ? `<span class="product-discount">${discount}% OFF</span>` : ''}
-            </div>
-            
-            <div class="product-stock ${stockClass}">
-              <i class="fas ${stockIcon}"></i>
-              <span>${stockText}</span>
-            </div>
-            
-            <p class="product-description">${p.description || 'No description available for this product.'}</p>
-            
-            <!-- Options -->
-            <div class="product-options">
-              ${p.sizes && p.sizes.length > 0 ? `
-                <div class="option-group">
-                  <div class="option-label">Size: <span id="selected-size">Select a size</span></div>
-                  <div class="size-options">
-                    ${p.sizes.map(size => `
-                      <button class="size-option" onclick="selectSize('${size}', this)">${size}</button>
-                    `).join('')}
-                  </div>
-                </div>
-              ` : ''}
-              
-              ${p.colors && p.colors.length > 0 ? `
-                <div class="option-group">
-                  <div class="option-label">Color: <span id="selected-color">Select a color</span></div>
-                  <div class="color-options">
-                    ${p.colors.map(color => `
-                      <button class="color-option" style="background: ${getColorCode(color)}" 
-                              onclick="selectColor('${color}', this)" 
-                              title="${color}"></button>
-                    `).join('')}
-                  </div>
-                </div>
-              ` : ''}
-            </div>
-            
-            <!-- Quantity -->
-            <div class="quantity-container">
-              <span class="quantity-label">Quantity:</span>
-              <div class="quantity-selector">
-                <button class="quantity-btn" onclick="updateQuantity(-1)" id="qty-minus" ${quantity <= 1 ? 'disabled' : ''}>
-                  <i class="fas fa-minus"></i>
-                </button>
-                <input type="number" class="quantity-input" value="${quantity}" min="1" max="${stock}" id="quantity-input" onchange="handleQuantityChange()">
-                <button class="quantity-btn" onclick="updateQuantity(1)" id="qty-plus" ${quantity >= stock ? 'disabled' : ''}>
-                  <i class="fas fa-plus"></i>
-                </button>
-              </div>
-            </div>
-            
-            <!-- Actions -->
-            <div class="product-actions">
-              <button class="btn-add-cart" onclick="handleAddToCart()" id="btn-add-cart" ${p.availability === false || stock === 0 ? 'disabled' : ''}>
-                <i class="fas fa-shopping-cart"></i>
-                ${p.availability === false || stock === 0 ? 'Out of Stock' : 'Add to Cart'}
-              </button>
-              <button class="btn-buy-now" onclick="handleBuyNow()" id="btn-buy-now" ${p.availability === false || stock === 0 ? 'disabled' : ''}>
-                <i class="fas fa-bolt"></i>
-                Buy Now
-              </button>
-              <button class="btn-wishlist ${productIsInWishlist ? 'active' : ''}" onclick="toggleWishlist()" id="btn-wishlist">
-                <i class="${productIsInWishlist ? 'fas' : 'far'} fa-heart"></i>
-              </button>
-            </div>
-            
-            <!-- Meta -->
-            <div class="product-meta">
-              <div class="meta-item">
-                <i class="fas fa-tag"></i>
-                <span>Category: <a href="products.html?category=${p.category}">${formatCategory(p.category)}</a></span>
-              </div>
-              ${p.brand ? `
-                <div class="meta-item">
-                  <i class="fas fa-industry"></i>
-                  <span>Brand: ${p.brand}</span>
-                </div>
-              ` : ''}
-              <div class="meta-item">
-                <i class="fas fa-truck"></i>
-                <span>Free shipping on orders above ₹500</span>
-              </div>
-              <div class="meta-item">
-                <i class="fas fa-undo"></i>
-                <span>7-day easy returns</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <!-- Tabs Section -->
-        <div class="product-tabs-section">
-          <div class="tabs-header">
-            <button class="tab-btn active" onclick="switchTab('description', this)">Description</button>
-            <button class="tab-btn" onclick="switchTab('specifications', this)">Specifications</button>
-            <button class="tab-btn" onclick="switchTab('reviews', this)">Reviews (${p.reviewCount || 0})</button>
-          </div>
-          
-          <div class="tab-content active" id="tab-description">
-            <h3>Product Description</h3>
-            <p>${p.description || 'No description available for this product.'}</p>
-            <ul>
-              <li>Premium quality materials</li>
-              <li>Safe for children</li>
-              <li>Easy to clean and maintain</li>
-              <li>Perfect for gifting</li>
-            </ul>
-          </div>
-          
-          <div class="tab-content" id="tab-specifications">
-            <h3>Specifications</h3>
-            <table style="width: 100%; border-collapse: collapse;">
-              <tr style="border-bottom: 1px solid var(--gray-200);">
-                <td style="padding: 0.75rem 0; font-weight: 600; width: 40%;">Category</td>
-                <td style="padding: 0.75rem 0; color: var(--gray-700);">${formatCategory(p.category)}</td>
-              </tr>
-              ${p.brand ? `
-                <tr style="border-bottom: 1px solid var(--gray-200);">
-                  <td style="padding: 0.75rem 0; font-weight: 600;">Brand</td>
-                  <td style="padding: 0.75rem 0; color: var(--gray-700);">${p.brand}</td>
-                </tr>
-              ` : ''}
-              ${p.ageGroup ? `
-                <tr style="border-bottom: 1px solid var(--gray-200);">
-                  <td style="padding: 0.75rem 0; font-weight: 600;">Age Group</td>
-                  <td style="padding: 0.75rem 0; color: var(--gray-700);">${p.ageGroup}</td>
-                </tr>
-              ` : ''}
-              ${p.sizes && p.sizes.length > 0 ? `
-                <tr style="border-bottom: 1px solid var(--gray-200);">
-                  <td style="padding: 0.75rem 0; font-weight: 600;">Available Sizes</td>
-                  <td style="padding: 0.75rem 0; color: var(--gray-700);">${p.sizes.join(', ')}</td>
-                </tr>
-              ` : ''}
-              ${p.colors && p.colors.length > 0 ? `
-                <tr style="border-bottom: 1px solid var(--gray-200);">
-                  <td style="padding: 0.75rem 0; font-weight: 600;">Available Colors</td>
-                  <td style="padding: 0.75rem 0; color: var(--gray-700);">${p.colors.join(', ')}</td>
-                </tr>
-              ` : ''}
-              ${p.dimensions && p.dimensions.weight ? `
-  <tr style="border-bottom: 1px solid var(--gray-200);">
-    <td style="padding: 0.75rem 0; font-weight: 600;">Weight</td>
-    <td style="padding: 0.75rem 0; color: var(--gray-700);">${p.dimensions.weight} kg</td>
-  </tr>
-` : ''}
-    
-              <tr style="border-bottom: 1px solid var(--gray-200);">
-                <td style="padding: 0.75rem 0; font-weight: 600;">Availability</td>
-                <td style="padding: 0.75rem 0; color: var(--gray-700);">${p.availability !== false ? 'In Stock' : 'Out of Stock'}</td>
-              </tr>
-            </table>
-          </div>
-          
-          </div>
-
-        <div class="tab-content" id="tab-reviews">
-  ${(() => {
-    const ratingData = calculateRatingBreakdown(p.reviews);
-    return `
-      <!-- Write Review Section -->
-<div class="write-review-section">
-  <h3>Write a Review</h3>
-  <form id="review-form" onsubmit="submitReview(event)">
-    <div class="review-form-container">
-      <div class="rating-input" id="rating-input">
-        <i class="far fa-star" data-rating="1" onclick="setRating(1)"></i>
-        <i class="far fa-star" data-rating="2" onclick="setRating(2)"></i>
-        <i class="far fa-star" data-rating="3" onclick="setRating(3)"></i>
-        <i class="far fa-star" data-rating="4" onclick="setRating(4)"></i>
-        <i class="far fa-star" data-rating="5" onclick="setRating(5)"></i>
+        `).join('')}
       </div>
-      <input type="hidden" id="review-rating" required>
-      
-      <div class="review-input-group">
-        <textarea id="review-comment" class="review-input" rows="1" required placeholder="Share your experience with this product..."></textarea>
-        <button type="submit" class="review-submit-btn">
-          <i class="fas fa-paper-plane"></i>
-        </button>
+      <div class="gallery-main" id="gallery-main">
+        ${p.badge ? `<span class="gallery-badge ${badgeClass}">${p.badge.charAt(0).toUpperCase() + p.badge.slice(1)}</span>` : ''}
+        <img src="${images[0]}" alt="${p.name}" id="main-image" onerror="this.src='https://via.placeholder.com/600x600?text=No+Image'">
+        ${images.length > 1 ? `
+          <button class="gallery-nav prev" onclick="prevImage()"><i class="fas fa-chevron-left"></i></button>
+          <button class="gallery-nav next" onclick="nextImage()"><i class="fas fa-chevron-right"></i></button>
+        ` : ''}
+        <button class="gallery-zoom" onclick="openZoom()"><i class="fas fa-search-plus"></i></button>
       </div>
     </div>
-  </form>
-</div>
-
-      <!-- Reviews Summary -->
-      <div class="reviews-summary">
-        <div class="reviews-average">
-          <div class="big-rating">${ratingData.average.toFixed(1)}</div>
-          <div class="stars">
-            ${generateStars(ratingData.average)}
-          </div>
-          <div class="total-reviews">${p.reviews?.length || 0} reviews</div>
+    
+    <!-- Product Info -->
+    <div class="product-info">
+      <div class="product-category">${p.category || 'General'}</div>
+      <h1 class="product-title">${p.name}</h1>
+      
+      <div class="product-rating">
+        <div class="rating-stars">
+          ${generateStars(p.rating || 4)}
         </div>
-        <div class="reviews-breakdown">
-          <div class="rating-bar">
-            <span class="label">5 stars</span>
-            <div class="bar"><div class="bar-fill" style="width: ${ratingData.percentages[5]}%;"></div></div>
-            <span class="count">${ratingData.percentages[5]}%</span>
+        <span class="rating-count">
+          ${(p.rating || 4).toFixed(1)} <a href="#reviews">(${p.reviewCount || 0} reviews)</a>
+        </span>
+      </div>
+      
+      <div class="product-price-container">
+        <span class="product-price">₹${p.price.toLocaleString('en-IN')}</span>
+        ${p.originalPrice ? `<span class="product-original-price">₹${p.originalPrice.toLocaleString('en-IN')}</span>` : ''}
+        ${discount > 0 ? `<span class="product-discount">${discount}% OFF</span>` : ''}
+      </div>
+      
+      <div class="product-stock ${stockClass}">
+        <i class="fas ${stockIcon}"></i>
+        <span>${stockText}</span>
+      </div>
+      
+      <!-- Options -->
+      <div class="product-options">
+        ${p.sizes && p.sizes.length > 0 ? `
+          <div class="option-group">
+            <div class="option-label">Size: <span id="selected-size">Select a size</span></div>
+            <div class="size-options">
+              ${p.sizes.map(size => `
+                <button class="size-option" onclick="selectSize('${size}', this)">${size}</button>
+              `).join('')}
+            </div>
           </div>
-          <div class="rating-bar">
-            <span class="label">4 stars</span>
-            <div class="bar"><div class="bar-fill" style="width: ${ratingData.percentages[4]}%;"></div></div>
-            <span class="count">${ratingData.percentages[4]}%</span>
+        ` : ''}
+        
+        ${p.colors && p.colors.length > 0 ? `
+          <div class="option-group">
+            <div class="option-label">Color: <span id="selected-color">Select a color</span></div>
+            <div class="color-options">
+              ${p.colors.map(color => `
+                <button class="color-option" style="background: ${getColorCode(color)}" 
+                        onclick="selectColor('${color}', this)" 
+                        title="${color}"></button>
+              `).join('')}
+            </div>
           </div>
-          <div class="rating-bar">
-            <span class="label">3 stars</span>
-            <div class="bar"><div class="bar-fill" style="width: ${ratingData.percentages[3]}%;"></div></div>
-            <span class="count">${ratingData.percentages[3]}%</span>
-          </div>
-          <div class="rating-bar">
-            <span class="label">2 stars</span>
-            <div class="bar"><div class="bar-fill" style="width: ${ratingData.percentages[2]}%;"></div></div>
-            <span class="count">${ratingData.percentages[2]}%</span>
-          </div>
-          <div class="rating-bar">
-            <span class="label">1 star</span>
-            <div class="bar"><div class="bar-fill" style="width: ${ratingData.percentages[1]}%;"></div></div>
-            <span class="count">${ratingData.percentages[1]}%</span>
-          </div>
+        ` : ''}
+      </div>
+      
+      <!-- Quantity -->
+      <div class="quantity-container">
+        <span class="quantity-label">Quantity:</span>
+        <div class="quantity-selector">
+          <button class="quantity-btn" onclick="updateQuantity(-1)" id="qty-minus" ${quantity <= 1 ? 'disabled' : ''}>
+            <i class="fas fa-minus"></i>
+          </button>
+          <input type="number" class="quantity-input" value="${quantity}" min="1" max="${stock}" id="quantity-input" onchange="handleQuantityChange()">
+          <button class="quantity-btn" onclick="updateQuantity(1)" id="qty-plus" ${quantity >= stock ? 'disabled' : ''}>
+            <i class="fas fa-plus"></i>
+          </button>
         </div>
       </div>
       
-      <!-- Customer Reviews -->
-      <div class="reviews-list">
-        <h3 style="margin-bottom: 1.5rem;">Customer Reviews</h3>
-        ${p.reviews && p.reviews.length > 0 ? p.reviews.map(review => `
-          <div class="review-card">
-            <div class="review-header">
-              <div class="reviewer-info">
-                <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(review.userName)}&background=random" alt="${review.userName}" class="reviewer-avatar">
-                <div>
-                  <div class="reviewer-name">${review.userName}</div>
-                  <div class="reviewer-meta">Verified Buyer • ${new Date(review.date).toLocaleDateString('en-IN', { year: 'numeric', month: 'short', day: 'numeric' })}</div>
+      <!-- Actions -->
+      <div class="product-actions">
+        <button class="btn-add-cart" onclick="handleAddToCart()" id="btn-add-cart" ${p.availability === false || stock === 0 ? 'disabled' : ''}>
+          <i class="fas fa-shopping-cart"></i>
+          ${p.availability === false || stock === 0 ? 'Out of Stock' : 'Add to Cart'}
+        </button>
+        <button class="btn-buy-now" onclick="handleBuyNow()" id="btn-buy-now" ${p.availability === false || stock === 0 ? 'disabled' : ''}>
+          <i class="fas fa-bolt"></i>
+          Buy Now
+        </button>
+        <button class="btn-wishlist ${productInWishlist ? 'active' : ''}" onclick="toggleWishlist()" id="btn-wishlist">
+          <i class="${productInWishlist ? 'fas' : 'far'} fa-heart"></i>
+        </button>
+      </div>
+      
+      <!-- Meta -->
+      <div class="product-meta">
+        <div class="meta-item">
+          <i class="fas fa-tag"></i>
+          <span>Category: <a href="products.html?category=${p.category}">${formatCategory(p.category)}</a></span>
+        </div>
+        ${p.brand ? `
+          <div class="meta-item">
+            <i class="fas fa-industry"></i>
+            <span>Brand: ${p.brand}</span>
+          </div>
+        ` : ''}
+        <div class="meta-item">
+          <i class="fas fa-truck"></i>
+          <span>Free shipping on orders above ₹500</span>
+        </div>
+        <div class="meta-item">
+          <i class="fas fa-undo"></i>
+          <span>7-day easy returns</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Description Section (Below Images) -->
+  <div class="product-description-section">
+    <h3>Product Description</h3>
+    <p>${p.description || 'No description available for this product.'}</p>
+  </div>
+  
+  <!-- Tabs Section -->
+  <div class="product-tabs-section">
+    <div class="tabs-header">
+      <button class="tab-btn active" onclick="switchTab('specifications', this)">Specifications</button>
+      <button class="tab-btn" onclick="switchTab('reviews', this)">Reviews (${p.reviewCount || 0})</button>
+    </div>
+    
+    <div class="tabs-content-wrapper">
+      <!-- Specifications Tab -->
+      <div class="tab-content active" id="tab-specifications">
+        <h3>Specifications</h3>
+        <table class="specs-table">
+          <tr>
+            <td>Category</td>
+            <td>${formatCategory(p.category)}</td>
+          </tr>
+          ${p.brand ? `
+            <tr>
+              <td>Brand</td>
+              <td>${p.brand}</td>
+            </tr>
+          ` : ''}
+          ${p.ageGroup ? `
+            <tr>
+              <td>Age Group</td>
+              <td>${p.ageGroup}</td>
+            </tr>
+          ` : ''}
+          ${p.dimensions ? `
+            <tr>
+              <td>Dimensions</td>
+              <td>${p.dimensions.length} × ${p.dimensions.width} × ${p.dimensions.height} ${p.dimensions.unit || 'cm'}</td>
+            </tr>
+          ` : ''}
+          ${p.dimensions && p.dimensions.weight ? `
+            <tr>
+              <td>Weight</td>
+              <td>${p.dimensions.weight} kg</td>
+            </tr>
+          ` : ''}
+          ${p.sizes && p.sizes.length > 0 ? `
+            <tr>
+              <td>Available Sizes</td>
+              <td>${p.sizes.join(', ')}</td>
+            </tr>
+          ` : ''}
+          ${p.colors && p.colors.length > 0 ? `
+            <tr>
+              <td>Available Colors</td>
+              <td>${p.colors.join(', ')}</td>
+            </tr>
+          ` : ''}
+          <tr>
+            <td>Availability</td>
+            <td>${p.availability !== false ? 'In Stock' : 'Out of Stock'}</td>
+          </tr>
+        </table>
+      </div>
+      
+      <!-- Reviews Tab -->
+      <div class="tab-content" id="tab-reviews">
+        ${(() => {
+          const ratingData = calculateRatingBreakdown(p.reviews);
+          return `
+            <div class="reviews-tab-grid">
+              <!-- Left: Write Review -->
+              <div class="write-review-column">
+                <h3>Write a Review</h3>
+                <form id="review-form" onsubmit="submitReview(event)">
+                  <div class="review-form-container">
+                    <div class="rating-input" id="rating-input">
+                      <i class="far fa-star" data-rating="1" onclick="setRating(1)"></i>
+                      <i class="far fa-star" data-rating="2" onclick="setRating(2)"></i>
+                      <i class="far fa-star" data-rating="3" onclick="setRating(3)"></i>
+                      <i class="far fa-star" data-rating="4" onclick="setRating(4)"></i>
+                      <i class="far fa-star" data-rating="5" onclick="setRating(5)"></i>
+                    </div>
+                    <input type="hidden" id="review-rating" required>
+                    
+                    <div class="review-input-group">
+                      <textarea id="review-comment" class="review-input" rows="1" required placeholder="Share your experience..."></textarea>
+                      <button type="submit" class="review-submit-btn">
+                        <i class="fas fa-paper-plane"></i>
+                      </button>
+                    </div>
+                  </div>
+                </form>
+                
+                <!-- Average Review -->
+                <div class="average-review-box">
+                  <div class="big-rating">${ratingData.average.toFixed(1)}</div>
+                  <div class="stars">${generateStars(ratingData.average)}</div>
+                  <div class="total-reviews">${p.reviews?.length || 0} reviews</div>
+                </div>
+                
+                <!-- Rating Breakdown -->
+                <div class="reviews-breakdown">
+                  <div class="rating-bar">
+                    <span class="label">5 stars</span>
+                    <div class="bar"><div class="bar-fill" style="width: ${ratingData.percentages[5]}%;"></div></div>
+                    <span class="count">${ratingData.percentages[5]}%</span>
+                  </div>
+                  <div class="rating-bar">
+                    <span class="label">4 stars</span>
+                    <div class="bar"><div class="bar-fill" style="width: ${ratingData.percentages[4]}%;"></div></div>
+                    <span class="count">${ratingData.percentages[4]}%</span>
+                  </div>
+                  <div class="rating-bar">
+                    <span class="label">3 stars</span>
+                    <div class="bar"><div class="bar-fill" style="width: ${ratingData.percentages[3]}%;"></div></div>
+                    <span class="count">${ratingData.percentages[3]}%</span>
+                  </div>
+                  <div class="rating-bar">
+                    <span class="label">2 stars</span>
+                    <div class="bar"><div class="bar-fill" style="width: ${ratingData.percentages[2]}%;"></div></div>
+                    <span class="count">${ratingData.percentages[2]}%</span>
+                  </div>
+                  <div class="rating-bar">
+                    <span class="label">1 star</span>
+                    <div class="bar"><div class="bar-fill" style="width: ${ratingData.percentages[1]}%;"></div></div>
+                    <span class="count">${ratingData.percentages[1]}%</span>
+                  </div>
                 </div>
               </div>
-              <div class="review-rating">
-                ${generateStars(review.rating)}
+              
+              <!-- Right: Customer Reviews -->
+              <div class="customer-reviews-column">
+                <h3>Customer Reviews</h3>
+                <div class="reviews-list">
+                  ${p.reviews && p.reviews.length > 0 ? p.reviews.map(review => `
+                    <div class="review-card">
+                      <div class="review-header">
+                        <div class="reviewer-info">
+                          <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(review.userName)}&background=random" alt="${review.userName}" class="reviewer-avatar">
+                          <div>
+                            <div class="reviewer-name">${review.userName}</div>
+                            <div class="reviewer-meta">${new Date(review.date).toLocaleDateString('en-IN', { year: 'numeric', month: 'short', day: 'numeric' })}</div>
+                          </div>
+                        </div>
+                        <div class="review-rating">
+                          ${generateStars(review.rating)}
+                        </div>
+                      </div>
+                      <p class="review-text">${review.comment}</p>
+                    </div>
+                  `).join('') : `
+                    <div class="no-reviews">
+                      <i class="fas fa-comment-slash"></i>
+                      <p>No reviews yet. Be the first to review!</p>
+                    </div>
+                  `}
+                </div>
               </div>
             </div>
-            <p class="review-text">${review.comment}</p>
-          </div>
-        `).join('') : `
-          <div class="review-card" style="text-align: center; padding: 2rem;">
-            <i class="fas fa-comment-slash" style="font-size: 3rem; color: var(--gray-400); margin-bottom: 1rem;"></i>
-            <p style="color: var(--gray-600);">No reviews yet. Be the first to review this product!</p>
-          </div>
-        `}
+          `;
+        })()}
       </div>
-    `;
-  })()}
-</div>
+    </div>
+  </div>
+  
+  <!-- Related Products -->
+  <div class="related-products-section" id="related-products"></div>
+`;
         
-        <!-- Related Products -->
-        <div class="related-products-section" id="related-products"></div>
-      `;
     }
 
     // ==================== FORMAT CATEGORY ====================
