@@ -158,7 +158,7 @@ img {
 }
 
 .review-submit-btn {
-  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  background: #ff6b35;
   border: none;
   width: 48px;
   height: 48px;
